@@ -31,31 +31,59 @@
       </property>
       <widget class="QWidget" name="menuPage">
        <layout class="QFormLayout" name="formLayout_2">
-        <item row="2" column="1">
+        <item row="6" column="1">
          <widget class="QPushButton" name="go2check">
           <property name="text">
            <string>Check</string>
           </property>
          </widget>
         </item>
-        <item row="3" column="1">
+        <item row="7" column="1">
          <widget class="QPushButton" name="go2input">
           <property name="text">
            <string>Input</string>
           </property>
          </widget>
         </item>
-        <item row="4" column="1">
+        <item row="8" column="1">
          <widget class="QPushButton" name="go2exit">
           <property name="text">
            <string>Exit</string>
           </property>
          </widget>
         </item>
-        <item row="1" column="1">
+        <item row="5" column="1">
          <widget class="QPushButton" name="go2choice">
           <property name="text">
            <string>Choice</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QPushButton" name="showLoadingButton">
+          <property name="text">
+           <string>Show loading</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QPushButton" name="hideLoadingButton">
+          <property name="text">
+           <string>Hide loading</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QPushButton" name="setMessageButton">
+          <property name="text">
+           <string>Set message</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QPushButton" name="resetMessageButton">
+          <property name="text">
+           <string>Reset message</string>
           </property>
          </widget>
         </item>

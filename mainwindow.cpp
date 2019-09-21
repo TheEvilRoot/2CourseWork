@@ -7,6 +7,7 @@
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
     initConnection();
+    initStatusBar();
     ui->stackedWidget->setCurrentWidget(ui->checkTest);
 }
 
@@ -20,9 +21,25 @@ void MainWindow::initConnection() {
     connect(ui->go2choice, &QPushButton::clicked, [=]() {
         presentView(ViewType::CHOICE);
     });
+    connect(ui->back2MenuButton, &QPushButton::clicked, [=]() {
+       presentView(ViewType::MENU);
+    });
+
     connect(ui->go2exit, &QPushButton::clicked, [=]() {
         this->close();
     });
+}
+
+void MainWindow::initStatusBar() {
+    statusProgressBar = new QProgressBar();
+    statusProgressBar->setRange(0, 100);
+    statusProgressBar->setVisible(false);
+
+    statusBarLabel = new QLabel();
+    statusBarLabel->setText("");
+
+    ui->statusbar->addPermanentWidget(statusProgressBar);
+    ui->statusbar->addPermanentWidget(statusBarLabel);
 }
 
 MainWindow::~MainWindow() {
@@ -48,18 +65,13 @@ bool MainWindow::presentView(const ViewType *type) {
 }
 
 void MainWindow::showLoading() {
-
+    statusProgressBar->setVisible(true);
 }
 
 void MainWindow::hideLoading() {
-
+    statusProgressBar->setVisible(false);
 }
 
 void MainWindow::showMessage(std::string message) {
-
-}
-
-
-void MainWindow::on_back2MenuButton_clicked() {
-    presentView(ViewType::MENU);
+    statusBarLabel->setText(QString::fromUtf8(message.c_str()));
 }

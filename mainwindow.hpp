@@ -2,6 +2,8 @@
 #define MAINWINDOW_HPP
 
 #include <QMainWindow>
+#include <QProgressBar>
+#include <QLabel>
 
 #include "viewtype.h"
 #include "mainview.hpp"
@@ -23,10 +25,14 @@ public:
     void showMessage(std::string message) override;
 
 private slots:
-    void on_back2MenuButton_clicked();
 
 private:
     void initConnection();
+    void initStatusBar();
+
     Ui::MainWindow *ui;
+
+    QProgressBar *statusProgressBar;
+    QLabel *statusBarLabel;
 };
 #endif
