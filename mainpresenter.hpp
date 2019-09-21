@@ -4,6 +4,8 @@
 #include "model.hpp"
 #include "mainview.hpp"
 
+#include <QString>
+
 class MainPresenter {
 private:
   Model *mModel;
@@ -15,6 +17,11 @@ public:
   void requestNewSession(bool force = false, bool continueSession = false);
   void initSession();
   void completeTest();
+
+  std::tuple<QString, QString, QString> getResults();
+  std::tuple<QString, QString> getTestInfo();
+
+  int getRandomPosition();
 };
 
 #endif // MAINPRESENTER_HPP

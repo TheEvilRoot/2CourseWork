@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "sessiondialog.hpp"
 
+#include <QRandomGenerator>
 #include <iostream>
 #include <sstream>
 
@@ -14,6 +15,8 @@ MainWindow::MainWindow(
     mChoiceButtons = new QPushButton*[6]{ ui->choiceOption1, ui->choiceOption2, ui->choiceOption3, ui->choiceOption4, ui->choiceOption5, ui->choiceOption6 };
     initConnection();
     initStatusBar();
+
+    presentView(ViewType::MENU);
 }
 
 void MainWindow::initConnection() {
@@ -46,6 +49,10 @@ void MainWindow::initConnection() {
 
       answerSubmit(ui->checkBox->currentText());
     });
+
+    connect(ui->back2menu, &QPushButton::clicked, this, [=]() {
+      presentView(ViewType::MENU);
+    });
 }
 
 void MainWindow::initStatusBar() {
@@ -74,6 +81,8 @@ bool MainWindow::presentView(const ViewType *type) {
         ui->stackedWidget->setCurrentWidget(ui->inputTest);
     } else if (type == ViewType::CHOICE) {
         ui->stackedWidget->setCurrentWidget(ui->choiceTest);
+    } else if (type == ViewType::RESULT) {
+      ui->stackedWidget->setCurrentWidget(ui->result);
     } else {
         return false;
     }
@@ -85,8 +94,26 @@ void MainWindow::askSession() {
   dialog->show();
 }
 
-void MainWindow::prepareView(BaseTest *test) {
+void MainWindow::prepareView(const ViewType *type) {
+  if (type == ViewType::RESULT) {
+    auto [points, wrong, right] = mPresenter->getResults();
+    ui->pointsLabel->setText(points);
+    ui->wrongLabel->setText(wrong);
+    ui->rightLabel->setText(right);
+  } else if (type == ViewType::CHOICE) {
+    auto [question, answer] = mPresenter->getTestInfo();
+    ui->questionLabelChoice->setText(question);
 
+    int randomPos = mPresenter->getRandomPosition();
+    for (int i = 0; i < 6; i++) {
+      if (i == randomPos) {
+        mChoiceButtons[i]->setText(answer);
+      } else {
+        char c = '0' + i;
+        mChoiceButtons[i]->setText(QString::fromUtf8(&c)); // REFACTOR
+      }
+    }
+  }
 }
 
 void MainWindow::optionSubmit(int position) {

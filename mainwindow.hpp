@@ -28,7 +28,7 @@ public:
     void enableContent() override;
     void disableContent() override;
     void askSession() override;
-    void prepareView(BaseTest *test) override;
+    void prepareView(const ViewType *type) override;
 
 private slots:
 

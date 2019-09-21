@@ -7,13 +7,17 @@
 
 class Session {
 private:
-    std::vector<BaseTest*> mTests;
-    unsigned int mPosition;
+  std::vector<BaseTest*> mTests;
+  unsigned int mPosition;
+
+
 public:
     Session();
     ~Session();
     void nextTest();
     void checkTest(bool result);
+    bool isFinished();
+    int getTestsCount() const;
     BaseTest * currentTest() const;
 
 };

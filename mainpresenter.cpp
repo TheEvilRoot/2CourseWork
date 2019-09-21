@@ -58,14 +58,33 @@ void MainPresenter::initSession() {
     mView->showMessage("Session is not initialized");
     return;
   }
-  if (!mModel->getSession()->currentTest()) {
+  if (mModel->getSession()->isFinished()) {
     completeTest();
-
     return;
   }
+
   mView->presentView(mModel->getSession()->currentTest()->getType());
+  mView->prepareView((mModel->getSession()->currentTest()->getType()));
 }
 
 void MainPresenter::completeTest() {
-  mView->presentView(ViewType::MENU);
+  mView->presentView(ViewType::RESULT);
+  mView->prepareView(ViewType::RESULT);
+}
+
+std::tuple<QString, QString, QString> MainPresenter::getResults() {
+  return std::tuple<QString, QString, QString>("1", "2", "3");
+}
+
+// I WILL REFACTOR IT LATER!
+std::tuple<QString, QString> MainPresenter::getTestInfo() {
+  if (mModel->getSession() && !mModel->getSession()->isFinished()) {
+    return std::tuple<QString, QString>(QString::fromUtf8(mModel->getSession()->currentTest()->getQuestion().c_str()),
+                                      QString::fromUtf8(mModel->getSession()->currentTest()->getAnswer().c_str()));
+  }
+  return std::tuple<QString, QString>("", "");
+}
+
+int MainPresenter::getRandomPosition() {
+  return mModel->getRandomPosition();
 }

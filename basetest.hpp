@@ -20,6 +20,8 @@ public:
 
     bool checkResult(std::string answer);
     const ViewType* getType() const;
+    std::string getQuestion() const;
+    std::string getAnswer() const;
 };
 
 #endif
