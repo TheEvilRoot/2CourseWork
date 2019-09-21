@@ -14,13 +14,12 @@ MainWindow::MainWindow(
     mChoiceButtons = new QPushButton*[6]{ ui->choiceOption1, ui->choiceOption2, ui->choiceOption3, ui->choiceOption4, ui->choiceOption5, ui->choiceOption6 };
     initConnection();
     initStatusBar();
-    ui->stackedWidget->setCurrentWidget(ui->checkTest);
 }
 
 void MainWindow::initConnection() {
-    connect(ui->back2MenuButton, &QPushButton::clicked, [=]() {
+    /*connect(ui->back2MenuButton, &QPushButton::clicked, [=]() {
        presentView(ViewType::MENU);
-    }); // TODO: Debug!
+    }); */// TODO: Debug!
 
     connect(ui->go2exit, &QPushButton::clicked, this, [=]() {
       this->close();
@@ -84,6 +83,10 @@ bool MainWindow::presentView(const ViewType *type) {
 void MainWindow::askSession() {
   auto dialog = new SessionDialog(mPresenter);
   dialog->show();
+}
+
+void MainWindow::prepareView(BaseTest *test) {
+
 }
 
 void MainWindow::optionSubmit(int position) {

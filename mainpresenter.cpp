@@ -60,6 +60,7 @@ void MainPresenter::initSession() {
   }
   if (!mModel->getSession()->currentTest()) {
     completeTest();
+
     return;
   }
   mView->presentView(mModel->getSession()->currentTest()->getType());

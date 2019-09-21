@@ -16,11 +16,9 @@ public:
     BaseTest(const ViewType *type,
              std::string questionText,
              std::string rightAnswer);
-
-    bool checkResult(std::string answer);
-
     ~BaseTest();
 
+    bool checkResult(std::string answer);
     const ViewType* getType() const;
 };
 

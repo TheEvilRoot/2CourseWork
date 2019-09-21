@@ -4,6 +4,7 @@
 #include <string>
 
 #include "viewtype.h"
+#include "basetest.hpp"
 
 class MainView { // TODO: Solve warning
 public:
@@ -15,6 +16,7 @@ public:
   virtual void disableContent() = 0;
   virtual void enableContent() = 0;
   virtual void askSession() = 0;
+  virtual void prepareView(BaseTest *test) = 0;
 };
 
 #endif // MAINVIEW_HPP
