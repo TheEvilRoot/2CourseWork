@@ -23,11 +23,11 @@ int main(int argc, char *argv[]) {
     Q_ASSERT(model);
 
     MainWindow w(model);
+
     MainView *view = dynamic_cast<MainView*>(&w);
-
     Q_ASSERT(view);
-    Q_ASSERT(view->presentView(nullptr) == false);
 
+    Q_ASSERT(view->presentView(nullptr) == false);
     w.show();
     return a.exec();
 }
