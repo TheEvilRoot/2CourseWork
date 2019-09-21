@@ -4,9 +4,11 @@
 #include <vector>
 #include <string>
 
+#include "viewtype.h"
+
 class BaseTest {
 private:
-    std::string mTypeName;
+    ViewType *mType;
     std::string mQuestionText;
     std::string mRightAnswer;
 

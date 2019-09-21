@@ -24,12 +24,43 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
+    <item row="1" column="0">
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
-      <widget class="QWidget" name="menuPage"/>
+      <widget class="QWidget" name="menuPage">
+       <layout class="QFormLayout" name="formLayout_2">
+        <item row="2" column="1">
+         <widget class="QPushButton" name="go2check">
+          <property name="text">
+           <string>Check</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QPushButton" name="go2input">
+          <property name="text">
+           <string>Input</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QPushButton" name="go2exit">
+          <property name="text">
+           <string>Exit</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QPushButton" name="go2choice">
+          <property name="text">
+           <string>Choice</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
       <widget class="QWidget" name="choiceTest">
        <layout class="QGridLayout" name="gridLayout_2">
         <item row="0" column="0">
@@ -118,7 +149,7 @@
       </widget>
       <widget class="QWidget" name="checkTest">
        <layout class="QGridLayout" name="gridLayout_3">
-        <item row="1" column="1">
+        <item row="0" column="1">
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
            <widget class="QLabel" name="label_3">
@@ -140,17 +171,14 @@
       </widget>
      </widget>
     </item>
+    <item row="0" column="0">
+     <widget class="QPushButton" name="back2MenuButton">
+      <property name="text">
+       <string>back to Menu</string>
+      </property>
+     </widget>
+    </item>
    </layout>
-  </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>400</width>
-     <height>22</height>
-    </rect>
-   </property>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

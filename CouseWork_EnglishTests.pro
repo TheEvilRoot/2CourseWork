@@ -9,12 +9,16 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     basetest.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    session.cpp
 
 HEADERS += \
     basetest.hpp \
+    mainview.hpp \
     mainwindow.hpp \
-    json.h
+    json.h \
+    session.hpp \
+    viewtype.h
 
 FORMS += \
     mainwindow.ui
