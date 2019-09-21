@@ -9,19 +9,26 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     basetest.cpp \
     main.cpp \
+    mainpresenter.cpp \
     mainwindow.cpp \
-    session.cpp
+    model.cpp \
+    session.cpp \
+    sessiondialog.cpp
 
 HEADERS += \
     basetest.hpp \
+    mainpresenter.hpp \
     mainview.hpp \
     mainwindow.hpp \
     json.h \
+    model.hpp \
     session.hpp \
+    sessiondialog.hpp \
     viewtype.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    sessiondialog.ui
 
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin

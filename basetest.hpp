@@ -8,17 +8,20 @@
 
 class BaseTest {
 private:
-    ViewType *mType;
+    const ViewType *mType;
     std::string mQuestionText;
     std::string mRightAnswer;
 
 public:
-    BaseTest(std::string questionText,
+    BaseTest(const ViewType *type,
+             std::string questionText,
              std::string rightAnswer);
 
     bool checkResult(std::string answer);
 
     ~BaseTest();
+
+    const ViewType* getType() const;
 };
 
 #endif

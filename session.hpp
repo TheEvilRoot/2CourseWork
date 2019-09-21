@@ -7,10 +7,15 @@
 
 class Session {
 private:
-    std::vector<BaseTest*> tests;
-    unsigned int position;
+    std::vector<BaseTest*> mTests;
+    unsigned int mPosition;
 public:
     Session();
+    ~Session();
+    void nextTest();
+    void checkTest(bool result);
+    BaseTest * currentTest() const;
+
 };
 
 #endif // SESSION_HPP
