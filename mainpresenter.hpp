@@ -13,15 +13,11 @@ private:
 public:
   MainPresenter(Model *model, MainView *view);
 
-  void proceedAnswer(std::string answer);
+  void proceedAnswer(QString answer);
   void requestNewSession(bool force = false, bool continueSession = false);
-  void initSession();
+  void handleSession();
   void completeTest();
-
-  std::tuple<QString, QString, QString> getResults();
-  std::tuple<QString, QString> getTestInfo();
-
-  int getRandomPosition();
+  void initView(const ViewType *type);
 };
 
 #endif // MAINPRESENTER_HPP

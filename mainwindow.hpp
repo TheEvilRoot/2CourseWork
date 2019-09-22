@@ -21,6 +21,7 @@ class MainWindow : public QMainWindow, public MainView {
 public:
     MainWindow(Model *model, QWidget *parent = nullptr);
     ~MainWindow() override;
+
     bool presentView(const ViewType *type) override;
     void showLoading() override;
     void hideLoading() override ;
@@ -28,23 +29,26 @@ public:
     void enableContent() override;
     void disableContent() override;
     void askSession() override;
-    void prepareView(const ViewType *type) override;
+
+    void setupResultScreen(QString points, QString rightAnswers, QString wrongAnswers, QString result) override;
+    void setupChoiceScreen(QString question, std::vector<QString> answers) override;
+    void setupCheckScreen(QString question, std::vector<QString> answers) override;
+    void setupInputScreen(QString question, QString prefill = "") override;
+    void setupMenuScreen(bool hasActiveSession, int points) override;
 
 private slots:
 
 private:
     void initConnection();
     void initStatusBar();
-
     void optionSubmit(int position);
     void answerSubmit(QString answer);
 
     Ui::MainWindow *ui;
-    MainPresenter *mPresenter;
 
+    MainPresenter *mPresenter;
     QProgressBar *statusProgressBar;
     QLabel *statusBarLabel;
-
     QPushButton **mChoiceButtons;
 };
 #endif

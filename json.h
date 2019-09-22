@@ -114,7 +114,7 @@ namespace json
 			// Trim leading white space
 			json::parsing::tlws(input);
 
-			// Initialize the result
+            // Initialize the result
 			std::string result;
 
 			// Loop until all digits are read

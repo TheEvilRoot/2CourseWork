@@ -1,6 +1,7 @@
 #include "mainwindow.hpp"
 #include "ui_mainwindow.h"
 #include "sessiondialog.hpp"
+#include "settings.h"
 
 #include <QRandomGenerator>
 #include <iostream>
@@ -11,45 +12,55 @@ MainWindow::MainWindow(
     QWidget *parent
 ): QMainWindow(parent), ui(new Ui::MainWindow), mPresenter(new MainPresenter(model, this)) {
     ui->setupUi(this);
+
     // I hate it!
     mChoiceButtons = new QPushButton*[6]{ ui->choiceOption1, ui->choiceOption2, ui->choiceOption3, ui->choiceOption4, ui->choiceOption5, ui->choiceOption6 };
+
     initConnection();
     initStatusBar();
 
+    setupMenuScreen(false, 0);
     presentView(ViewType::MENU);
 }
 
-void MainWindow::initConnection() {
-    /*connect(ui->back2MenuButton, &QPushButton::clicked, [=]() {
-       presentView(ViewType::MENU);
-    }); */// TODO: Debug!
+MainWindow::~MainWindow() {
+    delete ui;
+}
 
+void MainWindow::initConnection() {
+    // Menu screen
     connect(ui->go2exit, &QPushButton::clicked, this, [=]() {
       this->close();
     });
+    connect(ui->attemptsBox, &QCheckBox::toggled, this, [=]() {
+       bool newState = ui->attemptsBox->isChecked();
+       Settings::sAttemptsMode = newState;
+    });
+
     connect(ui->startSession, &QPushButton::clicked, this, [=]() {
       mPresenter->requestNewSession(false);
     });
+
+    // Choice screen
     for (int i = 0; i < 6; i++) {
       connect(mChoiceButtons[i], &QPushButton::clicked, this, [=]() {
         optionSubmit(i);
       });
     }
 
+    // Input screen
     connect(ui->inputSubmitButton, &QPushButton::clicked, this, [=]() {
       if (ui->inputAnswerInput->text().size() > 0) {
         answerSubmit(ui->inputAnswerInput->text());
       }
     });
 
+    // Check screen
     connect(ui->checkSubmitButton, &QPushButton::clicked, this, [=]() {
-      std::ostringstream osstr;
-      osstr << ui->checkBox->currentIndex() << "\n";
-      showMessage(osstr.str());
-
       answerSubmit(ui->checkBox->currentText());
     });
 
+    // Result screen
     connect(ui->back2menu, &QPushButton::clicked, this, [=]() {
       presentView(ViewType::MENU);
     });
@@ -66,10 +77,6 @@ void MainWindow::initStatusBar() {
 
     ui->statusbar->addPermanentWidget(statusProgressBar);
     ui->statusbar->addPermanentWidget(statusBarLabel);
-}
-
-MainWindow::~MainWindow() {
-    delete ui;
 }
 
 bool MainWindow::presentView(const ViewType *type) {
@@ -94,34 +101,12 @@ void MainWindow::askSession() {
   dialog->show();
 }
 
-void MainWindow::prepareView(const ViewType *type) {
-  if (type == ViewType::RESULT) {
-    auto [points, wrong, right] = mPresenter->getResults();
-    ui->pointsLabel->setText(points);
-    ui->wrongLabel->setText(wrong);
-    ui->rightLabel->setText(right);
-  } else if (type == ViewType::CHOICE) {
-    auto [question, answer] = mPresenter->getTestInfo();
-    ui->questionLabelChoice->setText(question);
-
-    int randomPos = mPresenter->getRandomPosition();
-    for (int i = 0; i < 6; i++) {
-      if (i == randomPos) {
-        mChoiceButtons[i]->setText(answer);
-      } else {
-        char c = '0' + i;
-        mChoiceButtons[i]->setText(QString::fromUtf8(&c)); // REFACTOR
-      }
-    }
-  }
-}
-
 void MainWindow::optionSubmit(int position) {
   answerSubmit(mChoiceButtons[position]->text());
 }
 
 void MainWindow::answerSubmit(QString answer) {
-  mPresenter->proceedAnswer(answer.toStdString());
+  mPresenter->proceedAnswer(answer);
 }
 
 void MainWindow::showLoading() {
@@ -142,4 +127,41 @@ void MainWindow::disableContent() {
 
 void MainWindow::enableContent() {
   ui->stackedWidget->setEnabled(true);
+}
+
+void MainWindow::setupMenuScreen(bool hasActiveSession, int points) {
+    if (hasActiveSession) {
+        ui->sessionInfo->setVisible(true);
+        ui->sessionInfo->setText("You have unfinished session. Your points: " + QString::number(points));
+    } else {
+        ui->sessionInfo->setVisible(false);
+    }
+    ui->attemptsBox->setChecked(Settings::sAttemptsMode);
+}
+
+void MainWindow::setupChoiceScreen(QString question, std::vector<QString> answers) {
+    ui->questionLabelChoice->setText(question);
+    for (size_t i = 0; i < 6; i++) {
+        mChoiceButtons[i]->setText(answers[i]);
+    }
+ }
+
+void MainWindow::setupInputScreen(QString question, QString prefill) {
+    ui->questionLabelInput->setText(question);
+    ui->inputAnswerInput->setText(prefill);
+}
+
+void MainWindow::setupCheckScreen(QString question, std::vector<QString> answers) {
+    ui->questionLabelCheck->setText(question);
+    ui->checkBox->clear();
+    for (auto ans : answers) {
+        ui->checkBox->addItem(ans);
+    }
+}
+
+void MainWindow::setupResultScreen(QString points, QString rightAnswers, QString wrongAnswers, QString result) {
+    ui->pointsLabel->setText(points);
+    ui->rightLabel->setText(rightAnswers);
+    ui->wrongLabel->setText(wrongAnswers);
+    ui->resultLabel->setText(result);
 }

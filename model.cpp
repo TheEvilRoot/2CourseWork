@@ -1,4 +1,5 @@
 #include "model.hpp"
+#include "settings.h"
 
 Session* Model::getSession() const {
   return mSession;
@@ -17,7 +18,7 @@ int Model::newSession(bool force) {
 
   // Otherwise delete (free) current session (if even exists) and create a new one!
   if (mSession) delete mSession;
-  this->mSession = new Session();
+  this->mSession = new Session(Settings::sAttemptsMode);
 
   return 0;
 }

@@ -4,21 +4,27 @@ const ViewType* BaseTest::getType() const {
   return mType;
 }
 
-std::string BaseTest::getQuestion() const {
+QString BaseTest::getQuestion() const {
   return mQuestionText;
 }
 
-std::string BaseTest::getAnswer() const {
+QString BaseTest::getAnswer() const {
   return mRightAnswer;
 }
 
+int BaseTest::getId() const {
+    return mId;
+}
+
+int BaseTest::GLOBAL_ID = 0;
+
 BaseTest::BaseTest(
     const ViewType *type,
-    std::string questionText,
-    std::string rightAnswer
-    ): mType(type), mQuestionText(questionText), mRightAnswer(rightAnswer) { }
+    QString questionText,
+    QString rightAnswer
+    ): mId(GLOBAL_ID++), mType(type), mQuestionText(questionText), mRightAnswer(rightAnswer) { }
 
-bool BaseTest::checkResult(std::string answer) {
+bool BaseTest::checkResult(QString answer) {
   return answer == mRightAnswer;
 }
 

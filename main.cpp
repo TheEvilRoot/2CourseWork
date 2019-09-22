@@ -16,6 +16,7 @@ const ViewType* ViewType::RESULT = new ViewType("result");
 
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
+
     QRandomGenerator *rand = new QRandomGenerator((quint8) time(nullptr));
     Q_ASSERT(rand);
 
@@ -23,7 +24,6 @@ int main(int argc, char *argv[]) {
     Q_ASSERT(model);
 
     MainWindow w(model);
-
     MainView *view = dynamic_cast<MainView*>(&w);
     Q_ASSERT(view);
 

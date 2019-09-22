@@ -24,6 +24,7 @@ HEADERS += \
     model.hpp \
     session.hpp \
     sessiondialog.hpp \
+    settings.h \
     viewtype.h
 
 FORMS += \

@@ -2,26 +2,32 @@
 #define BASETEST_HPP
 
 #include <vector>
-#include <string>
+#include <QString>
 
 #include "viewtype.h"
 
 class BaseTest {
 private:
+    int mId;
     const ViewType *mType;
-    std::string mQuestionText;
-    std::string mRightAnswer;
+    QString mQuestionText;
+    QString mRightAnswer;
 
 public:
+
+    static int GLOBAL_ID;
+
     BaseTest(const ViewType *type,
-             std::string questionText,
-             std::string rightAnswer);
+             QString questionText,
+             QString rightAnswer);
+
     ~BaseTest();
 
-    bool checkResult(std::string answer);
+    bool checkResult(QString answer);
     const ViewType* getType() const;
-    std::string getQuestion() const;
-    std::string getAnswer() const;
+    QString getQuestion() const;
+    QString getAnswer() const;
+    int getId() const;
 };
 
 #endif
