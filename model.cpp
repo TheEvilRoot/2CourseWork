@@ -63,6 +63,15 @@ bool Model::loadWords(bool forceReload) {
     return mWords.size();
 }
 
+// Algorithm:
+//
+// get random index
+// swap with last
+// pop last to buffer
+// while count
+// add popped items back to list
+// return buffer
+
 WordsList Model::getRandomWords(size_t count) {
     WordsList list;
     if (count > mWords.size()) count = mWords.size();
