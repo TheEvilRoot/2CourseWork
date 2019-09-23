@@ -4,7 +4,7 @@
 #include <cmath>
 
 Session::Session(bool attemptsMode):
-    mTests({new BaseTest(ViewType::CHOICE, "Hello World", "Yeah"), new BaseTest(ViewType::INPUT, "Yeeeee", "me!")}),
+    mTests({new BaseTest(ViewType::CHOICE, "ФЫВ Yeah!", "ФЫВ"), new BaseTest(ViewType::INPUT, "ФЫв is great?", "фыв")}),
     mPosition(0),
     mRight(0),
     mWrong(0),

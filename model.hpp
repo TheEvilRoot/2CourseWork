@@ -2,21 +2,22 @@
 #define MODEL_HPP
 
 #include "session.hpp"
+#include "settings.h"
 
-#include <QRandomGenerator>
+// #include <Random>
 
 class Model {
 private:
   Session *mSession;
-  QRandomGenerator *mRand;
+  Settings *mSettings;
 
 public:
-  Model(QRandomGenerator *rand);
+  Model(Settings *settings);
 
   int newSession(bool force);
   Session* getSession() const;
 
-  int getRandomPosition();
+  // int getRandomPosition();
 };
 
 #endif // MODEL_HPP

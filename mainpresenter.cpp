@@ -106,7 +106,7 @@ void MainPresenter::initView(const ViewType *type) {
 
         answers.push_back(test->getAnswer());
 
-        if (type == ViewType::CHOICE) mView->setupCheckScreen(test->getQuestion(), answers);
+        if (type == ViewType::CHOICE) mView->setupChoiceScreen(test->getQuestion(), answers);
         if (type == ViewType::CHECK) mView->setupCheckScreen(test->getQuestion(), answers);
     }
 }

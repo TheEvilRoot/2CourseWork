@@ -25,6 +25,7 @@ public:
     bool operator!=(ViewType &a) {
         return !(this->operator==(a));
     }
+
     std::string getViewName() const {
         return mViewName;
     }

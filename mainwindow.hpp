@@ -10,6 +10,7 @@
 #include "mainview.hpp"
 #include "model.hpp"
 #include "mainpresenter.hpp"
+#include "settings.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -19,7 +20,7 @@ class MainWindow : public QMainWindow, public MainView {
     Q_OBJECT
 
 public:
-    MainWindow(Model *model, QWidget *parent = nullptr);
+    MainWindow(Model *model, Settings *settings, QWidget *parent = nullptr);
     ~MainWindow() override;
 
     bool presentView(const ViewType *type) override;
@@ -45,8 +46,8 @@ private:
     void answerSubmit(QString answer);
 
     Ui::MainWindow *ui;
-
     MainPresenter *mPresenter;
+    Settings *mSettings;
     QProgressBar *statusProgressBar;
     QLabel *statusBarLabel;
     QPushButton **mChoiceButtons;

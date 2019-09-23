@@ -3,14 +3,15 @@
 #include "sessiondialog.hpp"
 #include "settings.h"
 
-#include <QRandomGenerator>
+//#include <QRandomGenerator>
 #include <iostream>
 #include <sstream>
 
 MainWindow::MainWindow(
     Model* model,
+    Settings *settings,
     QWidget *parent
-): QMainWindow(parent), ui(new Ui::MainWindow), mPresenter(new MainPresenter(model, this)) {
+): QMainWindow(parent), ui(new Ui::MainWindow), mPresenter(new MainPresenter(model, this)), mSettings(settings) {
     ui->setupUi(this);
 
     // I hate it!
@@ -34,7 +35,7 @@ void MainWindow::initConnection() {
     });
     connect(ui->attemptsBox, &QCheckBox::toggled, this, [=]() {
        bool newState = ui->attemptsBox->isChecked();
-       Settings::sAttemptsMode = newState;
+       mSettings->isAttemptMode = newState;
     });
 
     connect(ui->startSession, &QPushButton::clicked, this, [=]() {
@@ -136,7 +137,7 @@ void MainWindow::setupMenuScreen(bool hasActiveSession, int points) {
     } else {
         ui->sessionInfo->setVisible(false);
     }
-    ui->attemptsBox->setChecked(Settings::sAttemptsMode);
+    ui->attemptsBox->setChecked(mSettings->isAttemptMode);
 }
 
 void MainWindow::setupChoiceScreen(QString question, std::vector<QString> answers) {
