@@ -22,6 +22,8 @@ MainWindow::MainWindow(
 
     setupMenuScreen(false, 0);
     presentView(ViewType::MENU);
+
+    mPresenter->initApplication();
 }
 
 MainWindow::~MainWindow() {
@@ -118,8 +120,8 @@ void MainWindow::hideLoading() {
     statusProgressBar->setVisible(false);
 }
 
-void MainWindow::showMessage(std::string message) {
-    statusBarLabel->setText(QString::fromUtf8(message.c_str()));
+void MainWindow::showMessage(QString message) {
+    statusBarLabel->setText(message);
 }
 
 void MainWindow::disableContent() {

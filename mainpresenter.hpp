@@ -5,8 +5,12 @@
 #include "mainview.hpp"
 
 #include <QString>
+#include <QObject>
 
-class MainPresenter {
+class MainPresenter: public QObject {
+
+    Q_OBJECT
+
 private:
   Model *mModel;
   MainView *mView;
@@ -18,6 +22,11 @@ public:
   void handleSession();
   void completeTest();
   void initView(const ViewType *type);
+  void initApplication();
+
+public slots:
+    void onProgressDone();
+    void onError(QString message);
 };
 
 #endif // MAINPRESENTER_HPP

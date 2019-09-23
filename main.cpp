@@ -1,6 +1,7 @@
 #include "mainwindow.hpp"
 
 #include <QApplication>
+#include <iostream>
 
 #include "viewtype.h"
 #include "mainview.hpp"
@@ -17,9 +18,6 @@ const ViewType* ViewType::RESULT = new ViewType("result");
 
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
-
-//    QRandomGenerator *rand = new QRandomGenerator((quint8) time(nullptr));
-//    Q_ASSERT(rand);
 
     Settings *settings = new Settings();
     Q_ASSERT(settings);

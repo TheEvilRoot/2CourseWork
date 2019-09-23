@@ -20,19 +20,17 @@ private:
 public:
     Session(bool attemptsMode = false);
     ~Session();
+
     void nextTest();
     void checkTest(bool result);
-
     int calculatePoints(int attempts, BaseTest *test);
 
     BaseTest * currentTest() const;
-
     int getTestsCount() const;
     int getPoints() const;
     int getRightAnswersCount() const;
     int getWrongAnswersCount() const;
     bool isAttemptsMode() const;
-
     bool isFinished();
 };
 

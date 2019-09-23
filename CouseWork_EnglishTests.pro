@@ -13,7 +13,8 @@ SOURCES += \
     mainwindow.cpp \
     model.cpp \
     session.cpp \
-    sessiondialog.cpp
+    sessiondialog.cpp \
+    wordsfileloader.cpp
 
 HEADERS += \
     basetest.hpp \
@@ -25,7 +26,8 @@ HEADERS += \
     session.hpp \
     sessiondialog.hpp \
     settings.h \
-    viewtype.h
+    viewtype.h \
+    wordsfileloader.h
 
 FORMS += \
     mainwindow.ui \

@@ -26,7 +26,7 @@ public:
     bool presentView(const ViewType *type) override;
     void showLoading() override;
     void hideLoading() override ;
-    void showMessage(std::string message = "") override;
+    void showMessage(QString message = "") override;
     void enableContent() override;
     void disableContent() override;
     void askSession() override;

@@ -2,6 +2,8 @@
 
 #include <QApplication>
 
+#include "wordsfileloader.h"
+
 MainPresenter::MainPresenter(Model *model, MainView *view): mModel(model), mView(view) {
   Q_ASSERT(model);
   Q_ASSERT(view);
@@ -98,15 +100,36 @@ void MainPresenter::initView(const ViewType *type) {
         if (type == ViewType::INPUT) mView->setupInputScreen(test->getQuestion(), "");
 
         std::vector<QString> answers;
-        answers.push_back("Hello 1");
-        answers.push_back("Hello 2");
-        answers.push_back("Hello 3");
-        answers.push_back("Hello 4");
-        answers.push_back("Hello 5");
+
+        for (auto [ans, wer] : mModel->getRandomWords(5)) {
+            answers.push_back(ans);
+        }
 
         answers.push_back(test->getAnswer());
 
         if (type == ViewType::CHOICE) mView->setupChoiceScreen(test->getQuestion(), answers);
         if (type == ViewType::CHECK) mView->setupCheckScreen(test->getQuestion(), answers);
     }
+}
+
+void MainPresenter::onProgressDone() {
+    mView->hideLoading();
+    mView->enableContent();
+    mView->showMessage("Ready to work!");
+}
+
+void MainPresenter::onError(QString message) {
+    mView->hideLoading();
+    mView->enableContent();
+    mView->showMessage(message);
+}
+
+void MainPresenter::initApplication() {
+    mView->showLoading();
+    mView->disableContent();
+    mView->showMessage("Loading words...");
+    WordsFileLoader *loader = new WordsFileLoader(mModel);
+    QObject::connect(loader, &WordsFileLoader::progressDone, this, &MainPresenter::onProgressDone);
+    QObject::connect(loader, &WordsFileLoader::progressError, this, &MainPresenter::onError);
+    loader->start();
 }
