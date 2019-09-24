@@ -9,6 +9,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     model/data/basetest.cpp \
     main.cpp \
+    model/data/choicetest.cpp \
     presenter/main/mainpresenter.cpp \
     view/main/mainwindow.cpp \
     model/model.cpp \
@@ -18,6 +19,7 @@ SOURCES += \
 
 HEADERS += \
     model/data/basetest.hpp \
+    model/data/choicetest.h \
     presenter/main/mainpresenter.hpp \
     view/mainview.hpp \
     view/main/mainwindow.hpp \

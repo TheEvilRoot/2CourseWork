@@ -18,7 +18,7 @@ private:
 
 
 public:
-    Session(bool attemptsMode = false);
+    Session(std::vector<BaseTest *> tests, bool attemptsMode = false);
     ~Session();
 
     void nextTest();

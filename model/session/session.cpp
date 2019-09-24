@@ -3,14 +3,19 @@
 #include <iostream>
 #include <cmath>
 
-Session::Session(bool attemptsMode):
-    mTests({new BaseTest(ViewType::CHOICE, "ФЫВ Yeah!", "ФЫВ"), new BaseTest(ViewType::INPUT, "ФЫв is great?", "фыв")}),
+Session::Session(std::vector<BaseTest *> tests, bool attemptsMode):
+    mTests(tests),
     mPosition(0),
     mRight(0),
     mWrong(0),
     mPoints(0),
     mAttemptsMode(attemptsMode){
     std::cout << "Initializing session " << attemptsMode << "\n";
+}
+
+Session::~Session() {
+    std::cerr << "Session descruction initiated!!!!!!\n";
+    for (size_t i = 0; i < mTests.size(); i++) if (mTests[i]) delete mTests[i];
 }
 
 bool Session::isAttemptsMode() const {
@@ -31,10 +36,6 @@ int Session::getPoints() const{
 
 int Session::getTestsCount() const {
     return (int) mTests.size();
-}
-
-Session::~Session() {
-    std::cerr << "Session descruction initiated!!!!!!\n";
 }
 
 void Session::nextTest() {

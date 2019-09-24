@@ -23,6 +23,8 @@ public:
 
   bool loadWords(bool forceReload = false);
   WordsList getRandomWords(size_t count = 1);
+
+  std::vector<BaseTest *> generateTests();
 };
 
 #endif // MODEL_HPP

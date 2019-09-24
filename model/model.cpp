@@ -1,10 +1,10 @@
 #include "model.hpp"
 #include "settings.h"
+#include "model/data/choicetest.h"
 
 #include <QFile>
 #include <QTextStream>
 #include <iostream>
-#include <set>
 
 Session* Model::getSession() const {
   return mSession;
@@ -23,9 +23,23 @@ int Model::newSession(bool force) {
 
   // Otherwise delete (free) current session (if even exists) and create a new one!
   if (mSession) delete mSession;
-  this->mSession = new Session(mSettings->isAttemptMode);
+  this->mSession = new Session(generateTests(), mSettings->isAttemptMode);
 
   return 0;
+}
+
+std::vector<BaseTest *> Model::generateTests() {
+    std::vector<BaseTest *> tests;
+    int count = mRandomGen->bounded(10, 15);
+
+    for (int i = 0; i < count; i++) {
+        auto options = getRandomWords(6);
+        std::vector<QString> answers;
+        for (auto [a, q] : options) answers.push_back(a);
+        size_t randomIndex = mRandomGen->bounded(0, 6);
+        tests.push_back(new ChoiceTest(options[randomIndex].second, answers, randomIndex));
+    }
+    return tests;
 }
 
 bool Model::loadWords(bool forceReload) {
@@ -71,16 +85,20 @@ bool Model::loadWords(bool forceReload) {
 // while count
 // add popped items back to list
 // return buffer
+// Time: O(count) + O(1) + O(1) + O(1) + O(count) = O(count) = O(N)
 
 WordsList Model::getRandomWords(size_t count) {
     WordsList list;
     if (count > mWords.size()) count = mWords.size();
-    std::set<size_t> indeces;
-    for (; indeces.size() < count;) {
-        indeces.insert(mRandomGen->bounded((qint8) 0,(qint8) mWords.size()));
+    size_t lastIndex, randomIndex;
+    for (size_t i = 0; i < count; i++) {
+        lastIndex = mWords.size() - 1;
+        randomIndex = mRandomGen->bounded(0, mWords.size());
+
+        std::swap(mWords[lastIndex], mWords[randomIndex]);
+        list.push_back(mWords[lastIndex]);
+        mWords.pop_back();
     }
-    for (auto index : indeces) {
-        list.push_back(mWords[index]);
-    }
+    for (size_t i = 0; i < list.size(); i++) mWords.push_back(list[i]);
     return list;
 }

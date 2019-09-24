@@ -1,5 +1,7 @@
 #include "basetest.hpp"
 
+#include <iostream>
+
 const ViewType* BaseTest::getType() const {
   return mType;
 }
@@ -21,11 +23,15 @@ bool BaseTest::checkResult(QString answer) {
 }
 
 int BaseTest::GLOBAL_ID = 0;
+
 BaseTest::BaseTest(
     const ViewType *type,
     QString questionText,
     QString rightAnswer
 ): mId(GLOBAL_ID++), mType(type), mQuestionText(questionText), mRightAnswer(rightAnswer) { }
-BaseTest::~BaseTest() { }
+
+BaseTest::~BaseTest() {
+    std::cout << "Destructing " << mId << " test\n";
+}
 
 
