@@ -1,12 +1,11 @@
-#include "mainwindow.hpp"
+#include "view/main/mainwindow.hpp"
+#include "view/viewtype.h"
+#include "view/mainview.hpp"
+#include "model/model.hpp"
+#include "model/settings.h"
 
 #include <QApplication>
 #include <iostream>
-
-#include "viewtype.h"
-#include "mainview.hpp"
-#include "model.hpp"
-#include "settings.h"
 
 int ViewType::GLOBAL_ID = 0;
 

@@ -7,27 +7,27 @@ CONFIG += c++17
 DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
-    basetest.cpp \
+    model/data/basetest.cpp \
     main.cpp \
-    mainpresenter.cpp \
-    mainwindow.cpp \
-    model.cpp \
-    session.cpp \
-    sessiondialog.cpp \
-    wordsfileloader.cpp
+    presenter/main/mainpresenter.cpp \
+    view/main/mainwindow.cpp \
+    model/model.cpp \
+    model/session/session.cpp \
+    view/sessiondialog/sessiondialog.cpp \
+    model/loader/wordsfileloader.cpp
 
 HEADERS += \
-    basetest.hpp \
-    mainpresenter.hpp \
-    mainview.hpp \
-    mainwindow.hpp \
-    json.h \
-    model.hpp \
-    session.hpp \
-    sessiondialog.hpp \
-    settings.h \
-    viewtype.h \
-    wordsfileloader.h
+    model/data/basetest.hpp \
+    presenter/main/mainpresenter.hpp \
+    view/mainview.hpp \
+    view/main/mainwindow.hpp \
+    api/json.h \
+    model/model.hpp \
+    model/session/session.hpp \
+    view/sessiondialog/sessiondialog.hpp \
+    model/settings.h \
+    view/viewtype.h \
+    model/loader/wordsfileloader.h
 
 FORMS += \
     mainwindow.ui \
