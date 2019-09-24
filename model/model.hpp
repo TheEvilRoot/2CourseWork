@@ -1,10 +1,10 @@
 #ifndef MODEL_HPP
 #define MODEL_HPP
 
-#include <QRandomGenerator>
-
 #include "model/session/session.hpp"
 #include "settings.h"
+
+#include <QRandomGenerator>
 
 typedef std::vector<std::pair<QString, QString>> WordsList;
 

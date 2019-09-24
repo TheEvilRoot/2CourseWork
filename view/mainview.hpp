@@ -1,8 +1,6 @@
 #ifndef MAINVIEW_HPP
 #define MAINVIEW_HPP
 
-#include <string>
-
 #include "viewtype.h"
 #include "model/data/basetest.hpp"
 

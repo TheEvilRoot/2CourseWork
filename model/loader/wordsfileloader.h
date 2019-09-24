@@ -2,6 +2,7 @@
 #define WORDSFILELOADER_H
 
 #include <model/model.hpp>
+
 #include <QThread>
 
 class WordsFileLoader : public QThread {

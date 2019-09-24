@@ -1,10 +1,10 @@
 #ifndef BASETEST_HPP
 #define BASETEST_HPP
 
+#include "view/viewtype.h"
+
 #include <vector>
 #include <QString>
-
-#include "view/viewtype.h"
 
 class BaseTest {
 private:

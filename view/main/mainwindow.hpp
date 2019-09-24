@@ -1,16 +1,16 @@
 #ifndef MAINWINDOW_HPP
 #define MAINWINDOW_HPP
 
-#include <QMainWindow>
-#include <QProgressBar>
-#include <QPushButton>
-#include <QLabel>
-
 #include "view/viewtype.h"
 #include "view/mainview.hpp"
 #include "model/model.hpp"
 #include "presenter/main/mainpresenter.hpp"
 #include "model/settings.h"
+
+#include <QMainWindow>
+#include <QProgressBar>
+#include <QPushButton>
+#include <QLabel>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

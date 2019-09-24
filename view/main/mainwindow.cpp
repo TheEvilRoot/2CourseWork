@@ -3,7 +3,6 @@
 #include "view/sessiondialog/sessiondialog.hpp"
 #include "model/settings.h" // TODO: Create Presenter proxy!
 
-//#include <QRandomGenerator>
 #include <iostream>
 #include <sstream>
 

@@ -1,4 +1,5 @@
 #include "wordsfileloader.h"
+
 WordsFileLoader::WordsFileLoader(Model *model): mModel(model) { }
 
 void WordsFileLoader::run() {

@@ -1,8 +1,7 @@
 #include "mainpresenter.hpp"
+#include "model/loader/wordsfileloader.h"
 
 #include <QApplication>
-
-#include "model/loader/wordsfileloader.h"
 
 MainPresenter::MainPresenter(Model *model, MainView *view): mModel(model), mView(view) {
   Q_ASSERT(model);

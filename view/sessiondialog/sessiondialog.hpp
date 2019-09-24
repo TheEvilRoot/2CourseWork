@@ -1,9 +1,9 @@
 #ifndef SESSIONDIALOG_HPP
 #define SESSIONDIALOG_HPP
 
-#include <QDialog>
-
 #include "presenter/main/mainpresenter.hpp"
+
+#include <QDialog>
 
 namespace Ui {
   class SessionDialog;
