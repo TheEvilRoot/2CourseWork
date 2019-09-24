@@ -1,0 +1,19 @@
+sudo: require
+language: cpp
+os: osx
+compiler: gcc
+
+addons:
+ homebrew:
+  update: true
+  packages:
+  - qt
+
+before_install:
+ - export PATH="/usr/local/opt/qt/bin:$PATH"
+before_script:
+ - mkdir build
+ - cd build
+script:
+ - qmake ../CouseWork_EnglishTests.pro
+ - make
