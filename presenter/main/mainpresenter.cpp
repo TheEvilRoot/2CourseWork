@@ -1,5 +1,7 @@
 #include "mainpresenter.hpp"
 #include "model/loader/wordsfileloader.h"
+#include "model/data/choicetest.h"
+#include "model/data/checktest.h"
 
 #include <QApplication>
 
@@ -98,16 +100,18 @@ void MainPresenter::initView(const ViewType *type) {
 
         if (type == ViewType::INPUT) mView->setupInputScreen(test->getQuestion(), "");
 
-        std::vector<QString> answers;
-
-        for (auto [rus, eng] : mModel->getRandomWords(5)) {
-            answers.push_back(rus);
+        if (type == ViewType::CHOICE) {
+            ChoiceTest *choiceTest;
+            if ((choiceTest = dynamic_cast<ChoiceTest *>(test)) != nullptr) {
+                mView->setupChoiceScreen(test->getQuestion(), choiceTest->getAnswers());
+            }
         }
-
-        answers.push_back(test->getAnswer());
-
-        if (type == ViewType::CHOICE) mView->setupChoiceScreen(test->getQuestion(), answers);
-        if (type == ViewType::CHECK) mView->setupCheckScreen(test->getQuestion(), answers);
+        if (type == ViewType::CHECK) {
+            CheckTest *checkTest;
+            if ((checkTest = dynamic_cast<CheckTest *>(test)) != nullptr) {
+                mView->setupCheckScreen(test->getQuestion(), checkTest->getAnswers());
+            }
+        }
     }
 }
 

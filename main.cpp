@@ -21,7 +21,9 @@ int main(int argc, char *argv[]) {
     Settings *settings = new Settings();
     Q_ASSERT(settings);
 
-    Model *model = new Model(settings);
+    QRandomGenerator *random = new QRandomGenerator((int) time(nullptr));
+
+    Model *model = new Model(settings, random);
     Q_ASSERT(model);
 
     MainWindow w(model, settings);

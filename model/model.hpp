@@ -16,7 +16,7 @@ private:
   QRandomGenerator *mRandomGen;
 
 public:
-  Model(Settings *settings);
+  Model(Settings *settings, QRandomGenerator *random);
 
   int newSession(bool force);
   Session* getSession() const;

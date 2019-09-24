@@ -10,7 +10,7 @@ private:
 public:
     ChoiceTest(QString questionText,
                std::vector<QString> answers,
-               size_t correctIndex);
+               uint correctIndex);
     std::vector<QString> getAnswers() const;
 };
 

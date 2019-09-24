@@ -21,7 +21,7 @@ public:
              QString questionText,
              QString rightAnswer);
 
-    ~BaseTest();
+    virtual ~BaseTest();
 
     bool checkResult(QString answer);
     const ViewType* getType() const;

@@ -1,6 +1,8 @@
 #include "model.hpp"
 #include "settings.h"
 #include "model/data/choicetest.h"
+#include "model/data/checktest.h"
+#include "api/utils.h"
 
 #include <QFile>
 #include <QTextStream>
@@ -10,7 +12,7 @@ Session* Model::getSession() const {
   return mSession;
 }
 
-Model::Model(Settings *settings): mSession(nullptr), mSettings(settings), mRandomGen(new QRandomGenerator) {}
+Model::Model(Settings *settings, QRandomGenerator *random): mSession(nullptr), mSettings(settings), mRandomGen(random) {}
 
 int Model::newSession(bool force) {
   // If session is not null
@@ -30,14 +32,20 @@ int Model::newSession(bool force) {
 
 std::vector<BaseTest *> Model::generateTests() {
     std::vector<BaseTest *> tests;
-    int count = mRandomGen->bounded(10, 15);
+    int count = mRandomGen->bounded(16, 28);
 
     for (int i = 0; i < count; i++) {
         auto options = getRandomWords(6);
         std::vector<QString> answers;
-        for (auto [a, q] : options) answers.push_back(a);
-        size_t randomIndex = mRandomGen->bounded(0, 6);
-        tests.push_back(new ChoiceTest(options[randomIndex].second, answers, randomIndex));
+        uint direction = (uint) mRandomGen->bounded(0, 2);
+        for (auto &p : options) answers.push_back(getFromPair(p, direction));
+        uint randomIndex = (uint) mRandomGen->bounded(0, 6);
+
+        if (mRandomGen->bounded(0, 6) > 3) {
+            tests.push_back(new ChoiceTest(getFromPair(options[randomIndex], !direction), answers, randomIndex));
+        } else {
+            tests.push_back(new CheckTest(getFromPair(options[randomIndex], !direction), answers, randomIndex));
+        }
     }
     return tests;
 }
