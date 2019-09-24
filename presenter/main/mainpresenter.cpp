@@ -100,8 +100,8 @@ void MainPresenter::initView(const ViewType *type) {
 
         std::vector<QString> answers;
 
-        for (auto [ans, wer] : mModel->getRandomWords(5)) {
-            answers.push_back(ans);
+        for (auto [rus, eng] : mModel->getRandomWords(5)) {
+            answers.push_back(rus);
         }
 
         answers.push_back(test->getAnswer());
