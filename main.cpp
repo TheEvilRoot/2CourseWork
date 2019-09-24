@@ -1,10 +1,11 @@
-#include "mainwindow.hpp"
+#include "view/main/mainwindow.hpp"
+#include "view/viewtype.h"
+#include "view/mainview.hpp"
+#include "model/model.hpp"
+#include "model/settings.h"
 
 #include <QApplication>
-
-#include "viewtype.h"
-#include "mainview.hpp"
-#include "model.hpp"
+#include <iostream>
 
 int ViewType::GLOBAL_ID = 0;
 
@@ -16,14 +17,16 @@ const ViewType* ViewType::RESULT = new ViewType("result");
 
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
-    QRandomGenerator *rand = new QRandomGenerator((quint8) time(nullptr));
-    Q_ASSERT(rand);
 
-    Model *model = new Model(rand);
+    Settings *settings = new Settings();
+    Q_ASSERT(settings);
+
+    QRandomGenerator *random = new QRandomGenerator((int) time(nullptr));
+
+    Model *model = new Model(settings, random);
     Q_ASSERT(model);
 
-    MainWindow w(model);
-
+    MainWindow w(model, settings);
     MainView *view = dynamic_cast<MainView*>(&w);
     Q_ASSERT(view);
 
