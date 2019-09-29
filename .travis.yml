@@ -12,8 +12,8 @@ addons:
 before_install:
  - export PATH="/usr/local/opt/qt/bin:$PATH"
 before_script:
- - mkdir build
- - cd build
+ - mkdir Build
+ - cd Build
 script:
- - qmake ../CourseWork_EnglishTests.pro
+ - qmake ../Source
  - make
