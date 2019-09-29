@@ -1,5 +1,4 @@
-#ifndef VIEWTYPE_H
-#define VIEWTYPE_H
+#pragma once
 
 #include <string>
 
@@ -34,5 +33,3 @@ public:
         return mViewId;
     }
 };
-
-#endif // VIEWTYPE_H

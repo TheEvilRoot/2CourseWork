@@ -1,5 +1,4 @@
-#ifndef MAINVIEW_HPP
-#define MAINVIEW_HPP
+#pragma once
 
 #include "viewtype.h"
 #include "model/data/basetest.hpp"
@@ -22,5 +21,3 @@ public:
     virtual void setupResultScreen(QString points, QString rightAnswers, QString wrongAnswers, QString result) = 0;
     virtual void setupMenuScreen(bool hasActiveSession, int points) = 0;
 };
-
-#endif // MAINVIEW_HPP

@@ -1,5 +1,4 @@
-#ifndef CHOICETEST_H
-#define CHOICETEST_H
+#pragma once
 
 #include "model/data/basetest.hpp"
 
@@ -13,5 +12,3 @@ public:
                uint correctIndex);
     std::vector<QString> getAnswers() const;
 };
-
-#endif // CHOICETEST_H

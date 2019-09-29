@@ -1,5 +1,4 @@
-#ifndef MAINPRESENTER_HPP
-#define MAINPRESENTER_HPP
+#pragma once
 
 #include "model/model.hpp"
 #include "view/mainview.hpp"
@@ -28,5 +27,3 @@ public slots:
     void onProgressDone();
     void onError(QString message);
 };
-
-#endif // MAINPRESENTER_HPP

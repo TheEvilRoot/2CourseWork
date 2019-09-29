@@ -1,5 +1,4 @@
-#ifndef BASETEST_HPP
-#define BASETEST_HPP
+#pragma once
 
 #include "view/viewtype.h"
 
@@ -29,5 +28,3 @@ public:
     QString getAnswer() const;
     int getId() const;
 };
-
-#endif

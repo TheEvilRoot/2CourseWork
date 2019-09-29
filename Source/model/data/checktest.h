@@ -1,5 +1,4 @@
-#ifndef CHECKTEST_H
-#define CHECKTEST_H
+#pragma once
 
 #include "model/data/basetest.hpp"
 
@@ -13,5 +12,3 @@ public:
               uint correctIndex);
     std::vector<QString> getAnswers() const;
 };
-
-#endif // CHECKTEST_H

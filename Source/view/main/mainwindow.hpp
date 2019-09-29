@@ -1,5 +1,4 @@
-#ifndef MAINWINDOW_HPP
-#define MAINWINDOW_HPP
+#pragma once
 
 #include "view/viewtype.h"
 #include "view/mainview.hpp"
@@ -58,4 +57,3 @@ private:
     QLabel *statusBarLabel;
     QPushButton **mChoiceButtons;
 };
-#endif

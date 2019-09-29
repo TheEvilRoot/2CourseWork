@@ -1,5 +1,4 @@
-#ifndef MODEL_HPP
-#define MODEL_HPP
+#pragma once
 
 #include "model/session/session.hpp"
 #include "settings.h"
@@ -26,5 +25,3 @@ public:
 
   std::vector<BaseTest *> generateTests();
 };
-
-#endif // MODEL_HPP

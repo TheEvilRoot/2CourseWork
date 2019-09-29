@@ -1,5 +1,4 @@
-#ifndef SESSION_HPP
-#define SESSION_HPP
+#pragma once
 
 #include "model/data/basetest.hpp"
 
@@ -33,5 +32,3 @@ public:
     bool isAttemptsMode() const;
     bool isFinished();
 };
-
-#endif // SESSION_HPP

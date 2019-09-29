@@ -1,10 +1,7 @@
-#ifndef SETTINGS_H
-#define SETTINGS_H
+#pragma once
 
 class Settings {
 public:
     bool isAttemptMode;
     Settings(): isAttemptMode(false) {}
 };
-
-#endif
