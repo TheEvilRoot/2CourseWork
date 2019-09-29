@@ -75,7 +75,7 @@ void MainWindow::initStatusBar() {
     statusProgressBar->setVisible(false);
 
     statusBarLabel = new QLabel();
-    statusBarLabel->setText("");
+    setTextFor(statusBarLabel, "");
 
     ui->statusbar->addPermanentWidget(statusProgressBar);
     ui->statusbar->addPermanentWidget(statusBarLabel);
@@ -120,7 +120,7 @@ void MainWindow::hideLoading() {
 }
 
 void MainWindow::showMessage(QString message) {
-    statusBarLabel->setText(message);
+    setTextFor(statusBarLabel, message);
 }
 
 void MainWindow::disableContent() {
@@ -134,7 +134,8 @@ void MainWindow::enableContent() {
 void MainWindow::setupMenuScreen(bool hasActiveSession, int points) {
     if (hasActiveSession) {
         ui->sessionInfo->setVisible(true);
-        ui->sessionInfo->setText("You have unfinished session. Your points: " + QString::number(points));
+        QString message = "You have unfinished session. Your points: " + QString::number(points);
+        setTextFor(ui->sessionInfo, message);
     } else {
         ui->sessionInfo->setVisible(false);
     }
@@ -142,19 +143,19 @@ void MainWindow::setupMenuScreen(bool hasActiveSession, int points) {
 }
 
 void MainWindow::setupChoiceScreen(QString question, std::vector<QString> answers) {
-    ui->questionLabelChoice->setText(question);
+    setTextFor(ui->questionLabelChoice, question);
     for (size_t i = 0; i < 6; i++) {
-        mChoiceButtons[i]->setText(answers[i]);
+        setTextFor(mChoiceButtons[i], answers[i]);
     }
  }
 
 void MainWindow::setupInputScreen(QString question, QString prefill) {
-    ui->questionLabelInput->setText(question);
-    ui->inputAnswerInput->setText(prefill);
+    setTextFor(ui->questionLabelInput, question);
+    setTextFor(ui->inputAnswerInput, prefill);
 }
 
 void MainWindow::setupCheckScreen(QString question, std::vector<QString> answers) {
-    ui->questionLabelCheck->setText(question);
+    setTextFor(ui->questionLabelCheck, question);
     ui->checkBox->clear();
     for (auto ans : answers) {
         ui->checkBox->addItem(ans);
@@ -162,8 +163,8 @@ void MainWindow::setupCheckScreen(QString question, std::vector<QString> answers
 }
 
 void MainWindow::setupResultScreen(QString points, QString rightAnswers, QString wrongAnswers, QString result) {
-    ui->pointsLabel->setText(points);
-    ui->rightLabel->setText(rightAnswers);
-    ui->wrongLabel->setText(wrongAnswers);
-    ui->resultLabel->setText(result);
+    setTextFor(ui->pointsLabel, points);
+    setTextFor(ui->rightLabel, rightAnswers);
+    setTextFor(ui->wrongLabel, wrongAnswers);
+    setTextFor(ui->resultLabel, result);
 }
