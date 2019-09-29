@@ -59,7 +59,7 @@ void MainWindow::initConnection() {
 
     // Check screen
     connect(ui->checkSubmitButton, &QPushButton::clicked, this, [=]() {
-      answerSubmit(ui->checkBox->currentText());
+        optionSubmit(ui->checkBox->currentIndex());
     });
 
     // Result screen
