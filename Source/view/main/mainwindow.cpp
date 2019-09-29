@@ -52,9 +52,9 @@ void MainWindow::initConnection() {
 
     // Input screen
     connect(ui->inputSubmitButton, &QPushButton::clicked, this, [=]() {
-      if (ui->inputAnswerInput->text().size() > 0) {
+     // if (ui->inputAnswerInput->text().size() > 0) {
         answerSubmit(ui->inputAnswerInput->text());
-      }
+      //}
     });
 
     // Check screen
@@ -104,11 +104,11 @@ void MainWindow::askSession() {
 }
 
 void MainWindow::optionSubmit(int position) {
-  answerSubmit(mChoiceButtons[position]->text());
+    mPresenter->proceedAnswer("", position);
 }
 
 void MainWindow::answerSubmit(QString answer) {
-  mPresenter->proceedAnswer(answer);
+  mPresenter->proceedAnswer(answer, 0);
 }
 
 void MainWindow::showLoading() {

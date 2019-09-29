@@ -16,7 +16,7 @@ private:
 public:
   MainPresenter(Model *model, MainView *view);
 
-  void proceedAnswer(QString answer);
+  void proceedAnswer(QString answer, size_t index);
   void requestNewSession(bool force = false, bool continueSession = false);
   void handleSession();
   void completeTest();

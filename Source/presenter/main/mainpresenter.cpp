@@ -10,7 +10,7 @@ MainPresenter::MainPresenter(Model *model, MainView *view): mModel(model), mView
   Q_ASSERT(view);
 }
 
-void MainPresenter::proceedAnswer(QString answer) {
+void MainPresenter::proceedAnswer(QString answer, size_t index) {
   if (!mModel->getSession()) {
     mView->showMessage("Session is not initialized");
     return;
@@ -20,9 +20,17 @@ void MainPresenter::proceedAnswer(QString answer) {
     completeTest();
     return;
   }
-
   auto session = mModel->getSession();
-  if (session->currentTest()->checkResult(answer)) {
+  auto test = session->currentTest();
+  bool isCorrect = false;
+  if (test->getType() == ViewType::CHOICE || test->getType() == ViewType::CHECK) {
+      auto choiceTest = dynamic_cast<ChoiceTest *>(test);
+      isCorrect = choiceTest->checkAnswerByIndex(index);
+  } else {
+      isCorrect = test->checkResult(answer);
+  }
+
+  if (isCorrect) {
     session->checkTest(true);
     session->nextTest();
     mView->showMessage("Right answer");

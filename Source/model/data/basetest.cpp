@@ -19,7 +19,7 @@ int BaseTest::getId() const {
 }
 
 bool BaseTest::checkResult(QString answer) {
-  return answer == mRightAnswer;
+  return answer.toLower() == mRightAnswer.toLower();
 }
 
 int BaseTest::GLOBAL_ID = 0;

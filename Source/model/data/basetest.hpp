@@ -6,7 +6,7 @@
 #include <QString>
 
 class BaseTest {
-private:
+protected:
     int mId;
     const ViewType *mType;
     QString mQuestionText;
