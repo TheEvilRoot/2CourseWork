@@ -1,8 +1,0 @@
-<RCC>
-    <qresource prefix="/logo">
-        <file>english_logo.png</file>
-    </qresource>
-    <qresource prefix="/data">
-        <file>words.db</file>
-    </qresource>
-</RCC>
