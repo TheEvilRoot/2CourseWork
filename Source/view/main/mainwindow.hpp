@@ -12,6 +12,12 @@
 #include <QPushButton>
 #include <QLabel>
 
+#ifdef Q_OS_MAC
+#define setTextFor(__widget, __text) (__widget)->setText(__text); (__widget)->repaint()
+#else
+#define setTextFor(__widget, __text) (__widget)->setText(__text)
+#endif
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
