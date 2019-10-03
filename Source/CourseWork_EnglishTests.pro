@@ -12,6 +12,7 @@ SOURCES += \
     model/data/checktest.cpp \
     model/data/choicetest.cpp \
     model/data/inputtest.cpp \
+    model/session/sessionstate.cpp \
     presenter/main/mainpresenter.cpp \
     view/main/mainwindow.cpp \
     model/model.cpp \
@@ -25,6 +26,8 @@ HEADERS += \
     model/data/checktest.h \
     model/data/choicetest.h \
     model/data/inputtest.hpp \
+    model/data/result.hpp \
+    model/session/sessionstate.hpp \
     presenter/main/mainpresenter.hpp \
     view/mainview.hpp \
     view/main/mainwindow.hpp \

@@ -10,7 +10,10 @@ MainWindow::MainWindow(
     Model* model,
     Settings *settings,
     QWidget *parent
-): QMainWindow(parent), ui(new Ui::MainWindow), mPresenter(new MainPresenter(model, this)), mSettings(settings) {
+):  QMainWindow(parent),
+    ui(new Ui::MainWindow),
+    mPresenter(new MainPresenter(model, this)),
+    mSettings(settings) {
     ui->setupUi(this);
 
     // I hate it!

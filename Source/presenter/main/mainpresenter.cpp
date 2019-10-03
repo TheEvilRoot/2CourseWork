@@ -10,66 +10,46 @@ MainPresenter::MainPresenter(Model *model, MainView *view): mModel(model), mView
   Q_ASSERT(view);
 }
 
+/**
+ * @brief MainPresenter::proceedAnswer
+ * @param answer - answer string, empty string if test has index-based check (like Choice or Check)
+ * @param index - index of user answer. 0 if test has only string based check (like Input)
+ *
+ * Calls on user answer to current test.
+ * Should check answer and display result to screen.
+ */
 void MainPresenter::proceedAnswer(QString answer, size_t index) {
-  if (!mModel->getSession()) {
-    mView->showMessage("Session is not initialized");
-    return;
-  }
-  if (!mModel->getSession()->currentTest()) {
-    mView->showMessage("Test not found");
-    completeTest();
-    return;
-  }
-  auto session = mModel->getSession();
-  auto test = session->currentTest();
-  bool isCorrect = false;
-  if (test->getType() == ViewType::CHOICE || test->getType() == ViewType::CHECK) {
-      auto choiceTest = dynamic_cast<ChoiceTest *>(test);
-      isCorrect = choiceTest->checkAnswerByIndex(index);
-  } else {
-      isCorrect = test->checkResult(answer);
-  }
+    if (!mModel->getSession()) {
+        mView->showMessage("Session is not initialized");
+        return;
+    }
 
-  if (isCorrect) {
-    session->checkTest(true);
-    session->nextTest();
-    mView->showMessage("Right answer");
+    if (!mModel->getSession()->currentTest()) {
+        mView->showMessage("Test not found");
+        completeTest();
+        return;
+    }
+
+    auto session = mModel->getSession();
+    auto isCorrect = session->submitTest(index, answer);
+
+    if (isCorrect) {
+        mView->showMessage("Correct answer!");
+    } else {
+        mView->showMessage("Answer is wrong!");
+    }
+
     handleSession();
-  } else {
-      session->checkTest(false);
-      mView->showMessage("Answer is wrong!!");
 
-      if (!session->isAttemptsMode()) {
-          session->nextTest();
-          handleSession();
-      }
-  }
 }
 
-void MainPresenter::requestNewSession(bool force, bool continueSession) {
-  int result = mModel->newSession(force);
-
-  if (result == 0) {
-    handleSession();
-  } else if (result == 1) {
-    if (force) {
-      mModel->newSession(true);
-      handleSession();
-      return;
-    }
-    if (continueSession) {
-      handleSession();
-      return;
-    }
-    mView->hideLoading();
-    mView->showMessage("Session already exists");
-    mView->askSession();
-  } else {
-    mView->hideLoading();
-    mView->showMessage("Error!");
-  }
-}
-
+/**
+ * @brief MainPresenter::handleSession
+ *
+ * Calls to work with current test
+ * If session is finished (current test is null), show the results
+ * Otherwise display and setup specific screen for test.
+ */
 void MainPresenter::handleSession() {
   if (!mModel->getSession()) {
     mView->showMessage("Session is not initialized");
@@ -95,7 +75,7 @@ void MainPresenter::initView(const ViewType *type) {
     bool hasSession = session != nullptr;
 
     int points = hasSession ? session->getPoints() : 0;
-    int right = hasSession ? session->getRightAnswersCount() : 0;
+    int right = hasSession ? session->getCorrectAnswersCount() : 0;
     int wrong = hasSession ? session->getWrongAnswersCount() : 0;
 
     if (type == ViewType::MENU) {
@@ -121,6 +101,30 @@ void MainPresenter::initView(const ViewType *type) {
             }
         }
     }
+}
+
+void MainPresenter::requestNewSession(bool force, bool continueSession) {
+  int result = mModel->newSession(force);
+
+  if (result == 0) {
+    handleSession();
+  } else if (result == 1) {
+    if (force) {
+      mModel->newSession(true);
+      handleSession();
+      return;
+    }
+    if (continueSession) {
+      handleSession();
+      return;
+    }
+    mView->hideLoading();
+    mView->showMessage("Session already exists");
+    mView->askSession();
+  } else {
+    mView->hideLoading();
+    mView->showMessage("Error!");
+  }
 }
 
 void MainPresenter::onProgressDone() {
