@@ -1,34 +1,35 @@
 #pragma once
 
 #include "model/data/basetest.hpp"
+#include "model/session/sessionstate.hpp"
 
 #include <vector>
-#include <unordered_map>
+
+typedef std::vector<BaseTest *> TestList;
 
 class Session {
 private:
-  std::vector<BaseTest*> mTests;
-  unsigned int mPosition;
-  int mRight;
-  int mWrong;
-  int mPoints;
+  TestList mTests;
+  size_t mPosition;
   bool mAttemptsMode;
-  std::unordered_map<int, int> mLog;
-
+  SessionState *mState;
 
 public:
-    Session(std::vector<BaseTest *> tests, bool attemptsMode = false);
+    Session(TestList tests, bool attemptsMode = false);
     ~Session();
 
     void nextTest();
-    void checkTest(bool result);
-    int calculatePoints(int attempts, BaseTest *test);
+    bool submitTest(size_t index, QString answer);
+    int calculatePoints(Result *result, BaseTest *test);
+    void applyResult();
 
     BaseTest * currentTest() const;
-    int getTestsCount() const;
+    size_t getTestsCount() const;
     int getPoints() const;
-    int getRightAnswersCount() const;
+    int getCorrectAnswersCount() const;
     int getWrongAnswersCount() const;
     bool isAttemptsMode() const;
     bool isFinished();
+
+    SessionState * getState(); // Should be removed!
 };
