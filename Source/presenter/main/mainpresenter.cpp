@@ -81,7 +81,7 @@ void MainPresenter::initView(const ViewType *type) {
     if (type == ViewType::MENU) {
         mView->setupMenuScreen(hasSession && !session->isFinished(), points);
     } else if (type == ViewType::RESULT) {
-        mView->setupResultScreen(QString::number(points), QString::number(right), QString::number(wrong), "");
+        mView->setupResultScreen(session->getState());
     } else {
         auto test = session->currentTest();
         if (test == nullptr) return;

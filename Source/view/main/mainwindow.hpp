@@ -36,7 +36,7 @@ public:
     void disableContent() override;
     void askSession() override;
 
-    void setupResultScreen(QString points, QString rightAnswers, QString wrongAnswers, QString result) override;
+    void setupResultScreen(SessionState *state) override;
     void setupChoiceScreen(QString question, std::vector<QString> answers) override;
     void setupCheckScreen(QString question, std::vector<QString> answers) override;
     void setupInputScreen(QString question, QString prefill = "") override;
@@ -47,6 +47,7 @@ private slots:
 private:
     void initConnection();
     void initStatusBar();
+    void initResultTable();
     void optionSubmit(int position);
     void answerSubmit(QString answer);
 

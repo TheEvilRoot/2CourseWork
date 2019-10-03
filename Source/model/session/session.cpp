@@ -111,3 +111,7 @@ int Session::calculatePoints(Result *result, BaseTest *test) {
         return 27 / modifyer;
     }
 }
+
+SessionState * Session::getState() {
+    return mState;
+}

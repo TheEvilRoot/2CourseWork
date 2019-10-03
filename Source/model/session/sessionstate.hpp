@@ -13,8 +13,14 @@ private:
     std::deque<Result *> mTestResults;
 
     SessionState();
-
+public:
     int getPoints();
+    int getCorrect();
+    int getWrong();
+    QString getResultString();
+
+    size_t getCount();
+    Result *at(size_t index);
 
     friend class Session;
 };

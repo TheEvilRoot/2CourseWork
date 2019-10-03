@@ -27,7 +27,7 @@
     <item row="0" column="0">
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>4</number>
       </property>
       <widget class="QWidget" name="menuPage">
        <layout class="QGridLayout" name="gridLayout_5">
@@ -272,13 +272,6 @@
       </widget>
       <widget class="QWidget" name="result">
        <layout class="QGridLayout" name="gridLayout_7">
-        <item row="1" column="1">
-         <widget class="QPushButton" name="back2menu">
-          <property name="text">
-           <string>Back to menu</string>
-          </property>
-         </widget>
-        </item>
         <item row="0" column="1">
          <layout class="QFormLayout" name="formLayout">
           <item row="0" column="0">
@@ -331,6 +324,16 @@
            </widget>
           </item>
          </layout>
+        </item>
+        <item row="2" column="1">
+         <widget class="QPushButton" name="back2menu">
+          <property name="text">
+           <string>Back to menu</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QTableWidget" name="logTable"/>
         </item>
        </layout>
       </widget>

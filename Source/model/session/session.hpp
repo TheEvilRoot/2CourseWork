@@ -30,4 +30,6 @@ public:
     int getWrongAnswersCount() const;
     bool isAttemptsMode() const;
     bool isFinished();
+
+    SessionState * getState(); // Should be removed!
 };

@@ -21,6 +21,7 @@ MainWindow::MainWindow(
 
     initConnection();
     initStatusBar();
+    initResultTable();
 
     setupMenuScreen(false, 0);
     presentView(ViewType::MENU);
@@ -82,6 +83,11 @@ void MainWindow::initStatusBar() {
 
     ui->statusbar->addPermanentWidget(statusProgressBar);
     ui->statusbar->addPermanentWidget(statusBarLabel);
+}
+
+void MainWindow::initResultTable() {
+    ui->logTable->setColumnCount(5);
+    ui->logTable->setHorizontalHeaderLabels(QStringList {"Question", "Answer", "Points", "Attempts", "Time"});
 }
 
 bool MainWindow::presentView(const ViewType *type) {
@@ -165,9 +171,24 @@ void MainWindow::setupCheckScreen(QString question, std::vector<QString> answers
     }
 }
 
-void MainWindow::setupResultScreen(QString points, QString rightAnswers, QString wrongAnswers, QString result) {
-    setTextFor(ui->pointsLabel, points);
-    setTextFor(ui->rightLabel, rightAnswers);
-    setTextFor(ui->wrongLabel, wrongAnswers);
-    setTextFor(ui->resultLabel, result);
+void MainWindow::setupResultScreen(SessionState *state) {
+    auto pointsString = QString::number(state->getPoints());
+    auto correctString = QString::number(state->getCorrect());
+    auto wrongString = QString::number(state->getWrong());
+
+    setTextFor(ui->pointsLabel, pointsString);
+    setTextFor(ui->rightLabel, correctString);
+    setTextFor(ui->wrongLabel, wrongString);
+    setTextFor(ui->resultLabel, state->getResultString());
+
+    ui->logTable->setRowCount(state->getCount());
+    for (size_t i = 0; i < state->getCount(); i++) {
+        auto res = state->at(i);
+        int j = 0;
+        ui->logTable->setItem(i, j++, new QTableWidgetItem(res->mQuestion));
+        ui->logTable->setItem(i, j++, new QTableWidgetItem(res->mAnswer));
+        ui->logTable->setItem(i, j++, new QTableWidgetItem(QString::number(res->mPointsForTest)));
+        ui->logTable->setItem(i, j++, new QTableWidgetItem(QString::number(res->mAttempts)));
+        ui->logTable->setItem(i, j++, new QTableWidgetItem(QString::number(res->mSolveTime)));
+    }
 }
