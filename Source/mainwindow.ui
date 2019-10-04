@@ -27,7 +27,7 @@
     <item row="0" column="0">
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="menuPage">
        <layout class="QGridLayout" name="gridLayout_5">
@@ -149,17 +149,17 @@
       <widget class="QWidget" name="history">
        <layout class="QGridLayout" name="gridLayout_8">
         <item row="2" column="0">
-         <widget class="QTableView" name="historyTable"/>
+         <widget class="QTableWidget" name="detailTable"/>
         </item>
         <item row="3" column="0">
-         <widget class="QListView" name="detailView"/>
-        </item>
-        <item row="4" column="0">
          <widget class="QPushButton" name="historyBack2Menu">
           <property name="text">
            <string>Back to menu</string>
           </property>
          </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QTableWidget" name="historyTable"/>
         </item>
        </layout>
       </widget>

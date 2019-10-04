@@ -25,6 +25,7 @@ public:
     int getWrong();
     long getTime();
     QString getResultString();
+    std::deque<Result *>& getTestResults();
 
     size_t getCount();
     Result *at(size_t index);

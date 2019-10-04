@@ -85,7 +85,7 @@ void MainPresenter::initView(const ViewType *type) {
     } else if (type == ViewType::RESULT) {
         mView->setupResultScreen(mModel->getLastSession());
     } else if (type == ViewType::HISTORY) {
-
+        mView->setupHistoryList(mModel->getHistory());
     } else {
         auto test = session->currentTest();
         if (test == nullptr) return;
@@ -171,4 +171,8 @@ void MainPresenter::requestSessionFinish() {
     QObject::connect(worker, &StoreWorker::progressDone, this, &MainPresenter::onSessionFinish);
     QObject::connect(worker, &StoreWorker::progressError, this, &MainPresenter::onSessionError);
     worker->start();
+}
+
+void MainPresenter::requestHistoryDetailUpdate(int index) {
+    mView->setupHistoryDetails(mModel->getHistory()[index]->getTestResults());
 }

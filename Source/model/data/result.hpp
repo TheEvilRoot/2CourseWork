@@ -41,7 +41,7 @@ public:
         QJsonObject obj;
         obj.insert("question", mQuestion);
         obj.insert("answer", mAnswer);
-        obj.insert("index", static_cast<int>(mIndex));
+        obj.insert("index", QString::number(mIndex));
         obj.insert("attempts", mAttempts);
         obj.insert("points", mPointsForTest);
         obj.insert("time", QString::number(mSolveTime));

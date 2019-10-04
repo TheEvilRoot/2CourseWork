@@ -22,6 +22,7 @@ MainWindow::MainWindow(
     initConnection();
     initStatusBar();
     initResultTable();
+    initHistoryTables();
 
     setupMenuScreen(false, 0);
     presentView(ViewType::MENU);
@@ -75,8 +76,13 @@ void MainWindow::initConnection() {
     connect(ui->showHistory, &QPushButton::clicked, this, [=]() {
         mPresenter->initView(ViewType::HISTORY);
     });
+
     connect(ui->historyBack2Menu, &QPushButton::clicked, this, [=]() {
         mPresenter->initView(ViewType::MENU);
+    });
+
+    connect(ui->historyTable, &QTableWidget::itemSelectionChanged, this, [=]() {
+        mPresenter->requestHistoryDetailUpdate(ui->historyTable->currentRow());
     });
 }
 
@@ -98,6 +104,16 @@ void MainWindow::initResultTable() {
     ui->logTable->setHorizontalHeaderLabels(QStringList {"Question", "Answer", "Points", "Attempts", "Time"});
 }
 
+void MainWindow::initHistoryTables() {
+    ui->historyTable->setColumnCount(5);
+    ui->historyTable->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectRows);
+    ui->historyTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
+    ui->detailTable->setColumnCount(6);
+    ui->detailTable->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectRows);
+    ui->detailTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+}
+
 bool MainWindow::presentView(const ViewType *type) {
     if (type == ViewType::MENU) {
         ui->stackedWidget->setCurrentWidget(ui->menuPage);
@@ -109,7 +125,9 @@ bool MainWindow::presentView(const ViewType *type) {
         ui->stackedWidget->setCurrentWidget(ui->choiceTest);
     } else if (type == ViewType::RESULT) {
       ui->stackedWidget->setCurrentWidget(ui->result);
-    } else {
+    } else if (type == ViewType::HISTORY) {
+      ui->stackedWidget->setCurrentWidget(ui->history);
+    }else {
         return false;
     }
     return true;
@@ -190,7 +208,7 @@ void MainWindow::setupResultScreen(SessionState *state) {
     setTextFor(ui->resultLabel, state->getResultString());
 
     ui->logTable->setRowCount(state->getCount());
-    for (size_t i = 0; i < state->getCount(); i++) {
+    for (int i = 0; i < state->getCount(); i++) {
         auto res = state->at(i);
         int j = 0;
         ui->logTable->setItem(i, j++, new QTableWidgetItem(res->mQuestion));
@@ -198,5 +216,39 @@ void MainWindow::setupResultScreen(SessionState *state) {
         ui->logTable->setItem(i, j++, new QTableWidgetItem(QString::number(res->mPointsForTest)));
         ui->logTable->setItem(i, j++, new QTableWidgetItem(QString::number(res->mAttempts)));
         ui->logTable->setItem(i, j++, new QTableWidgetItem(QString::number(res->mSolveTime)));
+    }
+}
+
+void MainWindow::setupHistoryList(std::deque<SessionState *> &states) {
+    ui->historyTable->clear();
+    ui->historyTable->setHorizontalHeaderLabels(QStringList {"Session time", "Correct", "Wrong", "Points", "Result"});
+    ui->historyTable->setRowCount(states.size());
+    for (int i = 0; i < states.size(); i++) {
+        auto state = states[i];
+        int j = 0;
+
+        ui->historyTable->setItem(i, j++, new QTableWidgetItem(QString::number(state->getTime())));
+        ui->historyTable->setItem(i, j++, new QTableWidgetItem(QString::number(state->getCorrect())));
+        ui->historyTable->setItem(i, j++, new QTableWidgetItem(QString::number(state->getWrong())));
+        ui->historyTable->setItem(i, j++, new QTableWidgetItem(QString::number(state->getPoints())));
+        ui->historyTable->setItem(i, j++, new QTableWidgetItem(state->getResultString()));
+    }
+}
+
+void MainWindow::setupHistoryDetails(std::deque<Result *> &results) {
+    ui->detailTable->clear();
+    ui->detailTable->setHorizontalHeaderLabels(QStringList {"Question", "Answer", "Attempts", "Points", "Solve Time", "Index"});
+    ui->detailTable->setRowCount(results.size());
+
+    for (int i = 0; i < results.size(); i++) {
+        auto result = results[i];
+        int j = 0;
+
+        ui->detailTable->setItem(i, j++, new QTableWidgetItem(result->mQuestion));
+        ui->detailTable->setItem(i, j++, new QTableWidgetItem(result->mAnswer));
+        ui->detailTable->setItem(i, j++, new QTableWidgetItem(QString::number(result->mAttempts)));
+        ui->detailTable->setItem(i, j++, new QTableWidgetItem(QString::number(result->mPointsForTest)));
+        ui->detailTable->setItem(i, j++, new QTableWidgetItem(QString::number(result->mSolveTime)));
+        ui->detailTable->setItem(i, j++, new QTableWidgetItem(QString::number(result->mIndex)));
     }
 }

@@ -269,3 +269,7 @@ bool Model::saveHistory() {
 
     return true;
 }
+
+std::deque<SessionState *>& Model::getHistory() {
+    return mHistory;
+}

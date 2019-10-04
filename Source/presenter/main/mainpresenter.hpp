@@ -19,6 +19,7 @@ public:
   void proceedAnswer(QString answer, size_t index);
   void requestNewSession(bool force = false, bool continueSession = false);
   void requestSessionFinish();
+  void requestHistoryDetailUpdate(int index);
   void handleSession();
   void completeTest();
   void initView(const ViewType *type);

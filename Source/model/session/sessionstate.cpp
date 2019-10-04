@@ -62,3 +62,7 @@ Result* SessionState::at(size_t index) {
 QString SessionState::getResultString() {
     return mResult;
 }
+
+std::deque<Result *>& SessionState::getTestResults() {
+    return mTestResults;
+}

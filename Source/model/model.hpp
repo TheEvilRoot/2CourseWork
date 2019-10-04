@@ -35,4 +35,5 @@ public:
   bool saveHistory();
   SessionState * getLastSession();
   void storeSession(SessionState *state);
+  std::deque<SessionState *>& getHistory();
 };

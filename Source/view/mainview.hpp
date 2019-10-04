@@ -21,4 +21,7 @@ public:
     virtual void setupCheckScreen(QString question, std::vector<QString> answers) = 0;
     virtual void setupResultScreen(SessionState *state) = 0;
     virtual void setupMenuScreen(bool hasActiveSession, int points) = 0;
+
+    virtual void setupHistoryList(std::deque<SessionState *> &states) = 0;
+    virtual void setupHistoryDetails(std::deque<Result *> &results) = 0;
 };
