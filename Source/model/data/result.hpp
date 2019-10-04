@@ -26,10 +26,10 @@ public:
     Result(QJsonObject obj):
         mQuestion(obj.value("question").toString()),
         mAnswer(obj.value("answer").toString()),
-        mIndex(obj.value("index").toInt()),
+        mIndex(obj.value("index").toString().toULongLong()),
         mAttempts(obj.value("attempts").toInt()),
         mPointsForTest(obj.value("points").toInt()),
-        mSolveTime(obj.value("time").toInt())
+        mSolveTime(obj.value("time").toString().toLong())
     {
         auto userAnswers = obj.value("answers").toArray();
         for (auto ans : userAnswers) {
@@ -44,7 +44,7 @@ public:
         obj.insert("index", static_cast<int>(mIndex));
         obj.insert("attempts", mAttempts);
         obj.insert("points", mPointsForTest);
-        obj.insert("time", static_cast<int>(mSolveTime));
+        obj.insert("time", QString::number(mSolveTime));
 
         QJsonArray answersArray;
         for (auto ans : mUserAnswers) {
