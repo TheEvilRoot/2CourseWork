@@ -16,6 +16,7 @@ public:
     static const ViewType* INPUT;
     static const ViewType* CHECK;
     static const ViewType* RESULT;
+    static const ViewType* HISTORY;
 
     bool operator==(ViewType &a) {
         return this->mViewId == a.mViewId;

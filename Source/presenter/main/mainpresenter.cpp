@@ -84,6 +84,8 @@ void MainPresenter::initView(const ViewType *type) {
         mView->setupMenuScreen(hasSession && !session->isFinished(), points);
     } else if (type == ViewType::RESULT) {
         mView->setupResultScreen(mModel->getLastSession());
+    } else if (type == ViewType::HISTORY) {
+
     } else {
         auto test = session->currentTest();
         if (test == nullptr) return;

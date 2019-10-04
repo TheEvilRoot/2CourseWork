@@ -71,6 +71,13 @@ void MainWindow::initConnection() {
         mPresenter->requestSessionFinish();
         // presentView(ViewType::MENU);
     });
+
+    connect(ui->showHistory, &QPushButton::clicked, this, [=]() {
+        mPresenter->initView(ViewType::HISTORY);
+    });
+    connect(ui->historyBack2Menu, &QPushButton::clicked, this, [=]() {
+        mPresenter->initView(ViewType::MENU);
+    });
 }
 
 void MainWindow::initStatusBar() {
