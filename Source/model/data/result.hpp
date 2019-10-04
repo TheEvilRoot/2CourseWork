@@ -37,6 +37,15 @@ public:
         }
     }
 
+    QString getJoinedAnswers(char del) {
+        QString res;
+        for (size_t i = 0; i < mUserAnswers.size(); i++) {
+            res += mUserAnswers[i];
+            if (i < mUserAnswers.size() - 1) res += del;
+        }
+        return res;
+    }
+
     QJsonObject toJson() {
         QJsonObject obj;
         obj.insert("question", mQuestion);

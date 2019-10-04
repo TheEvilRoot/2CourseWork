@@ -107,11 +107,11 @@ void MainWindow::initResultTable() {
 void MainWindow::initHistoryTables() {
     ui->historyTable->setColumnCount(5);
     ui->historyTable->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectRows);
-    ui->historyTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->historyTable->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
     ui->detailTable->setColumnCount(6);
     ui->detailTable->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectRows);
-    ui->detailTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->detailTable->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 }
 
 bool MainWindow::presentView(const ViewType *type) {
@@ -237,7 +237,7 @@ void MainWindow::setupHistoryList(std::deque<SessionState *> &states) {
 
 void MainWindow::setupHistoryDetails(std::deque<Result *> &results) {
     ui->detailTable->clear();
-    ui->detailTable->setHorizontalHeaderLabels(QStringList {"Question", "Answer", "Attempts", "Points", "Solve Time", "Index"});
+    ui->detailTable->setHorizontalHeaderLabels(QStringList {"Question", "Answer", "Attempts", "Points", "Solve Time", "Your answers"});
     ui->detailTable->setRowCount(results.size());
 
     for (int i = 0; i < results.size(); i++) {
@@ -249,6 +249,6 @@ void MainWindow::setupHistoryDetails(std::deque<Result *> &results) {
         ui->detailTable->setItem(i, j++, new QTableWidgetItem(QString::number(result->mAttempts)));
         ui->detailTable->setItem(i, j++, new QTableWidgetItem(QString::number(result->mPointsForTest)));
         ui->detailTable->setItem(i, j++, new QTableWidgetItem(QString::number(result->mSolveTime)));
-        ui->detailTable->setItem(i, j++, new QTableWidgetItem(QString::number(result->mIndex)));
+        ui->detailTable->setItem(i, j++, new QTableWidgetItem(result->getJoinedAnswers(',')));
     }
 }
