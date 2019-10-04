@@ -12,6 +12,7 @@ SOURCES += \
     model/data/checktest.cpp \
     model/data/choicetest.cpp \
     model/data/inputtest.cpp \
+    model/loader/storeworker.cpp \
     model/session/sessionstate.cpp \
     presenter/main/mainpresenter.cpp \
     view/main/mainwindow.cpp \
@@ -27,11 +28,12 @@ HEADERS += \
     model/data/choicetest.h \
     model/data/inputtest.hpp \
     model/data/result.hpp \
+    model/loader/storeworker.hpp \
     model/session/sessionstate.hpp \
     presenter/main/mainpresenter.hpp \
+    storeworker.hpp \
     view/mainview.hpp \
     view/main/mainwindow.hpp \
-    api/json.h \
     model/model.hpp \
     model/session/session.hpp \
     view/sessiondialog/sessiondialog.hpp \

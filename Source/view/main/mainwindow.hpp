@@ -42,12 +42,16 @@ public:
     void setupInputScreen(QString question, QString prefill = "") override;
     void setupMenuScreen(bool hasActiveSession, int points) override;
 
+    void setupHistoryList(std::deque<SessionState *> &states) override;
+    void setupHistoryDetails(std::deque<Result *> &results) override;
+
 private slots:
 
 private:
     void initConnection();
     void initStatusBar();
     void initResultTable();
+    void initHistoryTables();
     void optionSubmit(int position);
     void answerSubmit(QString answer);
 
