@@ -11,10 +11,11 @@ class Model {
 private:
   Session *mSession;
   Settings *mSettings;
+  QRandomGenerator *mRandomGen;
   WordsList mWords;
   WordsList mSentences;
   std::vector<QString> mSentenceAnswers;
-  QRandomGenerator *mRandomGen;
+  std::deque<SessionState *> mHistory;
 
 public:
   Model(Settings *settings, QRandomGenerator *random);
@@ -28,6 +29,10 @@ public:
   WordsList getRandomWords(size_t count = 1);
   std::pair<QString, QString> getRandomSentence();
   std::vector<QString> getRandomSentenceAnswers(size_t count = 1);
+  TestList generateTests();
 
-  std::vector<BaseTest *> generateTests();
+  bool loadHistory();
+  bool saveHistory();
+  SessionState * getLastSession();
+  void storeSession(SessionState *state);
 };

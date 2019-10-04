@@ -2,6 +2,7 @@
 
 #include "model/data/result.hpp"
 
+#include <QJsonObject>
 #include <QString>
 #include <deque>
 
@@ -14,6 +15,10 @@ private:
 
     SessionState();
 public:
+    SessionState(QJsonObject obj);
+
+    QJsonObject toJson();
+
     int getPoints();
     int getCorrect();
     int getWrong();

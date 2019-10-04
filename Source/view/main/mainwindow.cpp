@@ -68,7 +68,8 @@ void MainWindow::initConnection() {
 
     // Result screen
     connect(ui->back2menu, &QPushButton::clicked, this, [=]() {
-      presentView(ViewType::MENU);
+        mPresenter->requestSessionFinish();
+        // presentView(ViewType::MENU);
     });
 }
 

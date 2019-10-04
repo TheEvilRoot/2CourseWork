@@ -2,6 +2,32 @@
 
 SessionState::SessionState(): mCorrect(0), mWrong(0), mResult("") {}
 
+SessionState::SessionState(QJsonObject obj):
+    mCorrect(obj.value("correct").toInt()),
+    mWrong(obj.value("wrong").toInt()),
+    mResult(obj.value("result").toString()){
+    auto resultsArray = obj.value("results").toArray();
+    for (auto res : resultsArray) {
+        auto result = new Result(res.toObject());
+        mTestResults.push_back(result);
+    }
+}
+
+QJsonObject SessionState::toJson() {
+    QJsonObject obj;
+    obj.insert("correct", QJsonValue(mCorrect));
+    obj.insert("wrong", QJsonValue(mWrong));
+    obj.insert("result", QJsonValue(mResult));
+
+    QJsonArray resultsArray;
+    for (auto result : mTestResults) {
+        resultsArray.push_back(result->toJson());
+    }
+
+    obj.insert("results", resultsArray);
+    return obj;
+}
+
 int SessionState::getPoints() {
     int res = 0;
     for (auto result : mTestResults) res+=result->mPointsForTest;

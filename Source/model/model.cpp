@@ -7,12 +7,11 @@
 
 #include <QFile>
 #include <QTextStream>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QJsonDocument>
 #include <iostream>
 #include <algorithm>
-
-Session* Model::getSession() const {
-  return mSession;
-}
 
 Model::Model(Settings *settings, QRandomGenerator *random): mSession(nullptr), mSettings(settings), mRandomGen(random) {}
 
@@ -32,49 +31,16 @@ int Model::newSession(bool force) {
   return 0;
 }
 
-std::vector<BaseTest *> Model::generateTests() {
-    std::vector<BaseTest *> tests;
-    int wordBasedCount = 0;//mRandomGen->bounded(10, 20);
-    int sentenceBasedCount = mRandomGen->bounded(3, 10);
+Session* Model::getSession() const {
+  return mSession;
+}
 
-    for (int i = 0; i < wordBasedCount; i++) {
-        auto options = getRandomWords(6);
-        std::vector<QString> answers;
-        uint direction = (uint) mRandomGen->bounded(0, 2);
-        for (auto &p : options) answers.push_back(getFromPair(p, direction));
-        uint randomIndex = (uint) mRandomGen->bounded(0, 6);
+SessionState* Model::getLastSession() {
+    return mHistory.back();
+}
 
-        if (mRandomGen->bounded(0, 6) > 3) {
-            tests.push_back(new ChoiceTest(getFromPair(options[randomIndex], !direction), answers, randomIndex));
-        } else {
-            tests.push_back(new CheckTest(getFromPair(options[randomIndex], !direction), answers, randomIndex));
-        }
-    }
-    for (int i = 0; i < sentenceBasedCount; i++) {
-        std::pair<QString, QString> sentence = getRandomSentence();
-
-        int random = mRandomGen->bounded(10);
-        if (random % 2 == 0) {
-            std::vector<QString> wordsForAnswers = getRandomSentenceAnswers(5);
-            std::vector<QString> answers;
-            for (auto w : wordsForAnswers) {
-                answers.push_back(QString(sentence.first).replace("[ ]", w));
-            }
-            answers.push_back(QString(sentence.first).replace("[ ]", sentence.second));
-            for (auto w : wordsForAnswers) printf("[DW] %s\n", w.toStdString().c_str());
-            printf("[D] %s:%s\n", sentence.first.toStdString().c_str(), sentence.second.toStdString().c_str());
-            for (auto w : answers) printf(">> [D] %s\n", w.toStdString().c_str());
-
-            if (random > 4) {
-                tests.push_back(new ChoiceTest(sentence.first, answers, 5));
-            } else {
-                tests.push_back(new CheckTest(sentence.first, answers, 5));
-            }
-        } else {
-            tests.push_back(new InputTest(sentence.first, sentence.second));
-        }
-    }
-    return tests;
+void Model::storeSession(SessionState *state) {
+    mHistory.push_back(state);
 }
 
 bool Model::loadWords(bool forceReload) {
@@ -105,12 +71,14 @@ bool Model::loadWords(bool forceReload) {
 
        mWords.push_back(std::pair<QString, QString>(list[0], list[1]));
     }
+    file->close();
 
     if (file) delete file;
     if (stream) delete stream;
 
     return mWords.size();
 }
+
 bool Model::loadSentences(bool forceReload) {
     if (mSentences.size() + mSentenceAnswers.size() > 0 && !forceReload) return true;
     mSentences.clear();
@@ -141,6 +109,8 @@ bool Model::loadSentences(bool forceReload) {
         }
     }
 
+    file->close();
+
     if (file) delete file;
     if (stream) delete stream;
 
@@ -148,16 +118,16 @@ bool Model::loadSentences(bool forceReload) {
     return mSentences.size();
 }
 
-// Algorithm:
-//
-// get random index
-// swap with last
-// pop last to buffer
-// while count
-// add popped items back to list
-// return buffer
-// Time: O(count) + O(1) + O(1) + O(1) + O(count) = O(count) = O(N)
-
+/*
+ * Algorithm:
+ * get random index
+ * swap with last
+ * pop last to buffer
+ * while count
+ * add popped items back to list
+ * return buffer
+ * Time: O(count) + O(1) + O(1) + O(1) + O(count) = O(count) = O(N)
+ */
 WordsList Model::getRandomWords(size_t count) {
     WordsList list;
     if (count > mWords.size()) count = mWords.size();
@@ -193,4 +163,109 @@ std::vector<QString> Model::getRandomSentenceAnswers(size_t count) {
     }
     for (size_t i = 0; i < list.size(); i++) mSentenceAnswers.push_back(list[i]);
     return list;
+}
+
+std::vector<BaseTest *> Model::generateTests() {
+    std::vector<BaseTest *> tests;
+    int wordBasedCount = mRandomGen->bounded(10, 20);
+    int sentenceBasedCount = mRandomGen->bounded(3, 10);
+
+    for (int i = 0; i < wordBasedCount; i++) {
+        auto options = getRandomWords(6);
+        std::vector<QString> answers;
+        uint direction = static_cast<uint>(mRandomGen->bounded(0, 2));
+        for (auto &p : options) answers.push_back(getFromPair(p, direction));
+        uint randomIndex = static_cast<uint>(mRandomGen->bounded(0, 6));
+
+        if (mRandomGen->bounded(0, 6) > 3) {
+            tests.push_back(new ChoiceTest(getFromPair(options[randomIndex], !direction), answers, randomIndex));
+        } else {
+            tests.push_back(new CheckTest(getFromPair(options[randomIndex], !direction), answers, randomIndex));
+        }
+    }
+    for (int i = 0; i < sentenceBasedCount; i++) {
+        std::pair<QString, QString> sentence = getRandomSentence();
+
+        int random = mRandomGen->bounded(10);
+        if (random % 2 == 0) {
+            std::vector<QString> wordsForAnswers = getRandomSentenceAnswers(5);
+            std::vector<QString> answers;
+            for (auto w : wordsForAnswers) {
+                answers.push_back(QString(sentence.first).replace("[ ]", w));
+            }
+            answers.push_back(QString(sentence.first).replace("[ ]", sentence.second));
+            for (auto w : wordsForAnswers) printf("[DW] %s\n", w.toStdString().c_str());
+            printf("[D] %s:%s\n", sentence.first.toStdString().c_str(), sentence.second.toStdString().c_str());
+            for (auto w : answers) printf(">> [D] %s\n", w.toStdString().c_str());
+
+            if (random > 4) {
+                tests.push_back(new ChoiceTest(sentence.first, answers, 5));
+            } else {
+                tests.push_back(new CheckTest(sentence.first, answers, 5));
+            }
+        } else {
+            tests.push_back(new InputTest(sentence.first, sentence.second));
+        }
+    }
+    return tests;
+}
+
+bool Model::loadHistory() {
+    QFile *file = new QFile("history.json");
+    if (!file->exists()) return true;
+
+    if (!file->open(QIODevice::ReadOnly)) {
+        if (file) delete file;
+        return false;
+    }
+
+    QTextStream *stream = new QTextStream(file);
+    stream->setCodec("UTF-8");
+
+    QString text = stream->readAll();
+    QJsonObject fileObj = QJsonDocument::fromJson(text.toUtf8()).object();
+
+    if (!fileObj.keys().contains("history")) {
+        std::cerr << "History file is invalid. History entry not in root object" << "\n";
+        return false;
+    }
+
+    QJsonArray historyEntries = fileObj.value("history").toArray();
+
+    for (auto entry : historyEntries) {
+        auto state = new SessionState(entry.toObject());
+        mHistory.push_back(state);
+    }
+    file->close();
+
+    if (file) delete file;
+    if (stream) delete stream;
+
+    return true;
+}
+
+
+bool Model::saveHistory() {
+    QJsonObject obj;
+    QJsonArray history;
+
+    for (auto state : mHistory) {
+        history.push_back(state->toJson());
+    }
+
+    obj.insert("history", history);
+    QJsonDocument doc(obj);
+
+    QFile *file = new QFile("history.json");
+    if (!file->open(QIODevice::WriteOnly)) {
+        return false;
+    }
+
+    QTextStream *stream = new QTextStream(file);
+    stream->setCodec("UTF-8");
+
+    stream->operator<<(QString::fromUtf8(doc.toJson()));
+    file->close();
+
+    return true;
 }

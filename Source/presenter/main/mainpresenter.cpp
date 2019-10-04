@@ -1,5 +1,6 @@
 #include "mainpresenter.hpp"
 #include "model/loader/wordsfileloader.h"
+#include "model/loader/storeworker.hpp"
 #include "model/data/choicetest.h"
 #include "model/data/checktest.h"
 
@@ -65,7 +66,8 @@ void MainPresenter::handleSession() {
 }
 
 void MainPresenter::completeTest() {
-  initView(ViewType::RESULT);
+    mModel->storeSession(mModel->getSession()->getState());
+    initView(ViewType::RESULT);
 }
 
 void MainPresenter::initView(const ViewType *type) {
@@ -81,7 +83,7 @@ void MainPresenter::initView(const ViewType *type) {
     if (type == ViewType::MENU) {
         mView->setupMenuScreen(hasSession && !session->isFinished(), points);
     } else if (type == ViewType::RESULT) {
-        mView->setupResultScreen(session->getState());
+        mView->setupResultScreen(mModel->getLastSession());
     } else {
         auto test = session->currentTest();
         if (test == nullptr) return;
@@ -139,6 +141,16 @@ void MainPresenter::onError(QString message) {
     mView->showMessage(message);
 }
 
+void MainPresenter::onSessionFinish() {
+    onProgressDone();
+    initView(ViewType::MENU);
+}
+
+void MainPresenter::onSessionError(QString message) {
+    onError(message);
+    initView(ViewType::MENU);
+}
+
 void MainPresenter::initApplication() {
     mView->showLoading();
     mView->disableContent();
@@ -147,4 +159,14 @@ void MainPresenter::initApplication() {
     QObject::connect(loader, &WordsFileLoader::progressDone, this, &MainPresenter::onProgressDone);
     QObject::connect(loader, &WordsFileLoader::progressError, this, &MainPresenter::onError);
     loader->start();
+}
+
+void MainPresenter::requestSessionFinish() {
+    mView->showLoading();
+    mView->disableContent();
+    mView->showMessage("Saving session...");
+    StoreWorker *worker = new StoreWorker(mModel);
+    QObject::connect(worker, &StoreWorker::progressDone, this, &MainPresenter::onSessionFinish);
+    QObject::connect(worker, &StoreWorker::progressError, this, &MainPresenter::onSessionError);
+    worker->start();
 }
