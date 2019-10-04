@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <cmath>
+#include <ctime>
 
 Session::Session(TestList tests, bool attemptsMode):
     mTests(tests),
