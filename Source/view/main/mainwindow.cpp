@@ -3,9 +3,6 @@
 #include "view/sessiondialog/sessiondialog.hpp"
 #include "model/settings.h" // TODO: Create Presenter proxy!
 
-#include <iostream>
-#include <sstream>
-
 MainWindow::MainWindow(
     Model* model,
     Settings *settings,
@@ -110,13 +107,15 @@ void MainWindow::initResultTable() {
 void MainWindow::initHistoryTables() {
     ui->historyTable->setHorizontalHeaderLabels(*mHistoryHeaders);
     ui->historyTable->setColumnCount(5);
+    ui->historyTable->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     ui->historyTable->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectRows);
-    ui->historyTable->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    ui->historyTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
     ui->detailTable->setHorizontalHeaderLabels(*mDetailHeaders);
     ui->detailTable->setColumnCount(6);
+    ui->detailTable->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     ui->detailTable->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectRows);
-    ui->detailTable->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    ui->detailTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }
 
 bool MainWindow::presentView(const ViewType *type) {
