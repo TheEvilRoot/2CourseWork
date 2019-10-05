@@ -61,4 +61,7 @@ private:
     QProgressBar *statusProgressBar;
     QLabel *statusBarLabel;
     QPushButton **mChoiceButtons;
+    QStringList *mDetailHeaders;
+    QStringList *mHistoryHeaders;
+    QStringList *mResultHeaders;
 };

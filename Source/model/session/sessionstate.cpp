@@ -2,12 +2,12 @@
 
 #include <ctime>
 
-SessionState::SessionState():  mCorrect(0), mWrong(0), mTime(time(nullptr)), mResult(""){}
+SessionState::SessionState():  mCorrect(0), mWrong(0), mTime(QDateTime::currentDateTime()), mResult(""){}
 
 SessionState::SessionState(QJsonObject obj):
     mCorrect(obj.value("correct").toInt()),
     mWrong(obj.value("wrong").toInt()),
-    mTime(obj.value("time").toString().toLong()),
+    mTime(QDateTime::fromMSecsSinceEpoch(obj.value("time").toString().toLongLong())),
     mResult(obj.value("result").toString()) {
     auto resultsArray = obj.value("results").toArray();
     for (auto res : resultsArray) {
@@ -21,7 +21,7 @@ QJsonObject SessionState::toJson() {
     obj.insert("correct", QJsonValue(mCorrect));
     obj.insert("wrong", QJsonValue(mWrong));
     obj.insert("result", QJsonValue(mResult));
-    obj.insert("time", QString::number(mTime));
+    obj.insert("time", QString::number(mTime.toMSecsSinceEpoch()));
 
     QJsonArray resultsArray;
     for (auto result : mTestResults) {
@@ -46,7 +46,7 @@ int SessionState::getWrong() {
     return mWrong;
 }
 
-long SessionState::getTime() {
+QDateTime& SessionState::getTime() {
     return mTime;
 }
 

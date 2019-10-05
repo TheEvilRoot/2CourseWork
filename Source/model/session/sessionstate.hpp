@@ -10,7 +10,7 @@ class SessionState {
 private:
     int mCorrect;
     int mWrong;
-    long mTime;
+    QDateTime mTime;
     QString mResult;
     std::deque<Result *> mTestResults;
 
@@ -23,7 +23,7 @@ public:
     int getPoints();
     int getCorrect();
     int getWrong();
-    long getTime();
+    QDateTime& getTime();
     QString getResultString();
     std::deque<Result *>& getTestResults();
 

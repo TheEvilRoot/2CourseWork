@@ -41,7 +41,6 @@ void MainPresenter::proceedAnswer(QString answer, size_t index) {
     }
 
     handleSession();
-
 }
 
 /**

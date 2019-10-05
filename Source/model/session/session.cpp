@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <cmath>
-#include <ctime>
+#include <QDateTime>
 
 Session::Session(TestList tests, bool attemptsMode):
     mTests(tests),
@@ -41,12 +41,12 @@ size_t Session::getTestsCount() const {
 
 void Session::applyResult() {
     if (!mState->mTestResults.empty()) {
-        mState->mTestResults.back()->mSolveTime = time(nullptr) - mState->mTestResults.back()->mSolveTime;
+        mState->mTestResults.back()->mSolveTime = QDateTime::fromMSecsSinceEpoch(QDateTime::currentDateTime().msecsTo(mState->mTestResults.back()->mSolveTime));
     }
     if (!currentTest()) return;
     auto test = currentTest();
 
-    mState->mTestResults.push_back(new Result(test->getQuestion(), test->getAnswer(), mPosition));
+    mState->mTestResults.push_back(new Result(test->getQuestion(), test->getAnswer(), mPosition, QDateTime::currentDateTime()));
 }
 
 void Session::nextTest() {

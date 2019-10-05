@@ -2,6 +2,7 @@
 
 #include <QString>
 #include <vector>
+#include <QDateTime>
 #include <QJsonObject>
 #include <QJsonArray>
 
@@ -13,15 +14,15 @@ public:
     size_t mIndex;
     int mAttempts;
     int mPointsForTest;
-    long mSolveTime;
+    QDateTime mSolveTime;
 
-    Result(QString question, QString answer, size_t index):
+    Result(QString question, QString answer, size_t index, QDateTime dt):
         mQuestion(question),
         mAnswer(answer),
         mIndex(index),
         mAttempts(0),
         mPointsForTest(0),
-        mSolveTime(0) {}
+        mSolveTime(dt){}
 
     Result(QJsonObject obj):
         mQuestion(obj.value("question").toString()),
@@ -29,7 +30,7 @@ public:
         mIndex(obj.value("index").toString().toULongLong()),
         mAttempts(obj.value("attempts").toInt()),
         mPointsForTest(obj.value("points").toInt()),
-        mSolveTime(obj.value("time").toString().toLong())
+        mSolveTime(QDateTime::fromMSecsSinceEpoch(obj.value("time").toString().toLongLong()))
     {
         auto userAnswers = obj.value("answers").toArray();
         for (auto ans : userAnswers) {
@@ -53,7 +54,7 @@ public:
         obj.insert("index", QString::number(mIndex));
         obj.insert("attempts", mAttempts);
         obj.insert("points", mPointsForTest);
-        obj.insert("time", QString::number(mSolveTime));
+        obj.insert("time", QString::number(mSolveTime.toMSecsSinceEpoch()));
 
         QJsonArray answersArray;
         for (auto ans : mUserAnswers) {

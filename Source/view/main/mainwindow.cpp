@@ -18,6 +18,9 @@ MainWindow::MainWindow(
 
     // I hate it!
     mChoiceButtons = new QPushButton*[6]{ ui->choiceOption1, ui->choiceOption2, ui->choiceOption3, ui->choiceOption4, ui->choiceOption5, ui->choiceOption6 };
+    mDetailHeaders = new QStringList {"Question", "Answer", "Attempts", "Points", "Solve Time", "Your answers"};
+    mHistoryHeaders = new QStringList {"Session time", "Correct", "Wrong", "Points", "Result"};
+    mResultHeaders = new QStringList {"Question", "Answer", "Points", "Attempts", "Time"};
 
     initConnection();
     initStatusBar();
@@ -101,14 +104,16 @@ void MainWindow::initStatusBar() {
 
 void MainWindow::initResultTable() {
     ui->logTable->setColumnCount(5);
-    ui->logTable->setHorizontalHeaderLabels(QStringList {"Question", "Answer", "Points", "Attempts", "Time"});
+    ui->logTable->setHorizontalHeaderLabels(*mResultHeaders);
 }
 
 void MainWindow::initHistoryTables() {
+    ui->historyTable->setHorizontalHeaderLabels(*mHistoryHeaders);
     ui->historyTable->setColumnCount(5);
     ui->historyTable->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectRows);
     ui->historyTable->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 
+    ui->detailTable->setHorizontalHeaderLabels(*mDetailHeaders);
     ui->detailTable->setColumnCount(6);
     ui->detailTable->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectRows);
     ui->detailTable->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
@@ -139,7 +144,8 @@ void MainWindow::askSession() {
 }
 
 void MainWindow::optionSubmit(int position) {
-    mPresenter->proceedAnswer("", position);
+    size_t index = static_cast<size_t>(position);
+    mPresenter->proceedAnswer("", index);
 }
 
 void MainWindow::answerSubmit(QString answer) {
@@ -207,27 +213,27 @@ void MainWindow::setupResultScreen(SessionState *state) {
     setTextFor(ui->wrongLabel, wrongString);
     setTextFor(ui->resultLabel, state->getResultString());
 
-    ui->logTable->setRowCount(state->getCount());
-    for (int i = 0; i < state->getCount(); i++) {
-        auto res = state->at(i);
+    ui->logTable->setRowCount(static_cast<int>(state->getCount()));
+    for (int i = 0; i < ui->logTable->rowCount(); i++) {
+        auto res = state->at(static_cast<size_t>(i));
         int j = 0;
         ui->logTable->setItem(i, j++, new QTableWidgetItem(res->mQuestion));
         ui->logTable->setItem(i, j++, new QTableWidgetItem(res->mAnswer));
         ui->logTable->setItem(i, j++, new QTableWidgetItem(QString::number(res->mPointsForTest)));
         ui->logTable->setItem(i, j++, new QTableWidgetItem(QString::number(res->mAttempts)));
-        ui->logTable->setItem(i, j++, new QTableWidgetItem(QString::number(res->mSolveTime)));
+        ui->logTable->setItem(i, j++, new QTableWidgetItem(res->mSolveTime.toString(Qt::DateFormat::DefaultLocaleShortDate)));
     }
 }
 
 void MainWindow::setupHistoryList(std::deque<SessionState *> &states) {
     ui->historyTable->clear();
-    ui->historyTable->setHorizontalHeaderLabels(QStringList {"Session time", "Correct", "Wrong", "Points", "Result"});
-    ui->historyTable->setRowCount(states.size());
-    for (int i = 0; i < states.size(); i++) {
-        auto state = states[i];
+    ui->historyTable->setHorizontalHeaderLabels(*mHistoryHeaders);
+    ui->historyTable->setRowCount(static_cast<int>(states.size()));
+    for (int i = 0; i < ui->historyTable->rowCount(); i++) {
+        auto state = states[static_cast<size_t>(i)];
         int j = 0;
 
-        ui->historyTable->setItem(i, j++, new QTableWidgetItem(QString::number(state->getTime())));
+        ui->historyTable->setItem(i, j++, new QTableWidgetItem(state->getTime().toString(Qt::DateFormat::DefaultLocaleShortDate)));
         ui->historyTable->setItem(i, j++, new QTableWidgetItem(QString::number(state->getCorrect())));
         ui->historyTable->setItem(i, j++, new QTableWidgetItem(QString::number(state->getWrong())));
         ui->historyTable->setItem(i, j++, new QTableWidgetItem(QString::number(state->getPoints())));
@@ -237,18 +243,18 @@ void MainWindow::setupHistoryList(std::deque<SessionState *> &states) {
 
 void MainWindow::setupHistoryDetails(std::deque<Result *> &results) {
     ui->detailTable->clear();
-    ui->detailTable->setHorizontalHeaderLabels(QStringList {"Question", "Answer", "Attempts", "Points", "Solve Time", "Your answers"});
-    ui->detailTable->setRowCount(results.size());
+    ui->detailTable->setHorizontalHeaderLabels(*mDetailHeaders);
+    ui->detailTable->setRowCount(static_cast<int>(results.size()));
 
-    for (int i = 0; i < results.size(); i++) {
-        auto result = results[i];
+    for (int i = 0; i < ui->detailTable->rowCount(); i++) {
+        auto result = results[static_cast<size_t>(i)];
         int j = 0;
 
         ui->detailTable->setItem(i, j++, new QTableWidgetItem(result->mQuestion));
         ui->detailTable->setItem(i, j++, new QTableWidgetItem(result->mAnswer));
         ui->detailTable->setItem(i, j++, new QTableWidgetItem(QString::number(result->mAttempts)));
         ui->detailTable->setItem(i, j++, new QTableWidgetItem(QString::number(result->mPointsForTest)));
-        ui->detailTable->setItem(i, j++, new QTableWidgetItem(QString::number(result->mSolveTime)));
+        ui->detailTable->setItem(i, j++, new QTableWidgetItem(result->mSolveTime.toString(Qt::DateFormat::DefaultLocaleShortDate)));
         ui->detailTable->setItem(i, j++, new QTableWidgetItem(result->getJoinedAnswers(',')));
     }
 }
