@@ -1,5 +1,4 @@
-#ifndef WORDSFILELOADER_H
-#define WORDSFILELOADER_H
+#pragma once
 
 #include <model/model.hpp>
 
@@ -19,5 +18,3 @@ signals:
     void progressDone();
     void progressError(QString);
 };
-
-#endif // WORDSFILELOADER_H

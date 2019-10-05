@@ -4,5 +4,6 @@
     </qresource>
     <qresource prefix="/data">
         <file>words.db</file>
+        <file>sentences.db</file>
     </qresource>
 </RCC>

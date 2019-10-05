@@ -1,5 +1,4 @@
-#ifndef SESSIONDIALOG_HPP
-#define SESSIONDIALOG_HPP
+#pragma once
 
 #include "presenter/main/mainpresenter.hpp"
 
@@ -22,5 +21,3 @@ private:
 
   void initDialog();
 };
-
-#endif // SESSIONDIALOG_HPP

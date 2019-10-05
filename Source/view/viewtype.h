@@ -1,5 +1,4 @@
-#ifndef VIEWTYPE_H
-#define VIEWTYPE_H
+#pragma once
 
 #include <string>
 
@@ -17,6 +16,7 @@ public:
     static const ViewType* INPUT;
     static const ViewType* CHECK;
     static const ViewType* RESULT;
+    static const ViewType* HISTORY;
 
     bool operator==(ViewType &a) {
         return this->mViewId == a.mViewId;
@@ -34,5 +34,3 @@ public:
         return mViewId;
     }
 };
-
-#endif // VIEWTYPE_H

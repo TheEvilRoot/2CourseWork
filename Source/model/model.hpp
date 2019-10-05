@@ -1,5 +1,4 @@
-#ifndef MODEL_HPP
-#define MODEL_HPP
+#pragma once
 
 #include "model/session/session.hpp"
 #include "settings.h"
@@ -12,19 +11,33 @@ class Model {
 private:
   Session *mSession;
   Settings *mSettings;
-  WordsList mWords;
   QRandomGenerator *mRandomGen;
+  WordsList mWords;
+  WordsList mSentences;
+  std::vector<QString> mSentenceAnswers;
+  std::deque<SessionState *> mHistory;
+
+  QString mVersion;
 
 public:
   Model(Settings *settings, QRandomGenerator *random);
+
+  QString& getVersion();
 
   int newSession(bool force);
   Session* getSession() const;
 
   bool loadWords(bool forceReload = false);
+  bool loadSentences(bool forceReload = false);
+
   WordsList getRandomWords(size_t count = 1);
+  std::pair<QString, QString> getRandomSentence();
+  std::vector<QString> getRandomSentenceAnswers(size_t count = 1);
+  TestList generateTests();
 
-  std::vector<BaseTest *> generateTests();
+  bool loadHistory();
+  bool saveHistory();
+  SessionState * getLastSession();
+  void storeSession(SessionState *state);
+  std::deque<SessionState *>& getHistory();
 };
-
-#endif // MODEL_HPP

@@ -9,3 +9,7 @@ ChoiceTest::ChoiceTest(
         std::vector<QString> answers,
         uint correctIndex
 ): BaseTest(ViewType::CHOICE, questionText, answers[correctIndex]), mAnswers(answers), mCorrectIndex(correctIndex) {}
+
+bool ChoiceTest::checkAnswerByIndex(size_t index) {
+    return mCorrectIndex == index && checkResult(getAnswers()[index]);
+}

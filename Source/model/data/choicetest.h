@@ -1,5 +1,4 @@
-#ifndef CHOICETEST_H
-#define CHOICETEST_H
+#pragma once
 
 #include "model/data/basetest.hpp"
 
@@ -11,7 +10,6 @@ public:
     ChoiceTest(QString questionText,
                std::vector<QString> answers,
                uint correctIndex);
+    bool checkAnswerByIndex(size_t index);
     std::vector<QString> getAnswers() const;
 };
-
-#endif // CHOICETEST_H

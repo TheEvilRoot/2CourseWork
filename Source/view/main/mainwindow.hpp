@@ -1,5 +1,4 @@
-#ifndef MAINWINDOW_HPP
-#define MAINWINDOW_HPP
+#pragma once
 
 #include "view/viewtype.h"
 #include "view/mainview.hpp"
@@ -37,17 +36,22 @@ public:
     void disableContent() override;
     void askSession() override;
 
-    void setupResultScreen(QString points, QString rightAnswers, QString wrongAnswers, QString result) override;
+    void setupResultScreen(SessionState *state) override;
     void setupChoiceScreen(QString question, std::vector<QString> answers) override;
     void setupCheckScreen(QString question, std::vector<QString> answers) override;
     void setupInputScreen(QString question, QString prefill = "") override;
     void setupMenuScreen(bool hasActiveSession, int points) override;
+
+    void setupHistoryList(std::deque<SessionState *> &states) override;
+    void setupHistoryDetails(std::deque<Result *> &results) override;
 
 private slots:
 
 private:
     void initConnection();
     void initStatusBar();
+    void initResultTable();
+    void initHistoryTables();
     void optionSubmit(int position);
     void answerSubmit(QString answer);
 
@@ -57,5 +61,7 @@ private:
     QProgressBar *statusProgressBar;
     QLabel *statusBarLabel;
     QPushButton **mChoiceButtons;
+    QStringList *mDetailHeaders;
+    QStringList *mHistoryHeaders;
+    QStringList *mResultHeaders;
 };
-#endif
