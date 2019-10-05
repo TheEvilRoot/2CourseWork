@@ -115,7 +115,7 @@ void MainWindow::initHistoryTables() {
     ui->detailTable->setColumnCount(6);
     ui->detailTable->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     ui->detailTable->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectRows);
-    ui->detailTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->detailTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
 }
 
 bool MainWindow::presentView(const ViewType *type) {
@@ -179,6 +179,7 @@ void MainWindow::setupMenuScreen(bool hasActiveSession, int points) {
     } else {
         ui->sessionInfo->setVisible(false);
     }
+    ui->versionLabel->setText(mPresenter->getVersion());
     ui->attemptsBox->setChecked(mSettings->isAttemptMode);
 }
 

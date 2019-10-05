@@ -17,8 +17,12 @@ private:
   std::vector<QString> mSentenceAnswers;
   std::deque<SessionState *> mHistory;
 
+  QString mVersion;
+
 public:
   Model(Settings *settings, QRandomGenerator *random);
+
+  QString& getVersion();
 
   int newSession(bool force);
   Session* getSession() const;

@@ -13,6 +13,7 @@ class MainPresenter: public QObject {
 private:
   Model *mModel;
   MainView *mView;
+
 public:
   MainPresenter(Model *model, MainView *view);
 
@@ -25,6 +26,7 @@ public:
   void initView(const ViewType *type);
   void initApplication();
 
+  QString& getVersion();
 public slots:
     void onSessionFinish();
     void onSessionError(QString message);

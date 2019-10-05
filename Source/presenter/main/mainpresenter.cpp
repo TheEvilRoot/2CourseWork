@@ -175,3 +175,7 @@ void MainPresenter::requestSessionFinish() {
 void MainPresenter::requestHistoryDetailUpdate(int index) {
     mView->setupHistoryDetails(mModel->getHistory()[index]->getTestResults());
 }
+
+QString& MainPresenter::getVersion() {
+    return mModel->getVersion();
+}

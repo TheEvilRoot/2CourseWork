@@ -13,7 +13,13 @@
 #include <iostream>
 #include <algorithm>
 
-Model::Model(Settings *settings, QRandomGenerator *random): mSession(nullptr), mSettings(settings), mRandomGen(random) {}
+Model::Model(Settings *settings, QRandomGenerator *random): mSession(nullptr), mSettings(settings), mRandomGen(random) {
+    mVersion = QString::number(mSettings->versionMajor) + "." + QString::number(mSettings->versionMinor) + "-" + QString::number(mSettings->versionBuild) + mSettings->versionSign;
+}
+
+QString& Model::getVersion() {
+    return mVersion;
+}
 
 int Model::newSession(bool force) {
   // If session is not null
