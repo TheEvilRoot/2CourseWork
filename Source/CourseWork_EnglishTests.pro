@@ -31,7 +31,6 @@ HEADERS += \
     model/loader/storeworker.hpp \
     model/session/sessionstate.hpp \
     presenter/main/mainpresenter.hpp \
-    storeworker.hpp \
     view/mainview.hpp \
     view/main/mainwindow.hpp \
     model/model.hpp \
