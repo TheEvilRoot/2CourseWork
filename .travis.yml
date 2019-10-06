@@ -3,6 +3,13 @@ language: cpp
 os: osx
 compiler: gcc
 
+deploy:
+	provider: releases
+	api_key: $API_KEY
+	file: Build/build.zip
+	skip_cleanup: true
+	draft: true
+
 addons:
  homebrew:
   update: true
@@ -17,3 +24,4 @@ before_script:
 script:
  - qmake ../Source
  - make
+	- zip -r build.zip CourseWork_EnglishTests.app
