@@ -10,6 +10,7 @@
 #include <QProgressBar>
 #include <QPushButton>
 #include <QLabel>
+#include <QTableWidget>
 
 #ifdef Q_OS_MAC
 #define setTextFor(__widget, __text) (__widget)->setText(__text); (__widget)->repaint()
@@ -54,6 +55,7 @@ private:
     void initHistoryTables();
     void optionSubmit(int position);
     void answerSubmit(QString answer);
+    QTableWidgetItem* notEditableItem(QString content);
 
     Ui::MainWindow *ui;
     MainPresenter *mPresenter;

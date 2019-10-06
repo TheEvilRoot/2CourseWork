@@ -1,4 +1,4 @@
-#include "mainwindow.hpp"
+﻿#include "mainwindow.hpp"
 #include "ui_mainwindow.h"
 #include "view/sessiondialog/sessiondialog.hpp"
 #include "model/settings.h" // TODO: Create Presenter proxy!
@@ -217,12 +217,12 @@ void MainWindow::setupResultScreen(SessionState *state) {
     for (int i = 0; i < ui->logTable->rowCount(); i++) {
         auto res = state->at(static_cast<size_t>(i));
         int j = 0;
-        ui->logTable->setItem(i, j++, new QTableWidgetItem(res->mQuestion));
-        ui->logTable->setItem(i, j++, new QTableWidgetItem(res->mAnswer));
-        ui->logTable->setItem(i, j++, new QTableWidgetItem(res->getJoinedAnswers(',')));
-        ui->logTable->setItem(i, j++, new QTableWidgetItem(QString::number(res->mPointsForTest)));
-        ui->logTable->setItem(i, j++, new QTableWidgetItem(QString::number(res->mAttempts)));
-        ui->logTable->setItem(i, j++, new QTableWidgetItem(res->mSolveTime.toString("mm:ss")));
+        ui->logTable->setItem(i, j++, notEditableItem(res->mQuestion));
+        ui->logTable->setItem(i, j++, notEditableItem(res->mAnswer));
+        ui->logTable->setItem(i, j++, notEditableItem(res->getJoinedAnswers(',')));
+        ui->logTable->setItem(i, j++, notEditableItem(QString::number(res->mPointsForTest)));
+        ui->logTable->setItem(i, j++, notEditableItem(QString::number(res->mAttempts)));
+        ui->logTable->setItem(i, j++, notEditableItem(res->mSolveTime.toString("mm:ss")));
     }
 }
 
@@ -234,11 +234,11 @@ void MainWindow::setupHistoryList(std::deque<SessionState *> &states) {
         auto state = states[static_cast<size_t>(i)];
         int j = 0;
 
-        ui->historyTable->setItem(i, j++, new QTableWidgetItem(state->getTime().toString(Qt::DateFormat::DefaultLocaleShortDate)));
-        ui->historyTable->setItem(i, j++, new QTableWidgetItem(QString::number(state->getCorrect())));
-        ui->historyTable->setItem(i, j++, new QTableWidgetItem(QString::number(state->getWrong())));
-        ui->historyTable->setItem(i, j++, new QTableWidgetItem(QString::number(state->getPoints())));
-        ui->historyTable->setItem(i, j++, new QTableWidgetItem(Qt::DateFormat::DefaultLocaleShortDate));
+        ui->historyTable->setItem(i, j++, notEditableItem(state->getTime().toString(Qt::DateFormat::DefaultLocaleShortDate)));
+        ui->historyTable->setItem(i, j++, notEditableItem(QString::number(state->getCorrect())));
+        ui->historyTable->setItem(i, j++, notEditableItem(QString::number(state->getWrong())));
+        ui->historyTable->setItem(i, j++, notEditableItem(QString::number(state->getPoints())));
+        ui->historyTable->setItem(i, j++, notEditableItem(state->getTime().toString(Qt::DateFormat::DefaultLocaleShortDate)));
     }
 }
 
@@ -251,11 +251,17 @@ void MainWindow::setupHistoryDetails(std::deque<Result *> &results) {
         auto result = results[static_cast<size_t>(i)];
         int j = 0;
 
-        ui->detailTable->setItem(i, j++, new QTableWidgetItem(result->mQuestion));
-        ui->detailTable->setItem(i, j++, new QTableWidgetItem(result->mAnswer));
-        ui->detailTable->setItem(i, j++, new QTableWidgetItem(QString::number(result->mAttempts)));
-        ui->detailTable->setItem(i, j++, new QTableWidgetItem(QString::number(result->mPointsForTest)));
-        ui->detailTable->setItem(i, j++, new QTableWidgetItem(result->mSolveTime.toString("mm:ss")));
-        ui->detailTable->setItem(i, j++, new QTableWidgetItem(result->getJoinedAnswers(',')));
+        ui->detailTable->setItem(i, j++, notEditableItem(result->mQuestion));
+        ui->detailTable->setItem(i, j++, notEditableItem(result->mAnswer));
+        ui->detailTable->setItem(i, j++, notEditableItem(QString::number(result->mAttempts)));
+        ui->detailTable->setItem(i, j++, notEditableItem(QString::number(result->mPointsForTest)));
+        ui->detailTable->setItem(i, j++, notEditableItem(result->mSolveTime.toString("mm:ss")));
+        ui->detailTable->setItem(i, j++, notEditableItem(result->getJoinedAnswers(',')));
     }
+}
+
+QTableWidgetItem* MainWindow::notEditableItem(QString content) {
+    auto item = new QTableWidgetItem(content);
+    item->setFlags(item->flags() & (~Qt::ItemIsEditable));
+    return item;
 }
