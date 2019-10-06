@@ -17,7 +17,7 @@ MainWindow::MainWindow(
     mChoiceButtons = new QPushButton*[6]{ ui->choiceOption1, ui->choiceOption2, ui->choiceOption3, ui->choiceOption4, ui->choiceOption5, ui->choiceOption6 };
     mDetailHeaders = new QStringList {"Question", "Answer", "Attempts", "Points", "Solve Time", "Your answers"};
     mHistoryHeaders = new QStringList {"Session time", "Correct", "Wrong", "Points", "Result"};
-    mResultHeaders = new QStringList {"Question", "Answer", "Points", "Attempts", "Time"};
+    mResultHeaders = new QStringList {"Question", "Answer", "Your answers","Points", "Attempts", "Time"};
 
     initConnection();
     initStatusBar();
@@ -100,7 +100,7 @@ void MainWindow::initStatusBar() {
 }
 
 void MainWindow::initResultTable() {
-    ui->logTable->setColumnCount(5);
+    ui->logTable->setColumnCount(6);
     ui->logTable->setHorizontalHeaderLabels(*mResultHeaders);
 }
 
@@ -219,9 +219,10 @@ void MainWindow::setupResultScreen(SessionState *state) {
         int j = 0;
         ui->logTable->setItem(i, j++, new QTableWidgetItem(res->mQuestion));
         ui->logTable->setItem(i, j++, new QTableWidgetItem(res->mAnswer));
+        ui->logTable->setItem(i, j++, new QTableWidgetItem(res->getJoinedAnswers(',')));
         ui->logTable->setItem(i, j++, new QTableWidgetItem(QString::number(res->mPointsForTest)));
         ui->logTable->setItem(i, j++, new QTableWidgetItem(QString::number(res->mAttempts)));
-        ui->logTable->setItem(i, j++, new QTableWidgetItem(res->mSolveTime.toString(Qt::DateFormat::DefaultLocaleShortDate)));
+        ui->logTable->setItem(i, j++, new QTableWidgetItem(res->mSolveTime.toString("mm:ss")));
     }
 }
 
@@ -237,7 +238,7 @@ void MainWindow::setupHistoryList(std::deque<SessionState *> &states) {
         ui->historyTable->setItem(i, j++, new QTableWidgetItem(QString::number(state->getCorrect())));
         ui->historyTable->setItem(i, j++, new QTableWidgetItem(QString::number(state->getWrong())));
         ui->historyTable->setItem(i, j++, new QTableWidgetItem(QString::number(state->getPoints())));
-        ui->historyTable->setItem(i, j++, new QTableWidgetItem(state->getResultString()));
+        ui->historyTable->setItem(i, j++, new QTableWidgetItem(Qt::DateFormat::DefaultLocaleShortDate));
     }
 }
 
@@ -254,7 +255,7 @@ void MainWindow::setupHistoryDetails(std::deque<Result *> &results) {
         ui->detailTable->setItem(i, j++, new QTableWidgetItem(result->mAnswer));
         ui->detailTable->setItem(i, j++, new QTableWidgetItem(QString::number(result->mAttempts)));
         ui->detailTable->setItem(i, j++, new QTableWidgetItem(QString::number(result->mPointsForTest)));
-        ui->detailTable->setItem(i, j++, new QTableWidgetItem(result->mSolveTime.toString(Qt::DateFormat::DefaultLocaleShortDate)));
+        ui->detailTable->setItem(i, j++, new QTableWidgetItem(result->mSolveTime.toString("mm:ss")));
         ui->detailTable->setItem(i, j++, new QTableWidgetItem(result->getJoinedAnswers(',')));
     }
 }

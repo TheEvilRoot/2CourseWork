@@ -1,7 +1,5 @@
 #include "sessionstate.hpp"
 
-#include <ctime>
-
 SessionState::SessionState():  mCorrect(0), mWrong(0), mTime(QDateTime::currentDateTime()), mResult(""){}
 
 SessionState::SessionState(QJsonObject obj):

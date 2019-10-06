@@ -41,7 +41,8 @@ size_t Session::getTestsCount() const {
 
 void Session::applyResult() {
     if (!mState->mTestResults.empty()) {
-        mState->mTestResults.back()->mSolveTime = QDateTime::fromMSecsSinceEpoch(QDateTime::currentDateTime().msecsTo(mState->mTestResults.back()->mSolveTime));
+        auto mSecs = abs(QDateTime::currentDateTime().msecsTo(mState->mTestResults.back()->mSolveTime));
+        mState->mTestResults.back()->mSolveTime = QDateTime::fromMSecsSinceEpoch(mSecs);
     }
     if (!currentTest()) return;
     auto test = currentTest();
