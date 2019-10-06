@@ -6,7 +6,7 @@ compiler: gcc
 deploy:
  provider: releases
  api_key: $API_KEY
- file: Build/build.zip
+ file: build.zip
  skip_cleanup: true
  draft: true
 
