@@ -6,6 +6,9 @@ CONFIG += c++17
 
 DEFINES += QT_DEPRECATED_WARNINGS
 
+RC_ICONS += icn.ico
+ICON = icn.icns
+
 SOURCES += \
     model/data/basetest.cpp \
     main.cpp \
