@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>600</height>
+    <width>404</width>
+    <height>604</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -27,7 +27,7 @@
     <item row="0" column="0">
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="menuPage">
        <layout class="QGridLayout" name="gridLayout_5">
@@ -87,7 +87,7 @@
             </property>
             <property name="minimumSize">
              <size>
-              <width>0</width>
+              <width>82</width>
               <height>60</height>
              </size>
             </property>
@@ -148,28 +148,18 @@
       </widget>
       <widget class="QWidget" name="history">
        <layout class="QGridLayout" name="gridLayout_8">
-        <item row="3" column="0">
-         <widget class="QTableWidget" name="detailTable"/>
-        </item>
-        <item row="5" column="0">
-         <widget class="QLabel" name="label_2">
-          <property name="text">
-           <string>TextLabel</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QTableWidget" name="historyTable"/>
-        </item>
-        <item row="6" column="0">
+        <item row="10" column="0">
          <widget class="QPushButton" name="historyBack2Menu">
           <property name="text">
            <string>Back to menu</string>
           </property>
          </widget>
         </item>
-        <item row="4" column="0">
-         <widget class="QLabel" name="label">
+        <item row="3" column="0">
+         <widget class="QTableWidget" name="detailTable"/>
+        </item>
+        <item row="6" column="0">
+         <widget class="QLabel" name="cefrResult">
           <property name="text">
            <string>TextLabel</string>
           </property>
@@ -182,6 +172,30 @@
           </property>
           <property name="textFormat">
            <enum>Qt::RichText</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QTableWidget" name="historyTable"/>
+        </item>
+        <item row="5" column="0">
+         <widget class="QLabel" name="sbpercentLabel">
+          <property name="text">
+           <string>TextLabel</string>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="0">
+         <widget class="QLabel" name="resultMessage">
+          <property name="text">
+           <string>TextLabel</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="wbpercentLabel">
+          <property name="text">
+           <string>TextLabel</string>
           </property>
          </widget>
         </item>

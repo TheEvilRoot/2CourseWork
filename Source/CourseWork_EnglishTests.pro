@@ -26,6 +26,7 @@ SOURCES += \
 
 HEADERS += \
     api/utils.h \
+    model/data/CEFR.hpp \
     model/data/basetest.hpp \
     model/data/checktest.h \
     model/data/choicetest.h \

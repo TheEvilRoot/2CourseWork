@@ -27,7 +27,7 @@ void MainPresenter::proceedAnswer(QString answer, size_t index) {
 
     if (!mModel->getSession()->currentTest()) {
         mView->showMessage("Test not found");
-        completeTest();
+        completeSession();
         return;
     }
 
@@ -56,7 +56,7 @@ void MainPresenter::handleSession() {
     return;
   }
   if (mModel->getSession()->isFinished()) {
-    completeTest();
+    completeSession();
     return;
   }
   auto type = mModel->getSession()->currentTest()->getType();
@@ -64,8 +64,9 @@ void MainPresenter::handleSession() {
   initView(type);
 }
 
-void MainPresenter::completeTest() {
+void MainPresenter::completeSession() {
     mModel->storeSession(mModel->getSession()->getState());
+    mModel->sessionConclude();
     initView(ViewType::RESULT);
 }
 
@@ -173,7 +174,7 @@ void MainPresenter::requestSessionFinish() {
 }
 
 void MainPresenter::requestHistoryDetailUpdate(int index) {
-    mView->setupHistoryDetails(mModel->getHistory()[index]->getTestResults());
+    mView->setupHistoryDetails(mModel->getHistory()[index]);
 }
 
 QString& MainPresenter::getVersion() {

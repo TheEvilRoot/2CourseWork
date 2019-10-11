@@ -34,6 +34,7 @@ public:
   std::pair<QString, QString> getRandomSentence();
   std::vector<QString> getRandomSentenceAnswers(size_t count = 1);
   TestList generateTests();
+  void sessionConclude();
 
   bool loadHistory();
   bool saveHistory();

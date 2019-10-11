@@ -193,6 +193,7 @@ std::vector<BaseTest *> Model::generateTests() {
         std::pair<QString, QString> sentence = getRandomSentence();
 
         int random = mRandomGen->bounded(10);
+        BaseTest *testToPush;
         if (random % 2 == 0) {
             std::vector<QString> wordsForAnswers = getRandomSentenceAnswers(5);
             std::vector<QString> answers;
@@ -205,13 +206,15 @@ std::vector<BaseTest *> Model::generateTests() {
             for (auto w : answers) printf(">> [D] %s\n", w.toStdString().c_str());
 
             if (random > 4) {
-                tests.push_back(new ChoiceTest(sentence.first, answers, 5));
+                testToPush = new ChoiceTest(sentence.first, answers, 5);
             } else {
-                tests.push_back(new CheckTest(sentence.first, answers, 5));
+                testToPush = new CheckTest(sentence.first, answers, 5);
             }
         } else {
-            tests.push_back(new InputTest(sentence.first, sentence.second));
+            testToPush = new InputTest(sentence.first, sentence.second);
         }
+        testToPush->setSentenceBased();
+        tests.push_back(testToPush);
     }
     return tests;
 }
@@ -278,4 +281,8 @@ bool Model::saveHistory() {
 
 std::deque<SessionState *>& Model::getHistory() {
     return mHistory;
+}
+
+void Model::sessionConclude() {
+    mSession->generateConclusion();
 }

@@ -31,5 +31,7 @@ public:
     bool isAttemptsMode() const;
     bool isFinished();
 
+    void generateConclusion();
+
     SessionState * getState(); // Should be removed!
 };

@@ -23,5 +23,5 @@ public:
     virtual void setupMenuScreen(bool hasActiveSession, int points) = 0;
 
     virtual void setupHistoryList(std::deque<SessionState *> &states) = 0;
-    virtual void setupHistoryDetails(std::deque<Result *> &results) = 0;
+    virtual void setupHistoryDetails(SessionState *state) = 0;
 };

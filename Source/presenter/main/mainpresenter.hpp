@@ -22,7 +22,7 @@ public:
   void requestSessionFinish();
   void requestHistoryDetailUpdate(int index);
   void handleSession();
-  void completeTest();
+  void completeSession();
   void initView(const ViewType *type);
   void initApplication();
 

@@ -44,7 +44,7 @@ public:
     void setupMenuScreen(bool hasActiveSession, int points) override;
 
     void setupHistoryList(std::deque<SessionState *> &states) override;
-    void setupHistoryDetails(std::deque<Result *> &results) override;
+    void setupHistoryDetails(SessionState *state) override;
 
 private slots:
 
@@ -53,6 +53,7 @@ private:
     void initStatusBar();
     void initResultTable();
     void initHistoryTables();
+    void initStateTable(QTableWidget *table, SessionState *state);
     void optionSubmit(int position);
     void answerSubmit(QString answer);
     QTableWidgetItem* notEditableItem(QString content);
@@ -63,7 +64,6 @@ private:
     QProgressBar *statusProgressBar;
     QLabel *statusBarLabel;
     QPushButton **mChoiceButtons;
-    QStringList *mDetailHeaders;
+    QStringList *mStateHeaders;
     QStringList *mHistoryHeaders;
-    QStringList *mResultHeaders;
 };

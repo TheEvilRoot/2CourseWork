@@ -27,11 +27,20 @@ int BaseTest::GLOBAL_ID = 0;
 BaseTest::BaseTest(
     const ViewType *type,
     QString questionText,
-    QString rightAnswer
-): mId(GLOBAL_ID++), mType(type), mQuestionText(questionText), mRightAnswer(rightAnswer) { }
+    QString rightAnswer,
+    bool isSentenceBased
+): mId(GLOBAL_ID++), mType(type), mQuestionText(questionText), mRightAnswer(rightAnswer), mIsSentenceBased(isSentenceBased) { }
 
 BaseTest::~BaseTest() {
     std::cout << "Destructing " << mId << " test\n";
+}
+
+bool BaseTest::isSentenceBased() {
+    return mIsSentenceBased;
+}
+
+void BaseTest::setSentenceBased() {
+    mIsSentenceBased = true;
 }
 
 

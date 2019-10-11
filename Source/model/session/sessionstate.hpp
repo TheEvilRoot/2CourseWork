@@ -1,6 +1,7 @@
 #pragma once
 
 #include "model/data/result.hpp"
+#include "model/data/CEFR.hpp"
 
 #include <QJsonObject>
 #include <QString>
@@ -12,7 +13,10 @@ private:
     int mWrong;
     QDateTime mTime;
     QString mResult;
+    const CEFR *mCefrResult;
     std::deque<Result *> mTestResults;
+    double mWordBasedCorrect;
+    double mSentenceBasedCorrect;
 
     SessionState();
 public:
@@ -26,6 +30,9 @@ public:
     QDateTime& getTime();
     QString getResultString();
     std::deque<Result *>& getTestResults();
+    const CEFR* getCefr();
+    double getWordBasedPercent();
+    double getSentenceBasedPercent();
 
     size_t getCount();
     Result *at(size_t index);
