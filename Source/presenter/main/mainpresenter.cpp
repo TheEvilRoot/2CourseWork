@@ -74,14 +74,8 @@ void MainPresenter::initView(const ViewType *type) {
     mView->presentView(type);
 
     auto session = mModel->getSession();
-    bool hasSession = session != nullptr;
-
-    int points = hasSession ? session->getPoints() : 0;
-    int right = hasSession ? session->getCorrectAnswersCount() : 0;
-    int wrong = hasSession ? session->getWrongAnswersCount() : 0;
-
     if (type == ViewType::MENU) {
-        mView->setupMenuScreen(hasSession && !session->isFinished(), points);
+        mView->setupMenuScreen(session ? session->getState() : nullptr);
     } else if (type == ViewType::RESULT) {
         mView->setupResultScreen(mModel->getLastSession());
     } else if (type == ViewType::HISTORY) {

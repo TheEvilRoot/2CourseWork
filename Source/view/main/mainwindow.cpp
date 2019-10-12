@@ -239,6 +239,8 @@ void MainWindow::setupResultScreen(SessionState *state) {
 void MainWindow::setupStateTableForState(QTableWidget *table, SessionState *state) {
     table->clear();
     table->setHorizontalHeaderLabels(*mStateHeaders);
+    if (state == nullptr) return;
+
     table->setRowCount(static_cast<int>(state->getCount()));
     for (int i = 0; i < ui->logTable->rowCount(); i++) {
         auto res = state->at(static_cast<size_t>(i));
