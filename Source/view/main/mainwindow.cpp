@@ -20,10 +20,11 @@ MainWindow::MainWindow(
 
     initConnection();
     initStatusBar();
-    initResultTable();
+    initStateTable(ui->logTable);
+    initStateTable(ui->detailTable);
     initHistoryTables();
 
-    setupMenuScreen(false, 0);
+    setupMenuScreen(nullptr);
     presentView(ViewType::MENU);
 
     mPresenter->initApplication();
@@ -72,6 +73,7 @@ void MainWindow::initConnection() {
         // presentView(ViewType::MENU);
     });
 
+    // History screen
     connect(ui->showHistory, &QPushButton::clicked, this, [=]() {
         mPresenter->initView(ViewType::HISTORY);
     });
@@ -98,9 +100,12 @@ void MainWindow::initStatusBar() {
     ui->statusbar->addPermanentWidget(statusBarLabel);
 }
 
-void MainWindow::initResultTable() {
-    ui->logTable->setColumnCount(6);
-    ui->logTable->setHorizontalHeaderLabels(*mStateHeaders);
+void MainWindow::initStateTable(QTableWidget *table) {
+    table->setHorizontalHeaderLabels(*mStateHeaders);
+    table->setColumnCount(6);
+    table->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    table->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectRows);
+    table->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
 }
 
 void MainWindow::initHistoryTables() {
@@ -109,12 +114,6 @@ void MainWindow::initHistoryTables() {
     ui->historyTable->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     ui->historyTable->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectRows);
     ui->historyTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-
-    ui->detailTable->setHorizontalHeaderLabels(*mStateHeaders);
-    ui->detailTable->setColumnCount(6);
-    ui->detailTable->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-    ui->detailTable->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectRows);
-    ui->detailTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
 }
 
 bool MainWindow::presentView(const ViewType *type) {
@@ -170,11 +169,10 @@ void MainWindow::enableContent() {
   ui->stackedWidget->setEnabled(true);
 }
 
-void MainWindow::setupMenuScreen(bool hasActiveSession, int points) {
-    if (hasActiveSession) {
+void MainWindow::setupMenuScreen(SessionState *currentState) {
+    if (currentState != nullptr) {
         ui->sessionInfo->setVisible(true);
-        QString message = "You have unfinished session. Your points: " + QString::number(points);
-        setTextFor(ui->sessionInfo, message);
+        setTextFor(ui->sessionInfo, "You have unfinished session.");
     } else {
         ui->sessionInfo->setVisible(false);
     }
@@ -223,7 +221,7 @@ void MainWindow::setupHistoryDetails(SessionState *state) {
     ui->resultMessage->setText(state->getResultString());
     ui->wbpercentLabel->setText("Percent of correct tests with words: " + QString::number(state->getWordBasedPercent() * 100) + "%%");
     ui->sbpercentLabel->setText("Percent of correct tests with sentences: " + QString::number(state->getSentenceBasedPercent() * 100) + "%%");
-    initStateTable(ui->detailTable, state);
+    setupStateTableForState(ui->detailTable, state);
 }
 
 void MainWindow::setupResultScreen(SessionState *state) {
@@ -235,10 +233,10 @@ void MainWindow::setupResultScreen(SessionState *state) {
     setTextFor(ui->rightLabel, correctString);
     setTextFor(ui->wrongLabel, wrongString);
     setTextFor(ui->resultLabel, state->getResultString());
-    initStateTable(ui->logTable, state);
+    setupStateTableForState(ui->logTable, state);
 }
 
-void MainWindow::initStateTable(QTableWidget *table, SessionState *state) {
+void MainWindow::setupStateTableForState(QTableWidget *table, SessionState *state) {
     table->clear();
     table->setHorizontalHeaderLabels(*mStateHeaders);
     table->setRowCount(static_cast<int>(state->getCount()));

@@ -41,7 +41,7 @@ public:
     void setupChoiceScreen(QString question, std::vector<QString> answers) override;
     void setupCheckScreen(QString question, std::vector<QString> answers) override;
     void setupInputScreen(QString question, QString prefill = "") override;
-    void setupMenuScreen(bool hasActiveSession, int points) override;
+    void setupMenuScreen(SessionState *currentState) override;
 
     void setupHistoryList(std::deque<SessionState *> &states) override;
     void setupHistoryDetails(SessionState *state) override;
@@ -51,9 +51,9 @@ private slots:
 private:
     void initConnection();
     void initStatusBar();
-    void initResultTable();
+    void initStateTable(QTableWidget *table);
     void initHistoryTables();
-    void initStateTable(QTableWidget *table, SessionState *state);
+    void setupStateTableForState(QTableWidget *table, SessionState *state);
     void optionSubmit(int position);
     void answerSubmit(QString answer);
     QTableWidgetItem* notEditableItem(QString content);
