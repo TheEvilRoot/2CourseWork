@@ -46,5 +46,6 @@ int main(int argc, char *argv[]) {
 
     Q_ASSERT(view->presentView(nullptr) == false);
     w.show();
+    std::cout << "Test" << "\n";
     return a.exec();
 }
