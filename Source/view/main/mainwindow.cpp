@@ -17,8 +17,8 @@ MainWindow::MainWindow(
 
     // I hate it!
     mChoiceButtons = new QPushButton*[6]{ ui->choiceOption1, ui->choiceOption2, ui->choiceOption3, ui->choiceOption4, ui->choiceOption5, ui->choiceOption6 };
-    mHistoryHeaders = new QStringList {"Session time", "Correct", "Wrong", "Points", "Result"};
-    mStateHeaders = new QStringList {"Question", "Answer", "Attempts", "Points", "Solve Time", "Your answers"};
+    mHistoryHeaders = new QStringList {"Время", "Верные ответы", "Неверные ответы", "Численных результат", "Результат"};
+    mStateHeaders = new QStringList {"Вопрос", "Правильный ответ", "Попытки", "Численных результат", "Время", "Ваши ответы"};
 
     initConnection();
     initStatusBar();
@@ -174,7 +174,7 @@ void MainWindow::enableContent() {
 void MainWindow::setupMenuScreen(SessionState *currentState) {
     if (currentState != nullptr) {
         ui->sessionInfo->setVisible(true);
-        setTextFor(ui->sessionInfo, "You have unfinished session.");
+        setTextFor(ui->sessionInfo, "У вас есть незавершенное тестирование");
     } else {
         ui->sessionInfo->setVisible(false);
     }
@@ -219,10 +219,10 @@ void MainWindow::setupHistoryList(std::deque<SessionState *> &states) {
 }
 
 void MainWindow::setupHistoryDetails(SessionState *state) {
-    ui->cefrResult->setText("Your result is " + state->getCefr()->getName());
+    ui->cefrResult->setText("Ваш результат: " + state->getCefr()->getName());
     ui->resultMessage->setText(state->getResultString());
-    ui->wbpercentLabel->setText("Percent of correct tests with words: " + QString::number(state->getWordBasedPercent() * 100) + "%%");
-    ui->sbpercentLabel->setText("Percent of correct tests with sentences: " + QString::number(state->getSentenceBasedPercent() * 100) + "%%");
+    ui->wbpercentLabel->setText("Процент верных решений тестов со лексикой: " + QString::number(state->getWordBasedPercent() * 100) + "%%");
+    ui->sbpercentLabel->setText("Процень верных решений тестов с текстами: " + QString::number(state->getSentenceBasedPercent() * 100) + "%%");
     setupStateTableForState(ui->detailTable, state);
 }
 

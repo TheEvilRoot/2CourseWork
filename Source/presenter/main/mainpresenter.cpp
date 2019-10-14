@@ -21,12 +21,12 @@ MainPresenter::MainPresenter(Model *model, MainView *view): mModel(model), mView
  */
 void MainPresenter::proceedAnswer(QString answer, size_t index) {
     if (!mModel->getSession()) {
-        mView->showMessage("Session is not initialized");
+        mView->showMessage("Тестирование не начато!");
         return;
     }
 
     if (!mModel->getSession()->currentTest()) {
-        mView->showMessage("Test not found");
+        mView->showMessage("Тест не найден!");
         completeSession();
         return;
     }
@@ -35,9 +35,9 @@ void MainPresenter::proceedAnswer(QString answer, size_t index) {
     auto isCorrect = session->submitTest(index, answer);
 
     if (isCorrect) {
-        mView->showMessage("Correct answer!");
+        mView->showMessage("Правильный отвеТ!");
     } else {
-        mView->showMessage("Answer is wrong!");
+        mView->showMessage("Ответ не верный...");
     }
 
     handleSession();
@@ -52,7 +52,7 @@ void MainPresenter::proceedAnswer(QString answer, size_t index) {
  */
 void MainPresenter::handleSession() {
   if (!mModel->getSession()) {
-    mView->showMessage("Session is not initialized");
+    mView->showMessage("Тестирование не начато!");
     return;
   }
   if (mModel->getSession()->isFinished()) {
@@ -75,7 +75,7 @@ void MainPresenter::initView(const ViewType *type) {
 
     auto session = mModel->getSession();
     if (type == ViewType::MENU) {
-        mView->setupMenuScreen(session ? session->getState() : nullptr);
+        mView->setupMenuScreen(session && !session->isFinished() ? session->getState() : nullptr);
     } else if (type == ViewType::RESULT) {
         mView->setupResultScreen(mModel->getLastSession());
     } else if (type == ViewType::HISTORY) {
@@ -117,18 +117,18 @@ void MainPresenter::requestNewSession(bool force, bool continueSession) {
       return;
     }
     mView->hideLoading();
-    mView->showMessage("Session already exists");
+    mView->showMessage("Тестирование уже начато");
     mView->askSession();
   } else {
     mView->hideLoading();
-    mView->showMessage("Error!");
+    mView->showMessage("Ошибка!");
   }
 }
 
 void MainPresenter::onProgressDone() {
     mView->hideLoading();
     mView->enableContent();
-    mView->showMessage("Ready to work!");
+    mView->showMessage("Готов к работе");
 }
 
 void MainPresenter::onError(QString message) {
@@ -150,7 +150,7 @@ void MainPresenter::onSessionError(QString message) {
 void MainPresenter::initApplication() {
     mView->showLoading();
     mView->disableContent();
-    mView->showMessage("Loading words...");
+    mView->showMessage("Загрузка данных...");
     WordsFileLoader *loader = new WordsFileLoader(mModel);
     QObject::connect(loader, &WordsFileLoader::progressDone, this, &MainPresenter::onProgressDone);
     QObject::connect(loader, &WordsFileLoader::progressError, this, &MainPresenter::onError);
@@ -160,7 +160,7 @@ void MainPresenter::initApplication() {
 void MainPresenter::requestSessionFinish() {
     mView->showLoading();
     mView->disableContent();
-    mView->showMessage("Saving session...");
+    mView->showMessage("Сохранение...");
     StoreWorker *worker = new StoreWorker(mModel);
     QObject::connect(worker, &StoreWorker::progressDone, this, &MainPresenter::onSessionFinish);
     QObject::connect(worker, &StoreWorker::progressError, this, &MainPresenter::onSessionError);
