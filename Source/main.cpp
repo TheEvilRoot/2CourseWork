@@ -29,7 +29,7 @@ const CEFR* CEFR::C1 = new CEFR("C1");
 const CEFR* CEFR::C2 = new CEFR("C2");
 
 int main(int argc, char *argv[]) {
-    QApplication a(argc, argv);
+    QApplication application(argc, argv);
 
     Settings *settings = new Settings();
     Q_ASSERT(settings);
@@ -40,11 +40,11 @@ int main(int argc, char *argv[]) {
     Model *model = new Model(settings, random);
     Q_ASSERT(model);
 
-    MainWindow w(model, settings);
-    MainView *view = dynamic_cast<MainView*>(&w);
+    MainWindow window(&application, model, settings);
+    MainView *view = dynamic_cast<MainView*>(&window);
     Q_ASSERT(view);
 
     Q_ASSERT(view->presentView(nullptr) == false);
-    w.show();
-    return a.exec();
+    window.show();
+    return application.exec();
 }
