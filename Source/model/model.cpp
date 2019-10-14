@@ -201,10 +201,6 @@ std::vector<BaseTest *> Model::generateTests() {
                 answers.push_back(QString(sentence.first).replace("[ ]", w));
             }
             answers.push_back(QString(sentence.first).replace("[ ]", sentence.second));
-            for (auto w : wordsForAnswers) printf("[DW] %s\n", w.toStdString().c_str());
-            printf("[D] %s:%s\n", sentence.first.toStdString().c_str(), sentence.second.toStdString().c_str());
-            for (auto w : answers) printf(">> [D] %s\n", w.toStdString().c_str());
-
             if (random > 4) {
                 testToPush = new ChoiceTest(sentence.first, answers, 5);
             } else {

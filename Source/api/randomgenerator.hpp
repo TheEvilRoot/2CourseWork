@@ -7,7 +7,6 @@
 #include <QRandomGenerator>
 #else
 #include <ctime>
-#include <cmath>
 #endif
 
 class RandomGenerator {
