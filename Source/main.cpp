@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
     Settings *settings = new Settings();
     Q_ASSERT(settings);
 
-    QRandomGenerator *random = new QRandomGenerator((int) time(nullptr));
+    RandomGenerator *random = new RandomGenerator(time(nullptr));
     Q_ASSERT(random);
 
     Model *model = new Model(settings, random);

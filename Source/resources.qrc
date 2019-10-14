@@ -6,4 +6,7 @@
         <file>words.db</file>
         <file>sentences.db</file>
     </qresource>
+    <qresource prefix="/styles">
+        <file>styles.css</file>
+    </qresource>
 </RCC>

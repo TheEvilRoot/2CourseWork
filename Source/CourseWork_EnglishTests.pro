@@ -25,6 +25,7 @@ SOURCES += \
     model/loader/wordsfileloader.cpp
 
 HEADERS += \
+    api/randomgenerator.hpp \
     api/utils.h \
     model/data/CEFR.hpp \
     model/data/basetest.hpp \

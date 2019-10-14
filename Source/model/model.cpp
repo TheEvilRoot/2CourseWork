@@ -13,7 +13,7 @@
 #include <iostream>
 #include <algorithm>
 
-Model::Model(Settings *settings, QRandomGenerator *random): mSession(nullptr), mSettings(settings), mRandomGen(random) {
+Model::Model(Settings *settings, RandomGenerator *random): mSession(nullptr), mSettings(settings), mRandomGen(random) {
     mVersion = QString::number(mSettings->versionMajor) + "." + QString::number(mSettings->versionMinor) + "-" + QString::number(mSettings->versionBuild) + mSettings->versionSign;
 }
 
@@ -140,7 +140,7 @@ WordsList Model::getRandomWords(size_t count) {
     size_t lastIndex, randomIndex;
     for (size_t i = 0; i < count; i++) {
         lastIndex = mWords.size() - 1;
-        randomIndex = mRandomGen->bounded(0, mWords.size());
+        randomIndex = mRandomGen->intInRange(mWords.size());
 
         std::swap(mWords[lastIndex], mWords[randomIndex]);
         list.push_back(mWords[lastIndex]);
@@ -151,7 +151,7 @@ WordsList Model::getRandomWords(size_t count) {
 }
 
 std::pair<QString, QString> Model::getRandomSentence() {
-    size_t randomIndex = mRandomGen->bounded(0, mSentences.size());
+    size_t randomIndex = mRandomGen->intInRange(mSentences.size());
     return mSentences[randomIndex];
 }
 
@@ -161,7 +161,7 @@ std::vector<QString> Model::getRandomSentenceAnswers(size_t count) {
     size_t lastIndex, randomIndex;
     for (size_t i = 0; i < count; i++) {
         lastIndex = mSentenceAnswers.size() - 1;
-        randomIndex = mRandomGen->bounded(0, mSentenceAnswers.size());
+        randomIndex = mRandomGen->intInRange(mSentenceAnswers.size());
 
         std::swap(mSentenceAnswers[lastIndex], mSentenceAnswers[randomIndex]);
         list.push_back(mSentenceAnswers[lastIndex]);
@@ -173,17 +173,17 @@ std::vector<QString> Model::getRandomSentenceAnswers(size_t count) {
 
 std::vector<BaseTest *> Model::generateTests() {
     std::vector<BaseTest *> tests;
-    int wordBasedCount = mRandomGen->bounded(10, 20);
-    int sentenceBasedCount = mRandomGen->bounded(3, 10);
+    int wordBasedCount = mRandomGen->intInRange(10, 20);
+    int sentenceBasedCount = mRandomGen->intInRange(3, 10);
 
     for (int i = 0; i < wordBasedCount; i++) {
         auto options = getRandomWords(6);
         std::vector<QString> answers;
-        uint direction = static_cast<uint>(mRandomGen->bounded(0, 2));
+        uint direction = static_cast<uint>(mRandomGen->intInRange(2));
         for (auto &p : options) answers.push_back(getFromPair(p, direction));
-        uint randomIndex = static_cast<uint>(mRandomGen->bounded(0, 6));
+        uint randomIndex = static_cast<uint>(mRandomGen->intInRange(6));
 
-        if (mRandomGen->bounded(0, 6) > 3) {
+        if (mRandomGen->intInRange(6) > 3) {
             tests.push_back(new ChoiceTest(getFromPair(options[randomIndex], !direction), answers, randomIndex));
         } else {
             tests.push_back(new CheckTest(getFromPair(options[randomIndex], !direction), answers, randomIndex));
@@ -192,7 +192,7 @@ std::vector<BaseTest *> Model::generateTests() {
     for (int i = 0; i < sentenceBasedCount; i++) {
         std::pair<QString, QString> sentence = getRandomSentence();
 
-        int random = mRandomGen->bounded(10);
+        int random = mRandomGen->intInRange(10);
         BaseTest *testToPush;
         if (random % 2 == 0) {
             std::vector<QString> wordsForAnswers = getRandomSentenceAnswers(5);
