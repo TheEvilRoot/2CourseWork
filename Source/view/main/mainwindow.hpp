@@ -26,7 +26,7 @@ class MainWindow : public QMainWindow, public MainView {
     Q_OBJECT
 
 public:
-    MainWindow(Model *model, Settings *settings, QWidget *parent = nullptr);
+    MainWindow(QApplication *application, Model *model, Settings *settings, QWidget *parent = nullptr);
     ~MainWindow() override;
 
     bool presentView(const ViewType *type) override;
@@ -66,4 +66,5 @@ private:
     QPushButton **mChoiceButtons;
     QStringList *mStateHeaders;
     QStringList *mHistoryHeaders;
+    QApplication *mApplication;
 };

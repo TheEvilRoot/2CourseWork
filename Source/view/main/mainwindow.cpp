@@ -4,13 +4,15 @@
 #include "model/settings.h" // TODO: Create Presenter proxy!
 
 MainWindow::MainWindow(
+    QApplication *application,
     Model* model,
     Settings *settings,
     QWidget *parent
 ):  QMainWindow(parent),
     ui(new Ui::MainWindow),
     mPresenter(new MainPresenter(model, this)),
-    mSettings(settings) {
+    mSettings(settings),
+    mApplication(application) {
     ui->setupUi(this);
 
     // I hate it!
@@ -26,7 +28,7 @@ MainWindow::MainWindow(
 
     setupMenuScreen(nullptr);
     presentView(ViewType::MENU);
-
+    mApplication->setStyleSheet(*mSettings->style);
     mPresenter->initApplication();
 }
 
