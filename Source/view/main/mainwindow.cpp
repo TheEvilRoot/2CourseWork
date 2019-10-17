@@ -245,13 +245,16 @@ void MainWindow::setupHistoryDetails(SessionState *state) {
 }
 
 void MainWindow::setupResultScreen(SessionState *state) {
+    if (state == nullptr) return;
     auto pointsString = QString::number(state->getPoints());
     auto correctString = QString::number(state->getCorrect());
     auto wrongString = QString::number(state->getWrong());
+    auto time = state->getSolveTime().toString("mm:ss");
 
     setTextFor(ui->pointsLabel, pointsString);
     setTextFor(ui->rightLabel, correctString);
     setTextFor(ui->wrongLabel, wrongString);
+    setTextFor(ui->resTimeLabel, time);
 
     if (state->getCefr() == CEFR::NOTHING) {
         setTextFor(ui->resCefrResult, "Нам пока не удалось определить Ваш уровень знаний. Больше практикуйтесь и в следующий раз у Вас все получится!");

@@ -46,6 +46,7 @@ SessionState* Model::getLastSession() {
 }
 
 void Model::storeSession(SessionState *state) {
+    state->updateSolveTime();
     mHistory.push_back(state);
 }
 
@@ -71,7 +72,7 @@ bool Model::loadWords(bool forceReload) {
 
         QStringList list = line.split("\t");
         if (list.size() < 2) {
-            std::cerr << "[words.db] Line " << lineNum << " has invalid stucture\n";
+            std::cerr << "[words.db] Line " << lineNum << " has invastoreSessionlid stucture\n";
             continue;
         }
 

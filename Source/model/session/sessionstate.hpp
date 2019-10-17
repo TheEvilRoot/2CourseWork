@@ -17,6 +17,7 @@ private:
     std::deque<Result *> mTestResults;
     double mWordBasedCorrect;
     double mSentenceBasedCorrect;
+    QDateTime mSolveTime;
 
     SessionState();
 public:
@@ -33,6 +34,8 @@ public:
     const CEFR* getCefr();
     double getWordBasedPercent();
     double getSentenceBasedPercent();
+    QDateTime& getSolveTime();
+    void updateSolveTime();
 
     size_t getCount();
     Result *at(size_t index);

@@ -20,10 +20,10 @@ Bugs to sovle and to-do list:
 * ~~History loading (In some cases (UB for now) history entries for session states displaying as empty cells.~~
 * Sometimes segfault on click on history session state
 * Windows encoding for custom strings for labels and table's headers
-* Large answers not fit in ChoiceTest view in buttons
+* ~~Large answers not fit in ChoiceTest view in buttons~~
 * Fullscreen adaptive layout
-* CEFR result and result string not displaying on Result screen
-* Session time not displaying in history and result screen (calculate as sum of times of all tests)
+* ~~CEFR result and result string not displaying on Result screen~~
+* ~~Session time not displaying in history and result screen (calculate as sum of times of all tests)~~
 * Fix data set!!
 * One of sentences has not missing word
 * Button hover color should be darker!

@@ -6,7 +6,8 @@ SessionState::SessionState():
     mTime(QDateTime::currentDateTime()),
     mResult(""),
     mWordBasedCorrect(0),
-    mSentenceBasedCorrect(0) {}
+    mSentenceBasedCorrect(0),
+    mSolveTime(QDateTime::fromMSecsSinceEpoch(0)){}
 
 SessionState::SessionState(QJsonObject obj):
     mCorrect(obj.value("correct").toInt()),
@@ -15,12 +16,14 @@ SessionState::SessionState(QJsonObject obj):
     mResult(obj.value("result").toString()),
     mCefrResult(CEFR::fromName(obj.value("cefr").toString())),
     mWordBasedCorrect(obj.value("wbcorrect").toDouble()),
-    mSentenceBasedCorrect(obj.value("sbcorrect").toDouble()) {
+    mSentenceBasedCorrect(obj.value("sbcorrect").toDouble()),
+    mSolveTime(QDateTime::fromMSecsSinceEpoch(0)){
     auto resultsArray = obj.value("results").toArray();
     for (auto res : resultsArray) {
         auto result = new Result(res.toObject());
         mTestResults.push_back(result);
     }
+    updateSolveTime();
 }
 
 QJsonObject SessionState::toJson() {
@@ -77,6 +80,10 @@ QString SessionState::getResultString() {
     return mResult;
 }
 
+QDateTime& SessionState::getSolveTime() {
+    return mSolveTime;
+}
+
 std::deque<Result *>& SessionState::getTestResults() {
     return mTestResults;
 }
@@ -87,4 +94,11 @@ double SessionState::getWordBasedPercent() {
 
 double SessionState::getSentenceBasedPercent() {
     return mSentenceBasedCorrect;
+}
+
+void SessionState::updateSolveTime() {
+    mSolveTime = QDateTime::fromMSecsSinceEpoch(0);
+    for (auto res : mTestResults) {
+        mSolveTime = mSolveTime.addMSecs(res->mSolveTime.toMSecsSinceEpoch());
+    }
 }
