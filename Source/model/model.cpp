@@ -201,11 +201,7 @@ std::vector<BaseTest *> Model::generateTests() {
                 answers.push_back(QString(sentence.first).replace("[ ]", w));
             }
             answers.push_back(QString(sentence.first).replace("[ ]", sentence.second));
-            if (random > 4) {
-                testToPush = new ChoiceTest(sentence.first, answers, 5);
-            } else {
-                testToPush = new CheckTest(sentence.first, answers, 5);
-            }
+            testToPush = new CheckTest(sentence.first, answers, 5);
         } else {
             testToPush = new InputTest(sentence.first, sentence.second);
         }
