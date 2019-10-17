@@ -17,7 +17,7 @@ Windows requirements
 Bugs to sovle and to-do list:
 -----
 
-* History loading (In some cases (UB for now) history entries for session states displaying as empty cells. 
+* ~~History loading (In some cases (UB for now) history entries for session states displaying as empty cells.~~
 * Sometimes segfault on click on history session state
 * Windows encoding for custom strings for labels and table's headers
 * Large answers not fit in ChoiceTest view in buttons

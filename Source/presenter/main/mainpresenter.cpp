@@ -137,9 +137,9 @@ void MainPresenter::onError(QString message) {
     mView->showMessage(message);
 }
 
-void MainPresenter::onSessionFinish() {
+void MainPresenter::onSessionFinish(const ViewType *nextView) {
     onProgressDone();
-    initView(ViewType::MENU);
+    initView(nextView);
 }
 
 void MainPresenter::onSessionError(QString message) {
@@ -157,18 +157,20 @@ void MainPresenter::initApplication() {
     loader->start();
 }
 
-void MainPresenter::requestSessionFinish() {
+void MainPresenter::requestSessionFinish(const ViewType *nextView) {
     mView->showLoading();
     mView->disableContent();
     mView->showMessage("Сохранение...");
-    StoreWorker *worker = new StoreWorker(mModel);
+    StoreWorker *worker = new StoreWorker(mModel, nextView);
     QObject::connect(worker, &StoreWorker::progressDone, this, &MainPresenter::onSessionFinish);
     QObject::connect(worker, &StoreWorker::progressError, this, &MainPresenter::onSessionError);
     worker->start();
 }
 
 void MainPresenter::requestHistoryDetailUpdate(int index) {
-    mView->setupHistoryDetails(mModel->getHistory()[index]);
+    auto historyEntry = index < 0 || index  > mModel->getHistory().size() ? nullptr : mModel->getHistory()[index];
+
+    mView->setupHistoryDetails(historyEntry);
 }
 
 QString& MainPresenter::getVersion() {

@@ -2,12 +2,12 @@
 
 #include <iostream>
 
-StoreWorker::StoreWorker(Model *model): mModel(model) { }
+StoreWorker::StoreWorker(Model *model, const ViewType *nextView): mModel(model), mNextView(nextView) { }
 
 void StoreWorker::run() {
     try {
         if (mModel->saveHistory()) {
-            emit progressDone();
+            emit progressDone(mNextView);
         } else {
             emit progressError("Failed");
         }

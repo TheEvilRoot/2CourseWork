@@ -10,11 +10,12 @@ class StoreWorker : public QThread {
 
 private:
     Model *mModel;
+    const ViewType *mNextView;
 public:
-    StoreWorker(Model *model);
+    StoreWorker(Model *model, const ViewType *nextView);
     void run() override;
 
 signals:
-    void progressDone();
+    void progressDone(const ViewType *nextView);
     void progressError(QString);
 };

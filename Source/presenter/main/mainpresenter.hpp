@@ -19,7 +19,7 @@ public:
 
   void proceedAnswer(QString answer, size_t index);
   void requestNewSession(bool force = false, bool continueSession = false);
-  void requestSessionFinish();
+  void requestSessionFinish(const ViewType *nextView = ViewType::MENU);
   void requestHistoryDetailUpdate(int index);
   void handleSession();
   void completeSession();
@@ -28,7 +28,7 @@ public:
 
   QString& getVersion();
 public slots:
-    void onSessionFinish();
+    void onSessionFinish(const ViewType *nextView);
     void onSessionError(QString message);
     void onProgressDone();
     void onError(QString message);

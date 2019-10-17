@@ -10,6 +10,7 @@ void WordsFileLoader::run() {
     bool loadSentences = mModel->loadSentences();
     bool loadHistory = mModel->loadHistory();
     auto res = ("Words loaded: " + QString::number(loadWords) + " Sentences loaded: " + QString::number(loadSentences) + "History loaded: " + QString::number(loadHistory));
+    std::cout << res.toStdString() << "\n";
     if (loadWords && loadSentences && loadHistory) {
         emit progressDone();
     } else {

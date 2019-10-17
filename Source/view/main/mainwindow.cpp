@@ -71,8 +71,10 @@ void MainWindow::initConnection() {
 
     // Result screen
     connect(ui->back2menu, &QPushButton::clicked, this, [=]() {
-        mPresenter->requestSessionFinish();
-        // presentView(ViewType::MENU);
+        mPresenter->requestSessionFinish(ViewType::MENU);
+    });
+    connect(ui->resGo2History, &QPushButton::clicked, this, [=]() {
+       mPresenter->requestSessionFinish(ViewType::HISTORY);
     });
 
     // History screen
@@ -85,8 +87,11 @@ void MainWindow::initConnection() {
     });
 
     connect(ui->historyTable, &QTableWidget::itemSelectionChanged, this, [=]() {
-        mPresenter->requestHistoryDetailUpdate(ui->historyTable->currentRow());
+        auto selectedIndex = ui->historyTable->currentRow();
+        auto isSelected = ui->historyTable->selectedRanges().size();
+        mPresenter->requestHistoryDetailUpdate(isSelected ? selectedIndex : -1);
     });
+
 }
 
 void MainWindow::initStatusBar() {
@@ -219,11 +224,24 @@ void MainWindow::setupHistoryList(std::deque<SessionState *> &states) {
 }
 
 void MainWindow::setupHistoryDetails(SessionState *state) {
-    ui->cefrResult->setText("Ваш результат: " + state->getCefr()->getName());
-    ui->resultMessage->setText(state->getResultString());
-    ui->wbpercentLabel->setText("Процент верных решений тестов со лексикой: " + QString::number(state->getWordBasedPercent() * 100) + "%%");
-    ui->sbpercentLabel->setText("Процень верных решений тестов с текстами: " + QString::number(state->getSentenceBasedPercent() * 100) + "%%");
     setupStateTableForState(ui->detailTable, state);
+
+    if (state == nullptr) {
+        setTextFor(ui->cefrResult, "");
+        setTextFor(ui->resultMessage, "");
+        setTextFor(ui->wbpercentLabel, "");
+        setTextFor(ui->sbpercentLabel, "");
+        return;
+    }
+    if (state->getCefr() == CEFR::NOTHING) {
+        setTextFor(ui->cefrResult, "Нам пока не удалось определить Ваш уровень знаний. Больше практикуйтесь и в следующий раз у Вас все получится!");
+        setTextFor(ui->resultMessage, "");
+    } else {
+        setTextFor(ui->cefrResult, "Ваш результат: " + state->getCefr()->getName());
+        setTextFor(ui->resultMessage, state->getResultString());
+    }
+    setTextFor(ui->wbpercentLabel, "Процент верных решений тестов со лексикой: " + QString::number(state->getWordBasedPercent() * 100) + "%%");
+    setTextFor(ui->sbpercentLabel, "Процень верных решений тестов с текстами: " + QString::number(state->getSentenceBasedPercent() * 100) + "%%");
 }
 
 void MainWindow::setupResultScreen(SessionState *state) {
@@ -234,18 +252,34 @@ void MainWindow::setupResultScreen(SessionState *state) {
     setTextFor(ui->pointsLabel, pointsString);
     setTextFor(ui->rightLabel, correctString);
     setTextFor(ui->wrongLabel, wrongString);
-    setTextFor(ui->resultLabel, state->getResultString());
+
+    if (state->getCefr() == CEFR::NOTHING) {
+        setTextFor(ui->resCefrResult, "Нам пока не удалось определить Ваш уровень знаний. Больше практикуйтесь и в следующий раз у Вас все получится!");
+        setTextFor(ui->resultLabel, "");
+    } else {
+        setTextFor(ui->resCefrResult, "Ваш результат: " + state->getCefr()->getName());
+        setTextFor(ui->resultLabel, state->getResultString());
+    }
+
     setupStateTableForState(ui->logTable, state);
 }
 
 void MainWindow::setupStateTableForState(QTableWidget *table, SessionState *state) {
+    if (table == nullptr)
+        return;
     table->clear();
     table->setHorizontalHeaderLabels(*mStateHeaders);
-    if (state == nullptr) return;
+    if (state == nullptr) {
+        table->setRowCount(0);
+        return;
+    }
 
     table->setRowCount(static_cast<int>(state->getCount()));
-    for (int i = 0; i < ui->logTable->rowCount(); i++) {
+    for (int i = 0; i < static_cast<int>(state->getCount()); i++) {
         auto res = state->at(static_cast<size_t>(i));
+        if (res == nullptr) {
+            std::cerr << "index " << i << " nullptr\n";
+        }
         int j = 0;
         table->setItem(i, j++, notEditableItem(res->mQuestion));
         table->setItem(i, j++, notEditableItem(res->mAnswer));

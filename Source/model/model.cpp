@@ -216,10 +216,11 @@ std::vector<BaseTest *> Model::generateTests() {
 }
 
 bool Model::loadHistory() {
-    QFile *file = new QFile("history.json");
-    if (!file->exists()) return true;
+    QFile *file = new QFile("./history.json");
+    if (!file->exists()) return true; // If file does not exists, history loading is not necessary, so it's actually succeed
 
     if (!file->open(QIODevice::ReadOnly)) {
+        std::cerr << "Unable to open history file" << file->errorString().toStdString() << "\n";
         if (file) delete file;
         return false;
     }
@@ -231,7 +232,7 @@ bool Model::loadHistory() {
     QJsonObject fileObj = QJsonDocument::fromJson(text.toUtf8()).object();
 
     if (!fileObj.keys().contains("history")) {
-        std::cerr << "History file is invalid. History entry not in root object" << "\n";
+        std::cout << "History file is invalid. History entry not in root object" << "\n";
         return false;
     }
 
@@ -242,6 +243,8 @@ bool Model::loadHistory() {
         mHistory.push_back(state);
     }
     file->close();
+
+    std::cout << "History count: " << mHistory.size() << "\n";
 
     if (file) delete file;
     if (stream) delete stream;
@@ -263,6 +266,7 @@ bool Model::saveHistory() {
 
     QFile *file = new QFile("history.json");
     if (!file->open(QIODevice::WriteOnly)) {
+        std::cerr << "Failed to open file to save history " << file->errorString().toStdString() << "\n";
         return false;
     }
 
