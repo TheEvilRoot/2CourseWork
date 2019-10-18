@@ -21,12 +21,12 @@ MainPresenter::MainPresenter(Model *model, MainView *view): mModel(model), mView
  */
 void MainPresenter::proceedAnswer(QString answer, size_t index) {
     if (!mModel->getSession()) {
-        mView->showMessage("Тестирование не начато!");
+        mView->showMessage("Тестирование не начато!", true);
         return;
     }
 
     if (!mModel->getSession()->currentTest()) {
-        mView->showMessage("Тест не найден!");
+        mView->showMessage("Тест не найден!", true);
         completeSession();
         return;
     }
@@ -52,7 +52,7 @@ void MainPresenter::proceedAnswer(QString answer, size_t index) {
  */
 void MainPresenter::handleSession() {
   if (!mModel->getSession()) {
-    mView->showMessage("Тестирование не начато!");
+    mView->showMessage("Тестирование не начато!", true);
     return;
   }
   if (mModel->getSession()->isFinished()) {
@@ -117,11 +117,11 @@ void MainPresenter::requestNewSession(bool force, bool continueSession) {
       return;
     }
     mView->hideLoading();
-    mView->showMessage("Тестирование уже начато");
+    mView->showMessage("Тестирование уже начато", true);
     mView->askSession();
   } else {
     mView->hideLoading();
-    mView->showMessage("Ошибка!");
+    mView->initiateError(true, "New session erro");
   }
 }
 
@@ -133,8 +133,8 @@ void MainPresenter::onProgressDone() {
 
 void MainPresenter::onError(QString message) {
     mView->hideLoading();
-    mView->enableContent();
     mView->showMessage(message);
+    mView->initiateError(true, message);
 }
 
 void MainPresenter::onSessionFinish(const ViewType *nextView) {

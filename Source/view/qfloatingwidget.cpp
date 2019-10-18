@@ -24,7 +24,6 @@ void QFloatingWidget::paintEvent(QPaintEvent *e) {
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
 
-    // Prepare the popup dimensions
     QRectF roundedRectDimensions;
     roundedRectDimensions.setX(rect().x() + 5);
     roundedRectDimensions.setY(rect().y() + 5);
@@ -35,7 +34,7 @@ void QFloatingWidget::paintEvent(QPaintEvent *e) {
 
     QPen pen;
     pen.setColor(Qt::gray);
-    pen.setWidth(1);
+    pen.setWidth(0);
     painter.setPen(pen);
 
     // Draw the popup body

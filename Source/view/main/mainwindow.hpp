@@ -37,6 +37,7 @@ public:
     void enableContent() override;
     void disableContent() override;
     void askSession() override;
+    void initiateError(bool fatal = false, QString message = "Unexpected error.") override;
 
     void setupResultScreen(SessionState *state) override;
     void setupChoiceScreen(QString question, std::vector<QString> answers) override;

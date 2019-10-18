@@ -3,6 +3,8 @@
 #include "view/sessiondialog/sessiondialog.hpp"
 #include "model/settings.h" // TODO: Create Presenter proxy!
 
+#include <QMessageBox>
+
 MainWindow::MainWindow(
     QApplication *application,
     Model* model,
@@ -32,6 +34,7 @@ MainWindow::MainWindow(
     presentView(ViewType::MENU);
     mApplication->setStyleSheet(*mSettings->style);
     mPresenter->initApplication();
+
 }
 
 MainWindow::~MainWindow() {
@@ -170,6 +173,24 @@ void MainWindow::showMessage(QString message, bool enablePopup) {
     setTextFor(statusBarLabel, message);
     if (enablePopup)
         showPopup(message);
+}
+
+void MainWindow::initiateError(bool fatal, QString message) {
+   if (fatal) {
+       disableContent();
+       QMessageBox *errorBox = new QMessageBox(this);
+       errorBox->setText("We've catch an fatal error dying application's work.\nThere's a description that will help maintain that problem: \n\n" + message);
+       errorBox->setWindowTitle("Fatal error occurred");
+       errorBox->setButtonText(QMessageBox::Ok, "Exit");
+       errorBox->button(QMessageBox::Ok)->setStyleSheet("padding-left: 20px; padding-right: 20px;");
+       connect(errorBox->button(QMessageBox::Ok), &QPushButton::clicked, [=]() {
+           exit(0);
+       });
+       errorBox->setWindowFlags((errorBox->windowFlags() | Qt::CustomizeWindowHint) & ~Qt::WindowCloseButtonHint);
+       errorBox->show();
+   } else {
+       showPopup("Error has occurred: " + message);
+   }
 }
 
 void MainWindow::disableContent() {

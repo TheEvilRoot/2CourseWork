@@ -32,7 +32,8 @@ Bugs to solve and to-do list:
 * Sometimes segfault on click on history session state (I think I've fix it. Just can't reproduce it again...)
 * Fullscreen adaptive layout
 * Windows encoding for custom strings for labels and table's headers
-* Fix data set!! (Outsourced 
+* Fix data set!! (Outsourced)
+* Shared pointers for DI objects.
 
 
 

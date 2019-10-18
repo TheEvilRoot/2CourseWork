@@ -15,6 +15,7 @@ public:
     virtual void disableContent() = 0;
     virtual void enableContent() = 0;
     virtual void askSession() = 0;
+    virtual void initiateError(bool fatal = false, QString message = "Unexpected error.") = 0;
 
     virtual void setupChoiceScreen(QString question, std::vector<QString> answers) = 0;
     virtual void setupInputScreen(QString question, QString prefill = "") = 0;
