@@ -308,8 +308,8 @@ void MainWindow::showPopup(QString message, unsigned int time) {
 
     const QPoint point(0, 0);
     const QPoint globalPos = ui->centralwidget->mapToGlobal(point);
-    const int posX = globalPos.x();
-    const int posY = globalPos.y();
+    const int posX = globalPos.x() + ((width() - mFloating->width()) >> 1);
+    const int posY = globalPos.y() + ((height() - mFloating->height()) >> 1);
 
     mFloating->setGeometry(posX, posY,
                        mFloating->width(),

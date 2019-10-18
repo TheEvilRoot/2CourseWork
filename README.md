@@ -18,21 +18,22 @@ Bugs to solve and to-do list:
 -----
 
 * ~~History loading (In some cases (UB for now) history entries for session states displaying as empty cells.~~
-* Sometimes segfault on click on history session state
-* Windows encoding for custom strings for labels and table's headers
 * ~~Large answers not fit in ChoiceTest view in buttons~~
-* Fullscreen adaptive layout
 * ~~CEFR result and result string not displaying on Result screen~~
 * ~~Session time not displaying in history and result screen (calculate as sum of times of all tests)~~
-* Fix data set!!
 * ~~One of sentences has not missing word~~
 * ~~Button hover color should be darker!~~
-* More noticeable message about test result (correct or wrong)
-	* Maybe colorize to red and green
-	* Or create floating message over question with disappear delay
-	* Modal dialog (Mhhmhmhmmhmhmhmhmhmhmhmhmhmhhhh, I don't like it)
+* ~~More noticeable message about test result (correct or wrong)~~
+	* ~~Maybe colorize to red and green~~
+	* ~~Or create floating message over question with disappear delay~~
+	* ~~Modal dialog (Mhhmhmhmmhmhmhmhmhmhmhmhmhmhhhh, I don't like it)~~
 * Some sort of help messages to provide user what he can do on the screen
 * Add more articles!!
+* Sometimes segfault on click on history session state (I think I've fix it. Just can't reproduce it again...)
+* Fullscreen adaptive layout
+* Windows encoding for custom strings for labels and table's headers
+* Fix data set!! (Outsourced 
+
 
 
 Ideas
