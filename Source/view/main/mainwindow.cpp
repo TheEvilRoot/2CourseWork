@@ -20,6 +20,8 @@ MainWindow::MainWindow(
     mHistoryHeaders = new QStringList {"Время", "Верные ответы", "Неверные ответы", "Численных результат", "Результат"};
     mStateHeaders = new QStringList {"Вопрос", "Правильный ответ", "Попытки", "Численных результат", "Время", "Ваши ответы"};
 
+    mFloating = new QFloatingWidget(this);
+
     initConnection();
     initStatusBar();
     initStateTable(ui->logTable);
@@ -164,8 +166,10 @@ void MainWindow::hideLoading() {
     statusProgressBar->setVisible(false);
 }
 
-void MainWindow::showMessage(QString message) {
+void MainWindow::showMessage(QString message, bool enablePopup) {
     setTextFor(statusBarLabel, message);
+    if (enablePopup)
+        showPopup(message);
 }
 
 void MainWindow::disableContent() {
@@ -297,4 +301,19 @@ QTableWidgetItem* MainWindow::notEditableItem(QString content) {
     auto item = new QTableWidgetItem(content);
     item->setFlags(item->flags() & (~Qt::ItemIsEditable));
     return item;
+}
+
+void MainWindow::showPopup(QString message, unsigned int time) {
+    mFloating->setPopupText(message);
+
+    const QPoint point(0, 0);
+    const QPoint globalPos = ui->centralwidget->mapToGlobal(point);
+    const int posX = globalPos.x();
+    const int posY = globalPos.y();
+
+    mFloating->setGeometry(posX, posY,
+                       mFloating->width(),
+                       mFloating->height());
+
+    mFloating->show();
 }
