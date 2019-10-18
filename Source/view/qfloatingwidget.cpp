@@ -1,6 +1,7 @@
 #include "qfloatingwidget.hpp"
 
 #include <QPainter>
+#include <QTimer>
 
 QFloatingWidget::QFloatingWidget(QWidget *parent): QWidget(parent) {
     resize(200, 50);
@@ -11,7 +12,7 @@ QFloatingWidget::QFloatingWidget(QWidget *parent): QWidget(parent) {
 
     animation.setTargetObject(this);
     animation.setPropertyName("popupOpacity");
-    animation.setDuration(150);
+    animation.setDuration(700);
 
     label.setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 
@@ -19,16 +20,7 @@ QFloatingWidget::QFloatingWidget(QWidget *parent): QWidget(parent) {
     setLayout(&layout);
 }
 
-
-QPoint QFloatingWidget::mfg(const QPoint &p) {
-    return this->mapFromGlobal(p);
-}
-
 void QFloatingWidget::paintEvent(QPaintEvent *e) {
-    // Draw the popup here
-    // You can always pick an image and use drawPixmap to
-    // draw it in order to make things simpler
-
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing);
 
@@ -43,23 +35,11 @@ void QFloatingWidget::paintEvent(QPaintEvent *e) {
 
     QPen pen;
     pen.setColor(Qt::gray);
-    pen.setWidth(3);
+    pen.setWidth(1);
     painter.setPen(pen);
 
     // Draw the popup body
     painter.drawRoundedRect(roundedRectDimensions, 15, 15);
-
-    painter.setPen(Qt::NoPen);
-    painter.setBrush(QBrush(Qt::gray));
-
-    // Draw the popup pointer
-    const QPointF points[3] = {
-        QPointF(roundedRectDimensions.x(), roundedRectDimensions.height() / 2 - 5 + 3),
-        QPointF(roundedRectDimensions.x(), roundedRectDimensions.height() / 2 + 5 + 3),
-        QPointF(roundedRectDimensions.x() - 5, roundedRectDimensions.height() / 2 + 3)
-    };
-
-    painter.drawPolygon(points, 3);
 }
 
 void QFloatingWidget::setPopupText(const QString &text) {
@@ -67,15 +47,21 @@ void QFloatingWidget::setPopupText(const QString &text) {
 }
 
 void QFloatingWidget::show() {
+    animation.setStartValue(0);
+    animation.setEndValue(1);
+    QTimer::singleShot(2000, [=]() {
+       if (!(popupOpacity < 1)) {
+           animation.setStartValue(popupOpacity);
+           animation.setEndValue(0);
+           animation.start();
+       }
+    });
     setWindowOpacity(0.0);
-
-    animation.setStartValue(0.0);
-    animation.setEndValue(1.0);
-
-    QWidget::show();
-
     animation.start();
+    QWidget::show();
 }
+
+
 
 void QFloatingWidget::setPopupOpacity(float opacity) {
     popupOpacity = opacity;

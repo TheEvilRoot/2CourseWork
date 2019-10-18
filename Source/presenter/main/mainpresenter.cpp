@@ -35,9 +35,9 @@ void MainPresenter::proceedAnswer(QString answer, size_t index) {
     auto isCorrect = session->submitTest(index, answer);
 
     if (isCorrect) {
-        mView->showMessage("Правильный отвеТ!");
+        mView->showMessage("Правильный ответ!", true);
     } else {
-        mView->showMessage("Ответ не верный...");
+        mView->showMessage("Ответ не верный...", true);
     }
 
     handleSession();

@@ -16,15 +16,14 @@ class QFloatingWidget: public QWidget {
 
 public:
     explicit QFloatingWidget(QWidget *parent = nullptr);
-    QPoint mfg(const QPoint &p);
 
 
 protected:
         void paintEvent(QPaintEvent *e);
 
 public slots:
-     void setPopupText(const QString& text);
-     void show();
+    void setPopupText(const QString& text);
+    void show();
 
 private:
     QLabel label;

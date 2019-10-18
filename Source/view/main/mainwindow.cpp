@@ -166,9 +166,10 @@ void MainWindow::hideLoading() {
     statusProgressBar->setVisible(false);
 }
 
-void MainWindow::showMessage(QString message) {
+void MainWindow::showMessage(QString message, bool enablePopup) {
     setTextFor(statusBarLabel, message);
-    showPopup(message);
+    if (enablePopup)
+        showPopup(message);
 }
 
 void MainWindow::disableContent() {
@@ -307,11 +308,10 @@ void MainWindow::showPopup(QString message, unsigned int time) {
 
     const QPoint point(0, 0);
     const QPoint globalPos = ui->centralwidget->mapToGlobal(point);
-    const int posX = -globalPos.x();
-    const int posY = -globalPos.y();
+    const int posX = globalPos.x();
+    const int posY = globalPos.y();
 
-    mFloating->setGeometry(posX + width() / 2,
-                       posY - height() / 2,
+    mFloating->setGeometry(posX, posY,
                        mFloating->width(),
                        mFloating->height());
 
