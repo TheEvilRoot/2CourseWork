@@ -5,6 +5,7 @@
 #include "model/model.hpp"
 #include "presenter/main/mainpresenter.hpp"
 #include "model/settings.h"
+#include "view/qfloatingwidget.hpp"
 
 #include <QMainWindow>
 #include <QProgressBar>
@@ -56,6 +57,7 @@ private:
     void setupStateTableForState(QTableWidget *table, SessionState *state);
     void optionSubmit(int position);
     void answerSubmit(QString answer);
+    void showPopup(QString message, unsigned int time = 1000);
     QTableWidgetItem* notEditableItem(QString content);
 
     Ui::MainWindow *ui;
@@ -67,4 +69,5 @@ private:
     QStringList *mStateHeaders;
     QStringList *mHistoryHeaders;
     QApplication *mApplication;
+    QFloatingWidget *mFloating;
 };

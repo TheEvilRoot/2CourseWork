@@ -14,7 +14,7 @@ Windows requirements
 * libwinpthread-1.dll
 * libstdc++-6.dll
 
-Bugs to sovle and to-do list:
+Bugs to solve and to-do list:
 -----
 
 * ~~History loading (In some cases (UB for now) history entries for session states displaying as empty cells.~~
@@ -25,7 +25,7 @@ Bugs to sovle and to-do list:
 * ~~CEFR result and result string not displaying on Result screen~~
 * ~~Session time not displaying in history and result screen (calculate as sum of times of all tests)~~
 * Fix data set!!
-* One of sentences has not missing word
+* ~~One of sentences has not missing word~~
 * ~~Button hover color should be darker!~~
 * More noticeable message about test result (correct or wrong)
 	* Maybe colorize to red and green

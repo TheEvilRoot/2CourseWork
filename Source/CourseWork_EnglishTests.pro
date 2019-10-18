@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += gui core
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -21,6 +21,7 @@ SOURCES += \
     view/main/mainwindow.cpp \
     model/model.cpp \
     model/session/session.cpp \
+    view/qfloatingwidget.cpp \
     view/sessiondialog/sessiondialog.cpp \
     model/loader/wordsfileloader.cpp
 
@@ -40,6 +41,7 @@ HEADERS += \
     view/main/mainwindow.hpp \
     model/model.hpp \
     model/session/session.hpp \
+    view/qfloatingwidget.hpp \
     view/sessiondialog/sessiondialog.hpp \
     model/settings.h \
     view/viewtype.h \
