@@ -19,7 +19,7 @@ public:
     ~Session();
 
     void nextTest();
-    bool submitTest(size_t index, QString answer);
+    int submitTest(size_t index, QString answer);
     int calculatePoints(Result *result, BaseTest *test);
     void applyResult();
 

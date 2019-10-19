@@ -62,7 +62,7 @@ void Session::nextTest() {
  * @param result - r
  * @param answer
  */
-bool Session::submitTest(size_t index, QString answer) {
+int Session::submitTest(size_t index, QString answer) {
     auto test = currentTest();
     if (test == nullptr) return false;
     auto isCorrect = false;
@@ -86,11 +86,19 @@ bool Session::submitTest(size_t index, QString answer) {
         mState->mWrong++;
     }
 
-    if (isCorrect || !mAttemptsMode) {
+    if (isCorrect || !mAttemptsMode || result->mAttempts > 3) {
         nextTest();
         applyResult();
+        return isCorrect;
     }
-    return isCorrect;
+
+    // Ghosts:
+    // is not correct
+    // attempt mode enabled
+
+    if (result->mAttempts <= 3) {
+        return 1377 + result->mAttempts;
+    }
 }
 
 BaseTest* Session::currentTest() const {
