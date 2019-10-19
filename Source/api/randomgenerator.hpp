@@ -1,6 +1,12 @@
 #ifndef RANDOMGENERATOR_HPP
 #define RANDOMGENERATOR_HPP
 
+/*
+ * Backward capability class
+ *
+ * QRandomGenerator does not exists under Qt 5.10.
+ */
+
 #include <QtGlobal>
 #if QT_VERSION >= QT_VERSION_CHECK(5,10,0)
 #define QT_RANDOM_GEN_PRESENT
