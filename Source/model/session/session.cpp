@@ -5,13 +5,14 @@
 #include <cmath>
 #include <QDateTime>
 
-Session::Session(TestList tests, bool attemptsMode):
+Session::Session(TestList tests, int maxAttempts):
     mTests(tests),
     mPosition(0),
-    mAttemptsMode(attemptsMode),
+    mMaxAttempts(maxAttempts),
+    mMagicConstant(1377),
     mState(new SessionState) {
     applyResult();
-    std::cout << "Initializing session " << attemptsMode << "\n";
+    std::cout << "Initializing session " << isAttemptsMode() << "\n";
 }
 
 Session::~Session() {
@@ -20,11 +21,19 @@ Session::~Session() {
 }
 
 bool Session::isAttemptsMode() const {
-    return mAttemptsMode;
+    return mMaxAttempts > 0;
 }
 
 int Session::getCorrectAnswersCount() const {
     return mState->mCorrect;
+}
+
+int Session::getMaxAttempts() const {
+    return mMaxAttempts;
+}
+
+int Session::getMagic() const {
+    return mMagicConstant;
 }
 
 int Session::getWrongAnswersCount() const {
@@ -86,19 +95,17 @@ int Session::submitTest(size_t index, QString answer) {
         mState->mWrong++;
     }
 
-    if (isCorrect || !mAttemptsMode || result->mAttempts > 3) {
+    if (isCorrect || result->mAttempts > mMaxAttempts) {
         nextTest();
         applyResult();
         return isCorrect;
     }
-
     // Ghosts:
     // is not correct
-    // attempt mode enabled
+    // maxAttempts > 0
+    // mAttemps <= maxAttempts
 
-    if (result->mAttempts <= 3) {
-        return 1377 + result->mAttempts;
-    }
+    return mMagicConstant + result->mAttempts;
 }
 
 BaseTest* Session::currentTest() const {

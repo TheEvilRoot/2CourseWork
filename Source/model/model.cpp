@@ -32,7 +32,7 @@ int Model::newSession(bool force) {
 
   // Otherwise delete (free) current session (if even exists) and create a new one!
   if (mSession) delete mSession;
-  this->mSession = new Session(generateTests(), mSettings->isAttemptMode);
+  this->mSession = new Session(generateTests(), mSettings->isAttemptMode ? mSettings->attemptsCount : 0);
 
   return 0;
 }

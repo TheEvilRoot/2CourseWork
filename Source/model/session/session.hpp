@@ -11,11 +11,12 @@ class Session {
 private:
   TestList mTests;
   size_t mPosition;
-  bool mAttemptsMode;
+  int mMaxAttempts;
+  int mMagicConstant;
   SessionState *mState;
 
 public:
-    Session(TestList tests, bool attemptsMode = false);
+    Session(TestList tests, int maxAttempts = 0);
     ~Session();
 
     void nextTest();
@@ -32,6 +33,8 @@ public:
     bool isFinished();
     size_t getTestPosition() const;
     void generateConclusion();
+    int getMaxAttempts() const;
+    int getMagic() const;
 
     SessionState * getState(); // Should be removed!
 };

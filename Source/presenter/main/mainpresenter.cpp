@@ -36,8 +36,8 @@ void MainPresenter::proceedAnswer(QString answer, size_t index) {
 
     if (isCorrect == 1) {
         mView->showMessage("Правильный ответ!", true);
-    } else if (isCorrect >= 1377) {
-        mView->showMessage("Ответ неверный. Осталось " + QString::number(3 - (isCorrect - 1377)) + " попыток");
+    } else if (isCorrect >= session->getMagic()) {
+        mView->showMessage("Ответ неверный. Осталось " + QString::number(session->getMaxAttempts() - (isCorrect - session->getMagic())) + " попыток");
     } else {
         mView->showMessage("Ответ не верный...", true);
     }
