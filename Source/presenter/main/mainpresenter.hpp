@@ -25,7 +25,7 @@ public:
   void completeSession();
   void initView(const ViewType *type);
   void initApplication();
-
+  void updateMenuTip();
   QString& getVersion();
 public slots:
     void onSessionFinish(const ViewType *nextView);

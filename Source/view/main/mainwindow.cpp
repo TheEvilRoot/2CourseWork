@@ -347,3 +347,7 @@ void MainWindow::setTestTitle(const ViewType *type, size_t index, size_t count) 
 
     if (titleView) setTextFor(titleView, "Тест " + QString::number(index + 1) + "/" + QString::number(count));
 }
+
+void MainWindow::setTipWords(std::pair<QString, QString> &words) {
+    setTextFor(ui->menuTipView, "Интересный факт<br><b>" + words.first + "</b> переводится как <b>" + words.second + "</b>");
+}

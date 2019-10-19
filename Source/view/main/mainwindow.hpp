@@ -49,6 +49,7 @@ public:
     void setupHistoryDetails(SessionState *state) override;
 
     void setTestTitle(const ViewType *type, size_t index, size_t count) override;
+    void setTipWords(std::pair<QString, QString> &words) override;
 private slots:
 
 private:

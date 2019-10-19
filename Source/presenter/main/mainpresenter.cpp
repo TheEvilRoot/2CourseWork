@@ -70,11 +70,17 @@ void MainPresenter::completeSession() {
     initView(ViewType::RESULT);
 }
 
+void MainPresenter::updateMenuTip() {
+    auto tip = mModel->getRandomWords(1);
+    mView->setTipWords(tip[0]);
+}
+
 void MainPresenter::initView(const ViewType *type) {
     mView->presentView(type);
 
     auto session = mModel->getSession();
-    if (type == ViewType::MENU) {
+    if (type == ViewType::MENU) { 
+        updateMenuTip();
         mView->setupMenuScreen(session && !session->isFinished() ? session->getState() : nullptr);
     } else if (type == ViewType::RESULT) {
         mView->setupResultScreen(mModel->getLastSession());
@@ -133,6 +139,7 @@ void MainPresenter::onProgressDone() {
     mView->hideLoading();
     mView->enableContent();
     mView->showMessage("Готов к работе");
+    updateMenuTip();
 }
 
 void MainPresenter::onError(QString message) {
