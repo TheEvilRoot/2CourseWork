@@ -81,11 +81,14 @@ void MainPresenter::initView(const ViewType *type) {
     } else if (type == ViewType::HISTORY) {
         mView->setupHistoryList(mModel->getHistory());
     } else {
+        auto testsCount = session->getTestsCount();
+        auto testIndex = session->getTestPosition();
         auto test = session->currentTest();
         if (test == nullptr) return;
 
-        if (type == ViewType::INPUT) mView->setupInputScreen(test->getQuestion(), "");
-
+        if (type == ViewType::INPUT) {
+            mView->setupInputScreen(test->getQuestion(), "");
+        }
         if (type == ViewType::CHOICE) {
             ChoiceTest *choiceTest;
             if ((choiceTest = dynamic_cast<ChoiceTest *>(test)) != nullptr) {
@@ -98,6 +101,7 @@ void MainPresenter::initView(const ViewType *type) {
                 mView->setupCheckScreen(test->getQuestion(), checkTest->getAnswers());
             }
         }
+        mView->setTestTitle(type, testIndex, testsCount);
     }
 }
 

@@ -39,6 +39,10 @@ size_t Session::getTestsCount() const {
     return mTests.size();
 }
 
+size_t Session::getTestPosition() const {
+    return mPosition;
+}
+
 void Session::applyResult() {
     if (!mState->mTestResults.empty()) {
         auto mSecs = abs(QDateTime::currentDateTime().msecsTo(mState->mTestResults.back()->mSolveTime));

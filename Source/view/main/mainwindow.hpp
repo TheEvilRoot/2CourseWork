@@ -48,6 +48,7 @@ public:
     void setupHistoryList(std::deque<SessionState *> &states) override;
     void setupHistoryDetails(SessionState *state) override;
 
+    void setTestTitle(const ViewType *type, size_t index, size_t count) override;
 private slots:
 
 private:

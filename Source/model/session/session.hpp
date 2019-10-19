@@ -30,7 +30,7 @@ public:
     int getWrongAnswersCount() const;
     bool isAttemptsMode() const;
     bool isFinished();
-
+    size_t getTestPosition() const;
     void generateConclusion();
 
     SessionState * getState(); // Should be removed!

@@ -25,4 +25,7 @@ public:
 
     virtual void setupHistoryList(std::deque<SessionState *> &states) = 0;
     virtual void setupHistoryDetails(SessionState *state) = 0;
+
+    virtual void setTestTitle(const ViewType *type, size_t index, size_t count) = 0;
 };
+

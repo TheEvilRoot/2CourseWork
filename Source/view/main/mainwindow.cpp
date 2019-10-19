@@ -338,3 +338,12 @@ void MainWindow::showPopup(QString message, unsigned int time) {
 
     mFloating->show();
 }
+
+void MainWindow::setTestTitle(const ViewType *type, size_t index, size_t count) {
+    QLabel *titleView = nullptr;
+    if (type == ViewType::INPUT) titleView = ui->inputTestTitle;
+    if (type == ViewType::CHECK) titleView = ui->checkTestTitle;
+    if (type == ViewType::CHOICE) titleView = ui->choiceTestTitle;
+
+    if (titleView) setTextFor(titleView, "Тест " + QString::number(index + 1) + "/" + QString::number(count));
+}
