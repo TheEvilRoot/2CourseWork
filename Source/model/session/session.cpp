@@ -41,7 +41,8 @@ size_t Session::getTestsCount() const {
 
 void Session::applyResult() {
     if (!mState->mTestResults.empty()) {
-        mState->mTestResults.back()->mSolveTime = QDateTime::fromMSecsSinceEpoch(QDateTime::currentDateTime().msecsTo(mState->mTestResults.back()->mSolveTime));
+        auto mSecs = abs(QDateTime::currentDateTime().msecsTo(mState->mTestResults.back()->mSolveTime));
+        mState->mTestResults.back()->mSolveTime = QDateTime::fromMSecsSinceEpoch(mSecs);
     }
     if (!currentTest()) return;
     auto test = currentTest();
@@ -115,4 +116,54 @@ int Session::calculatePoints(Result *result, BaseTest *test) {
 
 SessionState * Session::getState() {
     return mState;
+}
+
+void Session::generateConclusion() {
+    int countOfWordBasedTests = 0;
+    int correctWordBased = 0;
+    int countOfSentenceBasedTests = 0;
+    int correctSentenceBased = 0;
+
+    for (auto result : mState->getTestResults()) {
+       bool isSentenceBased = mTests[result->mIndex]->isSentenceBased();
+       countOfWordBasedTests += !isSentenceBased;
+       countOfSentenceBasedTests += isSentenceBased;
+       correctSentenceBased += isSentenceBased && result->mPointsForTest != 0;
+       correctWordBased += !isSentenceBased && result->mPointsForTest != 0;
+    }
+
+    double percentCorrectOfWordBased = (correctWordBased * 1.0) / countOfWordBasedTests;
+    double percentCorrectOfSentenceBased = (correctSentenceBased * 1.0) / countOfSentenceBasedTests;
+
+    // A1: WB > 0.05
+    // A2: WB > 0.2 & SB > 0.05
+    // B1: WB > 0.5 & SB > 0.2
+    // B2 WB > 0.8 & SB > 0.5
+    // C1: WB > 0.9 & SB > 0.8
+    // C2: WB == 1 && SB > 0.9
+    if (percentCorrectOfWordBased >= 0.999 && percentCorrectOfSentenceBased > 0.9) {
+        // C2
+        mState->mCefrResult = CEFR::C2;
+    } else if (percentCorrectOfWordBased >= 0.9 && percentCorrectOfSentenceBased > 0.8) {
+        // C1
+        mState->mCefrResult = CEFR::C1;
+    } else if (percentCorrectOfWordBased > 0.8 && percentCorrectOfSentenceBased > 0.5) {
+        // B2
+        mState->mCefrResult = CEFR::B2;
+    } else if (percentCorrectOfWordBased > 0.5 && percentCorrectOfSentenceBased > 0.2) {
+        // B1
+        mState->mCefrResult = CEFR::B1;
+    } else if (percentCorrectOfWordBased > 0.2 && percentCorrectOfSentenceBased > 0.05) {
+        // A2
+        mState->mCefrResult = CEFR::A2;
+    } else if (percentCorrectOfWordBased > 0.05) {
+        // A1
+        mState->mCefrResult = CEFR::A1;
+    } else {
+        // Need more practice
+        mState->mCefrResult = CEFR::NOTHING;
+    }
+
+    mState->mWordBasedCorrect = percentCorrectOfWordBased;
+    mState->mSentenceBasedCorrect = percentCorrectOfSentenceBased;
 }

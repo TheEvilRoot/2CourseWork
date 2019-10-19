@@ -2,8 +2,7 @@
 
 #include "model/session/session.hpp"
 #include "settings.h"
-
-#include <QRandomGenerator>
+#include "api/randomgenerator.hpp"
 
 typedef std::vector<std::pair<QString, QString>> WordsList;
 
@@ -11,7 +10,7 @@ class Model {
 private:
   Session *mSession;
   Settings *mSettings;
-  QRandomGenerator *mRandomGen;
+  RandomGenerator *mRandomGen;
   WordsList mWords;
   WordsList mSentences;
   std::vector<QString> mSentenceAnswers;
@@ -20,7 +19,7 @@ private:
   QString mVersion;
 
 public:
-  Model(Settings *settings, QRandomGenerator *random);
+  Model(Settings *settings, RandomGenerator *random);
 
   QString& getVersion();
 
@@ -34,6 +33,7 @@ public:
   std::pair<QString, QString> getRandomSentence();
   std::vector<QString> getRandomSentenceAnswers(size_t count = 1);
   TestList generateTests();
+  void sessionConclude();
 
   bool loadHistory();
   bool saveHistory();

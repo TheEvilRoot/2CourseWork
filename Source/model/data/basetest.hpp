@@ -11,6 +11,7 @@ protected:
     const ViewType *mType;
     QString mQuestionText;
     QString mRightAnswer;
+    bool mIsSentenceBased;
 
 public:
 
@@ -18,7 +19,8 @@ public:
 
     BaseTest(const ViewType *type,
              QString questionText,
-             QString rightAnswer);
+             QString rightAnswer,
+             bool isSentenceBased = false);
 
     virtual ~BaseTest();
 
@@ -27,4 +29,7 @@ public:
     QString getQuestion() const;
     QString getAnswer() const;
     int getId() const;
+
+    bool isSentenceBased();
+    void setSentenceBased();
 };

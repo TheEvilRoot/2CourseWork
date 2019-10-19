@@ -1,33 +1,40 @@
-#include "mainwindow.hpp"
+﻿#include "mainwindow.hpp"
 #include "ui_mainwindow.h"
 #include "view/sessiondialog/sessiondialog.hpp"
 #include "model/settings.h" // TODO: Create Presenter proxy!
 
+#include <QMessageBox>
+
 MainWindow::MainWindow(
+    QApplication *application,
     Model* model,
     Settings *settings,
     QWidget *parent
 ):  QMainWindow(parent),
     ui(new Ui::MainWindow),
     mPresenter(new MainPresenter(model, this)),
-    mSettings(settings) {
+    mSettings(settings),
+    mApplication(application) {
     ui->setupUi(this);
 
     // I hate it!
     mChoiceButtons = new QPushButton*[6]{ ui->choiceOption1, ui->choiceOption2, ui->choiceOption3, ui->choiceOption4, ui->choiceOption5, ui->choiceOption6 };
-    mDetailHeaders = new QStringList {"Question", "Answer", "Attempts", "Points", "Solve Time", "Your answers"};
-    mHistoryHeaders = new QStringList {"Session time", "Correct", "Wrong", "Points", "Result"};
-    mResultHeaders = new QStringList {"Question", "Answer", "Points", "Attempts", "Time"};
+    mHistoryHeaders = new QStringList {"Время", "Верные ответы", "Неверные ответы", "Численных результат", "Результат"};
+    mStateHeaders = new QStringList {"Вопрос", "Правильный ответ", "Попытки", "Численных результат", "Время", "Ваши ответы"};
+
+    mFloating = new QFloatingWidget(this);
 
     initConnection();
     initStatusBar();
-    initResultTable();
+    initStateTable(ui->logTable);
+    initStateTable(ui->detailTable);
     initHistoryTables();
 
-    setupMenuScreen(false, 0);
+    setupMenuScreen(nullptr);
     presentView(ViewType::MENU);
-
+    mApplication->setStyleSheet(*mSettings->style);
     mPresenter->initApplication();
+
 }
 
 MainWindow::~MainWindow() {
@@ -69,10 +76,13 @@ void MainWindow::initConnection() {
 
     // Result screen
     connect(ui->back2menu, &QPushButton::clicked, this, [=]() {
-        mPresenter->requestSessionFinish();
-        // presentView(ViewType::MENU);
+        mPresenter->requestSessionFinish(ViewType::MENU);
+    });
+    connect(ui->resGo2History, &QPushButton::clicked, this, [=]() {
+       mPresenter->requestSessionFinish(ViewType::HISTORY);
     });
 
+    // History screen
     connect(ui->showHistory, &QPushButton::clicked, this, [=]() {
         mPresenter->initView(ViewType::HISTORY);
     });
@@ -82,8 +92,11 @@ void MainWindow::initConnection() {
     });
 
     connect(ui->historyTable, &QTableWidget::itemSelectionChanged, this, [=]() {
-        mPresenter->requestHistoryDetailUpdate(ui->historyTable->currentRow());
+        auto selectedIndex = ui->historyTable->currentRow();
+        auto isSelected = ui->historyTable->selectedRanges().size();
+        mPresenter->requestHistoryDetailUpdate(isSelected ? selectedIndex : -1);
     });
+
 }
 
 void MainWindow::initStatusBar() {
@@ -99,9 +112,12 @@ void MainWindow::initStatusBar() {
     ui->statusbar->addPermanentWidget(statusBarLabel);
 }
 
-void MainWindow::initResultTable() {
-    ui->logTable->setColumnCount(5);
-    ui->logTable->setHorizontalHeaderLabels(*mResultHeaders);
+void MainWindow::initStateTable(QTableWidget *table) {
+    table->setHorizontalHeaderLabels(*mStateHeaders);
+    table->setColumnCount(6);
+    table->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    table->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectRows);
+    table->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
 }
 
 void MainWindow::initHistoryTables() {
@@ -110,12 +126,6 @@ void MainWindow::initHistoryTables() {
     ui->historyTable->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     ui->historyTable->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectRows);
     ui->historyTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-
-    ui->detailTable->setHorizontalHeaderLabels(*mDetailHeaders);
-    ui->detailTable->setColumnCount(6);
-    ui->detailTable->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-    ui->detailTable->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectRows);
-    ui->detailTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
 }
 
 bool MainWindow::presentView(const ViewType *type) {
@@ -159,8 +169,28 @@ void MainWindow::hideLoading() {
     statusProgressBar->setVisible(false);
 }
 
-void MainWindow::showMessage(QString message) {
+void MainWindow::showMessage(QString message, bool enablePopup) {
     setTextFor(statusBarLabel, message);
+    if (enablePopup)
+        showPopup(message);
+}
+
+void MainWindow::initiateError(bool fatal, QString message) {
+   if (fatal) {
+       disableContent();
+       QMessageBox *errorBox = new QMessageBox(this);
+       errorBox->setText("We've catch an fatal error dying application's work.\nThere's a description that will help maintain that problem: \n\n" + message);
+       errorBox->setWindowTitle("Fatal error occurred");
+       errorBox->setButtonText(QMessageBox::Ok, "Exit");
+       errorBox->button(QMessageBox::Ok)->setStyleSheet("padding-left: 20px; padding-right: 20px;");
+       connect(errorBox->button(QMessageBox::Ok), &QPushButton::clicked, [=]() {
+           exit(0);
+       });
+       errorBox->setWindowFlags((errorBox->windowFlags() | Qt::CustomizeWindowHint) & ~Qt::WindowCloseButtonHint);
+       errorBox->show();
+   } else {
+       showPopup("Error has occurred: " + message);
+   }
 }
 
 void MainWindow::disableContent() {
@@ -171,11 +201,10 @@ void MainWindow::enableContent() {
   ui->stackedWidget->setEnabled(true);
 }
 
-void MainWindow::setupMenuScreen(bool hasActiveSession, int points) {
-    if (hasActiveSession) {
+void MainWindow::setupMenuScreen(SessionState *currentState) {
+    if (currentState != nullptr) {
         ui->sessionInfo->setVisible(true);
-        QString message = "You have unfinished session. Your points: " + QString::number(points);
-        setTextFor(ui->sessionInfo, message);
+        setTextFor(ui->sessionInfo, "У вас есть незавершенное тестирование");
     } else {
         ui->sessionInfo->setVisible(false);
     }
@@ -203,28 +232,6 @@ void MainWindow::setupCheckScreen(QString question, std::vector<QString> answers
     }
 }
 
-void MainWindow::setupResultScreen(SessionState *state) {
-    auto pointsString = QString::number(state->getPoints());
-    auto correctString = QString::number(state->getCorrect());
-    auto wrongString = QString::number(state->getWrong());
-
-    setTextFor(ui->pointsLabel, pointsString);
-    setTextFor(ui->rightLabel, correctString);
-    setTextFor(ui->wrongLabel, wrongString);
-    setTextFor(ui->resultLabel, state->getResultString());
-
-    ui->logTable->setRowCount(static_cast<int>(state->getCount()));
-    for (int i = 0; i < ui->logTable->rowCount(); i++) {
-        auto res = state->at(static_cast<size_t>(i));
-        int j = 0;
-        ui->logTable->setItem(i, j++, new QTableWidgetItem(res->mQuestion));
-        ui->logTable->setItem(i, j++, new QTableWidgetItem(res->mAnswer));
-        ui->logTable->setItem(i, j++, new QTableWidgetItem(QString::number(res->mPointsForTest)));
-        ui->logTable->setItem(i, j++, new QTableWidgetItem(QString::number(res->mAttempts)));
-        ui->logTable->setItem(i, j++, new QTableWidgetItem(res->mSolveTime.toString(Qt::DateFormat::DefaultLocaleShortDate)));
-    }
-}
-
 void MainWindow::setupHistoryList(std::deque<SessionState *> &states) {
     ui->historyTable->clear();
     ui->historyTable->setHorizontalHeaderLabels(*mHistoryHeaders);
@@ -233,28 +240,101 @@ void MainWindow::setupHistoryList(std::deque<SessionState *> &states) {
         auto state = states[static_cast<size_t>(i)];
         int j = 0;
 
-        ui->historyTable->setItem(i, j++, new QTableWidgetItem(state->getTime().toString(Qt::DateFormat::DefaultLocaleShortDate)));
-        ui->historyTable->setItem(i, j++, new QTableWidgetItem(QString::number(state->getCorrect())));
-        ui->historyTable->setItem(i, j++, new QTableWidgetItem(QString::number(state->getWrong())));
-        ui->historyTable->setItem(i, j++, new QTableWidgetItem(QString::number(state->getPoints())));
-        ui->historyTable->setItem(i, j++, new QTableWidgetItem(state->getResultString()));
+        ui->historyTable->setItem(i, j++, notEditableItem(state->getTime().toString(Qt::DateFormat::DefaultLocaleShortDate)));
+        ui->historyTable->setItem(i, j++, notEditableItem(QString::number(state->getCorrect())));
+        ui->historyTable->setItem(i, j++, notEditableItem(QString::number(state->getWrong())));
+        ui->historyTable->setItem(i, j++, notEditableItem(QString::number(state->getPoints())));
+        ui->historyTable->setItem(i, j++, notEditableItem(state->getTime().toString(Qt::DateFormat::DefaultLocaleShortDate)));
     }
 }
 
-void MainWindow::setupHistoryDetails(std::deque<Result *> &results) {
-    ui->detailTable->clear();
-    ui->detailTable->setHorizontalHeaderLabels(*mDetailHeaders);
-    ui->detailTable->setRowCount(static_cast<int>(results.size()));
+void MainWindow::setupHistoryDetails(SessionState *state) {
+    setupStateTableForState(ui->detailTable, state);
 
-    for (int i = 0; i < ui->detailTable->rowCount(); i++) {
-        auto result = results[static_cast<size_t>(i)];
-        int j = 0;
-
-        ui->detailTable->setItem(i, j++, new QTableWidgetItem(result->mQuestion));
-        ui->detailTable->setItem(i, j++, new QTableWidgetItem(result->mAnswer));
-        ui->detailTable->setItem(i, j++, new QTableWidgetItem(QString::number(result->mAttempts)));
-        ui->detailTable->setItem(i, j++, new QTableWidgetItem(QString::number(result->mPointsForTest)));
-        ui->detailTable->setItem(i, j++, new QTableWidgetItem(result->mSolveTime.toString(Qt::DateFormat::DefaultLocaleShortDate)));
-        ui->detailTable->setItem(i, j++, new QTableWidgetItem(result->getJoinedAnswers(',')));
+    if (state == nullptr) {
+        setTextFor(ui->cefrResult, "");
+        setTextFor(ui->resultMessage, "");
+        setTextFor(ui->wbpercentLabel, "");
+        setTextFor(ui->sbpercentLabel, "");
+        return;
     }
+    if (state->getCefr() == CEFR::NOTHING) {
+        setTextFor(ui->cefrResult, "Нам пока не удалось определить Ваш уровень знаний. Больше практикуйтесь и в следующий раз у Вас все получится!");
+        setTextFor(ui->resultMessage, "");
+    } else {
+        setTextFor(ui->cefrResult, "Ваш результат: " + state->getCefr()->getName());
+        setTextFor(ui->resultMessage, state->getResultString());
+    }
+    setTextFor(ui->wbpercentLabel, "Процент верных решений тестов со лексикой: " + QString::number(state->getWordBasedPercent() * 100) + "%%");
+    setTextFor(ui->sbpercentLabel, "Процень верных решений тестов с текстами: " + QString::number(state->getSentenceBasedPercent() * 100) + "%%");
+}
+
+void MainWindow::setupResultScreen(SessionState *state) {
+    if (state == nullptr) return;
+    auto pointsString = QString::number(state->getPoints());
+    auto correctString = QString::number(state->getCorrect());
+    auto wrongString = QString::number(state->getWrong());
+    auto time = state->getSolveTime().toString("mm:ss");
+
+    setTextFor(ui->pointsLabel, pointsString);
+    setTextFor(ui->rightLabel, correctString);
+    setTextFor(ui->wrongLabel, wrongString);
+    setTextFor(ui->resTimeLabel, time);
+
+    if (state->getCefr() == CEFR::NOTHING) {
+        setTextFor(ui->resCefrResult, "Нам пока не удалось определить Ваш уровень знаний. Больше практикуйтесь и в следующий раз у Вас все получится!");
+        setTextFor(ui->resultLabel, "");
+    } else {
+        setTextFor(ui->resCefrResult, "Ваш результат: " + state->getCefr()->getName());
+        setTextFor(ui->resultLabel, state->getResultString());
+    }
+
+    setupStateTableForState(ui->logTable, state);
+}
+
+void MainWindow::setupStateTableForState(QTableWidget *table, SessionState *state) {
+    if (table == nullptr)
+        return;
+    table->clear();
+    table->setHorizontalHeaderLabels(*mStateHeaders);
+    if (state == nullptr) {
+        table->setRowCount(0);
+        return;
+    }
+
+    table->setRowCount(static_cast<int>(state->getCount()));
+    for (int i = 0; i < static_cast<int>(state->getCount()); i++) {
+        auto res = state->at(static_cast<size_t>(i));
+        if (res == nullptr) {
+            std::cerr << "index " << i << " nullptr\n";
+        }
+        int j = 0;
+        table->setItem(i, j++, notEditableItem(res->mQuestion));
+        table->setItem(i, j++, notEditableItem(res->mAnswer));
+        table->setItem(i, j++, notEditableItem(res->getJoinedAnswers(',')));
+        table->setItem(i, j++, notEditableItem(QString::number(res->mPointsForTest)));
+        table->setItem(i, j++, notEditableItem(QString::number(res->mAttempts)));
+        table->setItem(i, j++, notEditableItem(res->mSolveTime.toString("mm:ss")));
+    }
+}
+
+QTableWidgetItem* MainWindow::notEditableItem(QString content) {
+    auto item = new QTableWidgetItem(content);
+    item->setFlags(item->flags() & (~Qt::ItemIsEditable));
+    return item;
+}
+
+void MainWindow::showPopup(QString message, unsigned int time) {
+    mFloating->setPopupText(message);
+
+    const QPoint point(0, 0);
+    const QPoint globalPos = ui->centralwidget->mapToGlobal(point);
+    const int posX = globalPos.x() + ((width() - mFloating->width()) >> 1);
+    const int posY = globalPos.y() + ((height() - mFloating->height()) >> 1);
+
+    mFloating->setGeometry(posX, posY,
+                       mFloating->width(),
+                       mFloating->height());
+
+    mFloating->show();
 }
