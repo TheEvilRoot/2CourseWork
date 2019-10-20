@@ -5,6 +5,7 @@
 #include "model/data/inputtest.hpp"
 #include "api/utils.h"
 
+#include<QStandardPaths>
 #include <QFile>
 #include <QTextStream>
 #include <QJsonArray>
@@ -12,7 +13,7 @@
 #include <QJsonDocument>
 #include <iostream>
 #include <algorithm>
-
+#include <QDir>
 Model::Model(Settings *settings, RandomGenerator *random): mSession(nullptr), mSettings(settings), mRandomGen(random) {
     mVersion = QString::number(mSettings->versionMajor) + "." + QString::number(mSettings->versionMinor) + "-" + QString::number(mSettings->versionBuild) + mSettings->versionSign;
 }
@@ -213,7 +214,9 @@ std::vector<BaseTest *> Model::generateTests() {
 }
 
 bool Model::loadHistory() {
-    QFile *file = new QFile("./history.json");
+    auto path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QFile *file = new QFile(path + "/history.json");
+
     if (!file->exists()) {
         file->close();
         if (file) delete file;
@@ -267,8 +270,12 @@ bool Model::saveHistory() {
 
     obj.insert("history", history);
     QJsonDocument doc(obj);
+    auto path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QDir *directory = new QDir(path);
+    if (!directory->exists()) directory->mkpath(".");
 
-    QFile *file = new QFile("./history.json");
+    QFile *file = new QFile(path + "/history.json");
+    std::cout << "PATH: " << file->fileName().toStdString() << " :: " << path.toStdString() << "\n";
     if (!file->open(QIODevice::WriteOnly)) {
         std::cerr << "Failed to open file to save history " << file->errorString().toStdString() << "\n";
         return false;
