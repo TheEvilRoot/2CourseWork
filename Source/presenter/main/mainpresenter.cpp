@@ -144,10 +144,10 @@ void MainPresenter::onProgressDone() {
     updateMenuTip();
 }
 
-void MainPresenter::onError(QString message) {
+void MainPresenter::onError(QString message, bool fatal) {
     mView->hideLoading();
     mView->showMessage(message);
-    mView->initiateError(true, message);
+    mView->initiateError(fatal, message);
 }
 
 void MainPresenter::onSessionFinish(const ViewType *nextView) {
