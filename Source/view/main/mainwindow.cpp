@@ -178,9 +178,9 @@ void MainWindow::initiateError(bool fatal, QString message) {
    if (fatal) {
        disableContent();
        QMessageBox *errorBox = new QMessageBox(this);
-       errorBox->setText("We've catch an fatal error dying application's work.\nThere's a description that will help maintain that problem: \n\n" + message);
-       errorBox->setWindowTitle("Fatal error occurred");
-       errorBox->setButtonText(QMessageBox::Ok, "Exit");
+       errorBox->setText("Во время работы приложения произошла ошибка. К сожалению дальнейшая работа невозможна.\nДалее представлена информация об ошибке, которая может помочь решить ее:\n\n" + message);
+       errorBox->setWindowTitle("Произошла ошибка");
+       errorBox->setButtonText(QMessageBox::Ok, "Закрыть приложение");
        errorBox->button(QMessageBox::Ok)->setStyleSheet("padding-left: 20px; padding-right: 20px;");
        connect(errorBox->button(QMessageBox::Ok), &QPushButton::clicked, [=]() {
            exit(0);
