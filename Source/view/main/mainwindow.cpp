@@ -34,7 +34,6 @@ MainWindow::MainWindow(
     presentView(ViewType::MENU);
     mApplication->setStyleSheet(*mSettings->style);
     mPresenter->initApplication();
-
 }
 
 MainWindow::~MainWindow() {
