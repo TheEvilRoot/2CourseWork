@@ -240,6 +240,7 @@ bool Model::loadHistory() {
     QJsonObject fileObj = QJsonDocument::fromJson(text.toUtf8()).object();
 
     if (!fileObj.keys().contains("history")) {
+        file->remove();
         file->close();
         if (file) delete file;
         throw QString::fromUtf8("History file is invalid");
