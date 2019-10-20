@@ -5,6 +5,7 @@
 #include "model/data/inputtest.hpp"
 #include "api/utils.h"
 
+#include<QStandardPaths>
 #include <QFile>
 #include <QTextStream>
 #include <QJsonArray>
@@ -12,7 +13,7 @@
 #include <QJsonDocument>
 #include <iostream>
 #include <algorithm>
-
+#include <QDir>
 Model::Model(Settings *settings, RandomGenerator *random): mSession(nullptr), mSettings(settings), mRandomGen(random) {
     mVersion = QString::number(mSettings->versionMajor) + "." + QString::number(mSettings->versionMinor) + "-" + QString::number(mSettings->versionBuild) + mSettings->versionSign;
 }
@@ -56,8 +57,10 @@ bool Model::loadWords(bool forceReload) {
 
     QFile *file = new QFile(":/data/words.db");
     if (!file->open(QIODevice::ReadOnly)) {
+        auto message = QString::fromUtf8("Unable to open words file: ") + file->errorString();
+        file->close();
         if (file) delete file;
-        return false;
+        throw message;
     }
 
     QTextStream *stream = new QTextStream(file);
@@ -82,7 +85,6 @@ bool Model::loadWords(bool forceReload) {
 
     if (file) delete file;
     if (stream) delete stream;
-
     return mWords.size();
 }
 
@@ -93,8 +95,10 @@ bool Model::loadSentences(bool forceReload) {
 
     QFile *file = new QFile(":/data/sentences.db");
     if (!file->open(QIODevice::ReadOnly)) {
-        if (file) delete  file;
-        return false;
+        auto message = QString::fromUtf8("Unable to open sentences file: ") + file->errorString();
+        file->close();
+        if (file) delete file;
+        throw message;
     }
 
     QTextStream *stream = new QTextStream(file);
@@ -213,13 +217,20 @@ std::vector<BaseTest *> Model::generateTests() {
 }
 
 bool Model::loadHistory() {
-    QFile *file = new QFile("./history.json");
-    if (!file->exists()) return true; // If file does not exists, history loading is not necessary, so it's actually succeed
+    auto path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QFile *file = new QFile(path + "/history.json");
+
+    if (!file->exists()) {
+        file->close();
+        if (file) delete file;
+        return true;
+    } // If file does not exists, history loading is not necessary, so it's actually succeed
 
     if (!file->open(QIODevice::ReadOnly)) {
-        std::cerr << "Unable to open history file" << file->errorString().toStdString() << "\n";
+        auto message = QString::fromUtf8("Unable to open history file: ") + file->errorString();
+        file->close();
         if (file) delete file;
-        return false;
+        throw message;
     }
 
     QTextStream *stream = new QTextStream(file);
@@ -229,8 +240,10 @@ bool Model::loadHistory() {
     QJsonObject fileObj = QJsonDocument::fromJson(text.toUtf8()).object();
 
     if (!fileObj.keys().contains("history")) {
-        std::cout << "History file is invalid. History entry not in root object" << "\n";
-        return false;
+        file->remove();
+        file->close();
+        if (file) delete file;
+        throw QString::fromUtf8("History file is invalid");
     }
 
     QJsonArray historyEntries = fileObj.value("history").toArray();
@@ -239,9 +252,8 @@ bool Model::loadHistory() {
         auto state = new SessionState(entry.toObject());
         mHistory.push_back(state);
     }
-    file->close();
 
-    std::cout << "History count: " << mHistory.size() << "\n";
+    file->close();
 
     if (file) delete file;
     if (stream) delete stream;
@@ -249,30 +261,33 @@ bool Model::loadHistory() {
     return true;
 }
 
-
+// Throws QString with error message
 bool Model::saveHistory() {
+    // Json generation
     QJsonObject obj;
     QJsonArray history;
-
     for (auto state : mHistory) {
         history.push_back(state->toJson());
     }
-
     obj.insert("history", history);
     QJsonDocument doc(obj);
 
-    QFile *file = new QFile("history.json");
+    // Create AppData directory is doesn't exists
+    auto path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QDir *directory = new QDir(path);
+    if (!directory->exists()) directory->mkpath(".");
+
+    // Open file
+    QFile *file = new QFile(path + "/history.json");
     if (!file->open(QIODevice::WriteOnly)) {
-        std::cerr << "Failed to open file to save history " << file->errorString().toStdString() << "\n";
-        return false;
+        throw QString::fromUtf8("Failed to open file to save history: ") + file->errorString();
     }
 
     QTextStream *stream = new QTextStream(file);
     stream->setCodec("UTF-8");
-
     stream->operator<<(QString::fromUtf8(doc.toJson()));
-    file->close();
 
+    file->close();
     return true;
 }
 

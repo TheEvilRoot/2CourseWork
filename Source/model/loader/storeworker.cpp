@@ -6,12 +6,11 @@ StoreWorker::StoreWorker(Model *model, const ViewType *nextView): mModel(model),
 
 void StoreWorker::run() {
     try {
-        if (mModel->saveHistory()) {
-            emit progressDone(mNextView);
-        } else {
-            emit progressError("Failed");
-        }
-    } catch(...){
-        emit progressError("Exception!!");
+       if (!mModel->saveHistory()) emit progressError("Something really went wrong");
+    } catch(QString &msg){
+        emit progressError(msg);
+        return;
     }
+
+    emit progressDone(mNextView);
 }

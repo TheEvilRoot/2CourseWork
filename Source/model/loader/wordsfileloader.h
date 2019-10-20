@@ -16,5 +16,5 @@ public:
 
 signals:
     void progressDone();
-    void progressError(QString);
+    void progressError(QString, bool);
 };

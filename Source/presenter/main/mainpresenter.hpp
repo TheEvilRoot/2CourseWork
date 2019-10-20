@@ -31,5 +31,5 @@ public slots:
     void onSessionFinish(const ViewType *nextView);
     void onSessionError(QString message);
     void onProgressDone();
-    void onError(QString message);
+    void onError(QString message, bool fatal = true);
 };
