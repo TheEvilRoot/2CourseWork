@@ -36,7 +36,7 @@ Bugs to solve and to-do list:
 * Shared pointers for DI objects.
 * ~~Add tips to Menu Screen with words from dataset.~~
 * ~~Add number of attempts only for attempts mode.~~
-* ~~On macOS(Windows just not tested) failed to open history file... ~~
+* ~~On macOS(Windows just not tested) failed to open history file~~
 
 
 

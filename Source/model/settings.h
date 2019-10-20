@@ -13,7 +13,7 @@ public:
     char versionSign;
     QString *style;
     int attemptsCount;
-    Settings(): isAttemptMode(false), versionMajor(1), versionMinor(2), versionBuild(191019), versionSign('A'), style(new QString), attemptsCount(3) {
+    Settings(): isAttemptMode(false), versionMajor(1), versionMinor(3), versionBuild(201019), versionSign('A'), style(new QString), attemptsCount(3) {
         loadStyles(style);
     }
 
