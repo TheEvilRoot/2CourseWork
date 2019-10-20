@@ -188,7 +188,7 @@ void MainWindow::initiateError(bool fatal, QString message) {
        errorBox->setWindowFlags((errorBox->windowFlags() | Qt::CustomizeWindowHint) & ~Qt::WindowCloseButtonHint);
        errorBox->show();
    } else {
-       showPopup("Error has occurred: " + message);
+       showPopup("Произошла ошибка: " + message);
    }
 }
 
