@@ -29,7 +29,6 @@ public:
     int getPoints() const;
     int getCorrectAnswersCount() const;
     int getWrongAnswersCount() const;
-    bool isAttemptsMode() const;
     bool isFinished();
     size_t getTestPosition() const;
     void generateConclusion();

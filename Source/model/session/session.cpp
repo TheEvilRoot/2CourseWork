@@ -12,16 +12,11 @@ Session::Session(TestList tests, int maxAttempts):
     mMagicConstant(1377),
     mState(new SessionState) {
     applyResult();
-    std::cout << "Initializing session " << isAttemptsMode() << "\n";
 }
 
 Session::~Session() {
     std::cerr << "Session descruction initiated!!!!!!\n";
     for (size_t i = 0; i < mTests.size(); i++) if (mTests[i]) delete mTests[i];
-}
-
-bool Session::isAttemptsMode() const {
-    return mMaxAttempts > 0;
 }
 
 int Session::getCorrectAnswersCount() const {
@@ -95,7 +90,7 @@ int Session::submitTest(size_t index, QString answer) {
         mState->mWrong++;
     }
 
-    if (isCorrect || result->mAttempts > mMaxAttempts) {
+    if (isCorrect || result->mAttempts >= mMaxAttempts) {
         nextTest();
         applyResult();
         return isCorrect;

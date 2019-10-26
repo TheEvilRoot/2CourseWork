@@ -4,6 +4,7 @@
 #include "model/settings.h" // TODO: Create Presenter proxy!
 
 #include <QMessageBox>
+#include <QSpinBox>
 
 MainWindow::MainWindow(
     QApplication *application,
@@ -45,9 +46,8 @@ void MainWindow::initConnection() {
     connect(ui->go2exit, &QPushButton::clicked, this, [=]() {
       this->close();
     });
-    connect(ui->attemptsBox, &QCheckBox::toggled, this, [=]() {
-       bool newState = ui->attemptsBox->isChecked();
-       mSettings->isAttemptMode = newState;
+    connect(ui->attemptsBox, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, [=]() {
+        mSettings->attemptsCount = ui->attemptsBox->value();
     });
 
     connect(ui->startSession, &QPushButton::clicked, this, [=]() {
@@ -63,9 +63,7 @@ void MainWindow::initConnection() {
 
     // Input screen
     connect(ui->inputSubmitButton, &QPushButton::clicked, this, [=]() {
-     // if (ui->inputAnswerInput->text().size() > 0) {
         answerSubmit(ui->inputAnswerInput->text());
-      //}
     });
 
     // Check screen
@@ -208,7 +206,6 @@ void MainWindow::setupMenuScreen(SessionState *currentState) {
         ui->sessionInfo->setVisible(false);
     }
     ui->versionLabel->setText(mPresenter->getVersion());
-    ui->attemptsBox->setChecked(mSettings->isAttemptMode);
 }
 
 void MainWindow::setupChoiceScreen(QString question, std::vector<QString> answers) {
