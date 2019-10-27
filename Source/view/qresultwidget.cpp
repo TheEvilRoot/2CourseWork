@@ -32,10 +32,8 @@ QResultWidget::QResultWidget(SessionState *state) : mEmptyAnswer("<i>Пусто�
     font.setPointSize(18);
     font.setBold(false);
     questionLabel->setFont(font);
-    questionLabel->setScaledContents(false);
     questionLabel->setAlignment(Qt::AlignCenter);
     questionLabel->setWordWrap(true);
-    questionLabel->setScaledContents(true);
     contentView->addWidget(questionLabel);
     userAnswerLabel = new QLabel(this);
     userAnswerLabel->setObjectName(QString::fromUtf8("userAnswerLabel"));
@@ -133,5 +131,5 @@ void QResultWidget::updateView() {
 
     auto correctAnswer = result->mAnswer;
     if (correctAnswer.length() == 0) correctAnswer = mEmptyAnswer;
-    setTextFor(correctLabel, correctAnswer);
+    setTextFor(correctLabel, !result->mPointsForTest ? correctAnswer : "");
 }
