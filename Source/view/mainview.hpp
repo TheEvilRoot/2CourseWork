@@ -29,5 +29,6 @@ public:
     virtual void setTipWords(std::pair<QString, QString>& words) = 0;
 
     virtual void setTestTitle(const ViewType *type, size_t index, size_t count) = 0;
+    virtual void setupResultTest(Result *result, size_t index, size_t count) = 0;
 };
 

@@ -27,7 +27,7 @@ MainWindow::MainWindow(
 
     initConnection();
     initStatusBar();
-    initStateTable(ui->logTable);
+//    initStateTable(ui->logTable);
     initStateTable(ui->detailTable);
     initHistoryTables();
 
@@ -78,7 +78,12 @@ void MainWindow::initConnection() {
     connect(ui->resGo2History, &QPushButton::clicked, this, [=]() {
        mPresenter->requestSessionFinish(ViewType::HISTORY);
     });
-
+    connect(ui->resTestNext, &QPushButton::clicked, this, [=]() {
+        mPresenter->nextResultTest();
+    });
+    connect(ui->resTestPrev, &QPushButton::clicked, this, [=]() {
+       mPresenter->prevResultTest();
+    });
     // History screen
     connect(ui->showHistory, &QPushButton::clicked, this, [=]() {
         mPresenter->initView(ViewType::HISTORY);
@@ -93,7 +98,6 @@ void MainWindow::initConnection() {
         auto isSelected = ui->historyTable->selectedRanges().size();
         mPresenter->requestHistoryDetailUpdate(isSelected ? selectedIndex : -1);
     });
-
 }
 
 void MainWindow::initStatusBar() {
@@ -285,7 +289,22 @@ void MainWindow::setupResultScreen(SessionState *state) {
         setTextFor(ui->resultLabel, state->getResultString());
     }
 
-    setupStateTableForState(ui->logTable, state);
+//    setupStateTableForState(ui->logTable, state);
+}
+
+void MainWindow::setupResultTest(Result *result, size_t index, size_t count) {
+    setTextFor(ui->resTestTitle, "Тест " + QString::number(index + 1) + "/" + QString::number(count));
+    setTextFor(ui->resTestQuestionLabel, result->mQuestion);
+    auto userAnswer = result->mUserAnswers.back();
+    if (userAnswer.length() == 0) userAnswer = "<i>Пустой ответ</i>";
+    setTextFor(ui->resTestUserAnswerLabel, userAnswer);
+
+    auto styles = "color: " + QString::fromUtf8(result->mPointsForTest ? "green" : "red") + ";";
+    ui->resTestUserAnswerLabel->setStyleSheet(styles);
+
+    auto correctAnswer = result->mAnswer;
+    if (correctAnswer.length() == 0) correctAnswer = "<i>Пустой ответ</i>";
+    setTextFor(ui->resTestCorrectLabel, correctAnswer);
 }
 
 void MainWindow::setupStateTableForState(QTableWidget *table, SessionState *state) {

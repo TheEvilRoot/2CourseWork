@@ -50,6 +50,8 @@ public:
 
     void setTestTitle(const ViewType *type, size_t index, size_t count) override;
     void setTipWords(std::pair<QString, QString> &words) override;
+    void setupResultTest(Result *result, size_t index, size_t count) override;
+
 private slots:
 
 private:
