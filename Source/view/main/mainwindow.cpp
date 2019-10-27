@@ -27,8 +27,6 @@ MainWindow::MainWindow(
 
     initConnection();
     initStatusBar();
-//    initStateTable(ui->logTable);
-//    initStateTable(ui->detailTable);
     initHistoryTables();
 
     mHistoryResult = new QResultWidget();
@@ -94,7 +92,6 @@ void MainWindow::initConnection() {
     connect(ui->historyBack2Menu, &QPushButton::clicked, this, [=]() {
         mPresenter->initView(ViewType::MENU);
     });
-
     connect(ui->historyTable, &QTableWidget::itemSelectionChanged, this, [=]() {
         auto selectedIndex = ui->historyTable->currentRow();
         auto isSelected = ui->historyTable->selectedRanges().size();
@@ -113,14 +110,6 @@ void MainWindow::initStatusBar() {
 
     ui->statusbar->addPermanentWidget(statusProgressBar);
     ui->statusbar->addPermanentWidget(statusBarLabel);
-}
-
-void MainWindow::initStateTable(QTableWidget *table) {
-    table->setHorizontalHeaderLabels(*mStateHeaders);
-    table->setColumnCount(6);
-    table->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-    table->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectRows);
-    table->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
 }
 
 void MainWindow::initHistoryTables() {
@@ -293,32 +282,6 @@ void MainWindow::setupResultScreen(SessionState *state) {
     }
 
     mFinalResult->setState(state);
-}
-
-void MainWindow::setupStateTableForState(QTableWidget *table, SessionState *state) {
-    if (table == nullptr)
-        return;
-    table->clear();
-    table->setHorizontalHeaderLabels(*mStateHeaders);
-    if (state == nullptr) {
-        table->setRowCount(0);
-        return;
-    }
-
-    table->setRowCount(static_cast<int>(state->getCount()));
-    for (int i = 0; i < static_cast<int>(state->getCount()); i++) {
-        auto res = state->at(static_cast<size_t>(i));
-        if (res == nullptr) {
-            std::cerr << "index " << i << " nullptr\n";
-        }
-        int j = 0;
-        table->setItem(i, j++, notEditableItem(res->mQuestion));
-        table->setItem(i, j++, notEditableItem(res->mAnswer));
-        table->setItem(i, j++, notEditableItem(res->getJoinedAnswers(',')));
-        table->setItem(i, j++, notEditableItem(QString::number(res->mPointsForTest)));
-        table->setItem(i, j++, notEditableItem(QString::number(res->mAttempts)));
-        table->setItem(i, j++, notEditableItem(res->mSolveTime.toString("mm:ss")));
-    }
 }
 
 QTableWidgetItem* MainWindow::notEditableItem(QString content) {

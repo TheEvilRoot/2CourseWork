@@ -52,9 +52,7 @@ private slots:
 private:
     void initConnection();
     void initStatusBar();
-    void initStateTable(QTableWidget *table);
     void initHistoryTables();
-    void setupStateTableForState(QTableWidget *table, SessionState *state);
     void optionSubmit(int position);
     void answerSubmit(QString answer);
     void showPopup(QString message, unsigned int time = 1000);
