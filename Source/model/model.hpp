@@ -20,7 +20,7 @@ private:
 
 public:
   Model(Settings *settings, RandomGenerator *random);
-
+  QString& getFromPair(std::pair<QString, QString> &pair, uint index);
   QString& getVersion();
 
   int newSession(bool force);

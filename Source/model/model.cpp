@@ -18,6 +18,11 @@ Model::Model(Settings *settings, RandomGenerator *random): mSession(nullptr), mS
     mVersion = QString::number(mSettings->versionMajor) + "." + QString::number(mSettings->versionMinor) + "-" + QString::number(mSettings->versionBuild) + mSettings->versionSign;
 }
 
+QString& Model::getFromPair(std::pair<QString, QString> &pair, uint index) {
+    index %= 2;
+    return index == 0 ? pair.first : pair.second;
+}
+
 QString& Model::getVersion() {
     return mVersion;
 }

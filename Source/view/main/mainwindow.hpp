@@ -1,23 +1,19 @@
 #pragma once
 
+#include "api/utils.h"
 #include "view/viewtype.h"
 #include "view/mainview.hpp"
 #include "model/model.hpp"
 #include "presenter/main/mainpresenter.hpp"
 #include "model/settings.h"
 #include "view/qfloatingwidget.hpp"
+#include "view/qresultwidget.hpp"
 
 #include <QMainWindow>
 #include <QProgressBar>
 #include <QPushButton>
 #include <QLabel>
 #include <QTableWidget>
-
-#ifdef Q_OS_MAC
-#define setTextFor(__widget, __text) (__widget)->setText(__text); (__widget)->repaint()
-#else
-#define setTextFor(__widget, __text) (__widget)->setText(__text)
-#endif
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -75,4 +71,5 @@ private:
     QStringList *mHistoryHeaders;
     QApplication *mApplication;
     QFloatingWidget *mFloating;
+    QResultWidget *mHistoryResult;
 };

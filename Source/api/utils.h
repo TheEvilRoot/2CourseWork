@@ -1,8 +1,9 @@
 #pragma once
 
-#include <QString>
+#ifdef Q_OS_MAC
+#define setTextFor(__widget, __text) (__widget)->setText(__text); (__widget)->repaint()
+#else
+#define setTextFor(__widget, __text) (__widget)->setText(__text)
+#endif
 
-QString& getFromPair(std::pair<QString, QString> &pair, uint index) {
-    index %= 2;
-    return index == 0 ? pair.first : pair.second;
-}
+
