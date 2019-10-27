@@ -22,6 +22,7 @@ SOURCES += \
     model/model.cpp \
     model/session/session.cpp \
     view/qfloatingwidget.cpp \
+    view/qresultwidget.cpp \
     view/sessiondialog/sessiondialog.cpp \
     model/loader/wordsfileloader.cpp
 
@@ -42,6 +43,7 @@ HEADERS += \
     model/model.hpp \
     model/session/session.hpp \
     view/qfloatingwidget.hpp \
+    view/qresultwidget.hpp \
     view/sessiondialog/sessiondialog.hpp \
     model/settings.h \
     view/viewtype.h \
