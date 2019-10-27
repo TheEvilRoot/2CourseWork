@@ -29,7 +29,7 @@ private:
     QGridLayout *gridLayout;
     QPushButton *nextBtn;
     QPushButton *prevBtn;
-    QVBoxLayout *contentVIew;
+    QVBoxLayout *contentView;
     QLabel *questionLabel;
     QLabel *userAnswerLabel;
     QLabel *correctLabel;

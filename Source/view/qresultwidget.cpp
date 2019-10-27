@@ -4,10 +4,10 @@
 
 QResultWidget::QResultWidget(SessionState *state) : mEmptyAnswer("<i>Пустой ответ</i>"), mIndex(0), mState(state) {
     QFont font;
-    QSizePolicy sizePolicy3(QSizePolicy::Preferred, QSizePolicy::Maximum);
+    QSizePolicy sizePolicy3(QSizePolicy::Preferred, QSizePolicy::Minimum);
     sizePolicy3.setHorizontalStretch(0);
     sizePolicy3.setVerticalStretch(0);
-    QSizePolicy sizePolicy8(QSizePolicy::Preferred, QSizePolicy::MinimumExpanding);
+    QSizePolicy sizePolicy8(QSizePolicy::Preferred, QSizePolicy::Minimum);
     sizePolicy8.setHorizontalStretch(0);
     sizePolicy8.setVerticalStretch(0);
 
@@ -24,8 +24,8 @@ QResultWidget::QResultWidget(SessionState *state) : mEmptyAnswer("<i>Пусто�
     prevBtn->setMinimumSize(QSize(50, 50));
     prevBtn->setMaximumSize(QSize(50, 50));
     gridLayout->addWidget(prevBtn, 1, 0, 1, 1);
-    contentVIew = new QVBoxLayout();
-    contentVIew->setObjectName(QString::fromUtf8("contentVIew"));
+    contentView = new QVBoxLayout();
+    contentView->setObjectName(QString::fromUtf8("contentVIew"));
     questionLabel = new QLabel(this);
     questionLabel->setObjectName(QString::fromUtf8("questionLabel"));
     questionLabel->setSizePolicy(sizePolicy8);
@@ -35,7 +35,8 @@ QResultWidget::QResultWidget(SessionState *state) : mEmptyAnswer("<i>Пусто�
     questionLabel->setScaledContents(false);
     questionLabel->setAlignment(Qt::AlignCenter);
     questionLabel->setWordWrap(true);
-    contentVIew->addWidget(questionLabel);
+    questionLabel->setScaledContents(true);
+    contentView->addWidget(questionLabel);
     userAnswerLabel = new QLabel(this);
     userAnswerLabel->setObjectName(QString::fromUtf8("userAnswerLabel"));
     sizePolicy3.setHeightForWidth(userAnswerLabel->sizePolicy().hasHeightForWidth());
@@ -46,14 +47,15 @@ QResultWidget::QResultWidget(SessionState *state) : mEmptyAnswer("<i>Пусто�
     userAnswerLabel->setStyleSheet(QString::fromUtf8("color: red;"));
     userAnswerLabel->setAlignment(Qt::AlignCenter);
     userAnswerLabel->setWordWrap(true);
-    contentVIew->addWidget(userAnswerLabel);
+    contentView->addWidget(userAnswerLabel);
     correctLabel = new QLabel(this);
     correctLabel->setObjectName(QString::fromUtf8("correctLabel"));
     sizePolicy3.setHeightForWidth(correctLabel->sizePolicy().hasHeightForWidth());
     correctLabel->setSizePolicy(sizePolicy3);
     correctLabel->setAlignment(Qt::AlignCenter);
-    contentVIew->addWidget(correctLabel);
-    gridLayout->addLayout(contentVIew, 1, 1, 1, 1);
+    correctLabel->setWordWrap(true);
+    contentView->addWidget(correctLabel);
+    gridLayout->addLayout(contentView, 1, 1, 1, 1);
     titleLabel = new QLabel(this);
     titleLabel->setObjectName(QString::fromUtf8("titleLabel"));
     sizePolicy3.setHeightForWidth(titleLabel->sizePolicy().hasHeightForWidth());
