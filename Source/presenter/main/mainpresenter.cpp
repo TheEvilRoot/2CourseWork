@@ -89,7 +89,6 @@ void MainPresenter::initView(const ViewType *type) {
         mResultTestIndex = 0;
         auto lastSession = mModel->getLastSession();
         mView->setupResultScreen(lastSession);
-        mView->setupResultTest(lastSession->at(mResultTestIndex), mResultTestIndex, lastSession->getCount());
     } else if (type == ViewType::HISTORY) {
         mView->setupHistoryList(mModel->getHistory());
     } else {
@@ -115,26 +114,6 @@ void MainPresenter::initView(const ViewType *type) {
         }
         mView->setTestTitle(type, testIndex, testsCount);
     }
-}
-
-void MainPresenter::updateResultTestIndex(int delta) {
-    auto lastSession = mModel->getLastSession();
-    if (lastSession == nullptr) return;
-
-    long long newIndex = static_cast<long long>(mResultTestIndex) + delta;
-    if (newIndex < 0 || newIndex >= lastSession->getCount()) return;
-
-    mResultTestIndex += delta;
-
-    mView->setupResultTest(lastSession->at(mResultTestIndex), mResultTestIndex, lastSession->getCount());
-}
-
-void MainPresenter::nextResultTest() {
-   updateResultTestIndex(1);
-}
-
-void MainPresenter::prevResultTest() {
-    updateResultTestIndex(-1);
 }
 
 void MainPresenter::requestNewSession(bool force, bool continueSession) {

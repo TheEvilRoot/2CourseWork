@@ -27,12 +27,8 @@ public:
   void initView(const ViewType *type);
   void initApplication();
   void updateMenuTip();
-  void nextResultTest();
-  void prevResultTest();
   QString& getVersion();
 
-private:
-  void updateResultTestIndex(int delta);
 public slots:
     void onSessionFinish(const ViewType *nextView);
     void onSessionError(QString message);

@@ -35,6 +35,10 @@ MainWindow::MainWindow(
     mHistoryResult->setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum));
     ui->resultLayout->addWidget(mHistoryResult);
 
+    mFinalResult = new QResultWidget();
+    mFinalResult->setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum));
+    ui->finalResult->addWidget(mFinalResult);
+
     setupMenuScreen(nullptr);
     presentView(ViewType::MENU);
     mApplication->setStyleSheet(*mSettings->style);
@@ -81,12 +85,6 @@ void MainWindow::initConnection() {
     });
     connect(ui->resGo2History, &QPushButton::clicked, this, [=]() {
        mPresenter->requestSessionFinish(ViewType::HISTORY);
-    });
-    connect(ui->resTestNext, &QPushButton::clicked, this, [=]() {
-        mPresenter->nextResultTest();
-    });
-    connect(ui->resTestPrev, &QPushButton::clicked, this, [=]() {
-       mPresenter->prevResultTest();
     });
     // History screen
     connect(ui->showHistory, &QPushButton::clicked, this, [=]() {
@@ -294,22 +292,7 @@ void MainWindow::setupResultScreen(SessionState *state) {
         setTextFor(ui->resultLabel, state->getResultString());
     }
 
-//    setupStateTableForState(ui->logTable, state);
-}
-
-void MainWindow::setupResultTest(Result *result, size_t index, size_t count) {
-    setTextFor(ui->resTestTitle, "Тест " + QString::number(index + 1) + "/" + QString::number(count));
-    setTextFor(ui->resTestQuestionLabel, result->mQuestion);
-    auto userAnswer = result->mUserAnswers.back();
-    if (userAnswer.length() == 0) userAnswer = "<i>Пустой ответ</i>";
-    setTextFor(ui->resTestUserAnswerLabel, userAnswer);
-
-    auto styles = "color: " + QString::fromUtf8(result->mPointsForTest ? "green" : "red") + ";";
-    ui->resTestUserAnswerLabel->setStyleSheet(styles);
-
-    auto correctAnswer = result->mAnswer;
-    if (correctAnswer.length() == 0) correctAnswer = "<i>Пустой ответ</i>";
-    setTextFor(ui->resTestCorrectLabel, correctAnswer);
+    mFinalResult->setState(state);
 }
 
 void MainWindow::setupStateTableForState(QTableWidget *table, SessionState *state) {
