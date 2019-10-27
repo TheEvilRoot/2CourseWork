@@ -14,12 +14,12 @@ public:
     QResultWidget();
 
 private:
-    QGridLayout *gridLayout_12;
-    QPushButton *resTestNext;
-    QPushButton *resTestPrev;
-    QVBoxLayout *verticalLayout_2;
-    QLabel *resTestQuestionLabel;
-    QLabel *resTestUserAnswerLabel;
-    QLabel *resTestCorrectLabel;
-    QLabel *resTestTitle;
+    QGridLayout *gridLayout;
+    QPushButton *nextBtn;
+    QPushButton *prevBtn;
+    QVBoxLayout *contentVIew;
+    QLabel *questionLabel;
+    QLabel *userAnswerLabel;
+    QLabel *correctLabel;
+    QLabel *titleLabel;
 };

@@ -1,88 +1,92 @@
 #include "qresultwidget.hpp"
 
 QResultWidget::QResultWidget() {
-    QFont font1;
-    font1.setPointSize(18);
-
     QFont font;
-    font.setPointSize(16);
-    font.setBold(true);
-    font.setWeight(75);
-
-    QFont font2;
-    font2.setPointSize(15);
 
     QSizePolicy sizePolicy3(QSizePolicy::Preferred, QSizePolicy::Maximum);
     sizePolicy3.setHorizontalStretch(0);
     sizePolicy3.setVerticalStretch(0);
 
-    gridLayout_12 = new QGridLayout();
-    gridLayout_12->setObjectName(QString::fromUtf8("gridLayout_12"));
-    gridLayout_12->setSizeConstraint(QLayout::SetDefaultConstraint);
-    resTestNext = new QPushButton(this);
-    resTestNext->setObjectName(QString::fromUtf8("resTestNext"));
-    resTestNext->setMinimumSize(QSize(50, 50));
-    resTestNext->setMaximumSize(QSize(50, 50));
-
-    gridLayout_12->addWidget(resTestNext, 1, 2, 1, 1);
-
-    resTestPrev = new QPushButton(this);
-    resTestPrev->setObjectName(QString::fromUtf8("resTestPrev"));
-    resTestPrev->setMinimumSize(QSize(50, 50));
-    resTestPrev->setMaximumSize(QSize(50, 50));
-
-    gridLayout_12->addWidget(resTestPrev, 1, 0, 1, 1);
-
-    verticalLayout_2 = new QVBoxLayout();
-    verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
-    resTestQuestionLabel = new QLabel(this);
-    resTestQuestionLabel->setObjectName(QString::fromUtf8("resTestQuestionLabel"));
     QSizePolicy sizePolicy8(QSizePolicy::Preferred, QSizePolicy::MinimumExpanding);
     sizePolicy8.setHorizontalStretch(0);
     sizePolicy8.setVerticalStretch(0);
-    sizePolicy8.setHeightForWidth(resTestQuestionLabel->sizePolicy().hasHeightForWidth());
-    resTestQuestionLabel->setSizePolicy(sizePolicy8);
-    resTestQuestionLabel->setFont(font1);
-    resTestQuestionLabel->setScaledContents(false);
-    resTestQuestionLabel->setAlignment(Qt::AlignCenter);
-    resTestQuestionLabel->setWordWrap(true);
+    sizePolicy8.setHeightForWidth(questionLabel->sizePolicy().hasHeightForWidth());
 
-    verticalLayout_2->addWidget(resTestQuestionLabel);
+    gridLayout = new QGridLayout();
+    gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
+    gridLayout->setSizeConstraint(QLayout::SetDefaultConstraint);
+    nextBtn = new QPushButton(this);
+    nextBtn->setObjectName(QString::fromUtf8("nextBtn"));
+    nextBtn->setMinimumSize(QSize(50, 50));
+    nextBtn->setMaximumSize(QSize(50, 50));
 
-    resTestUserAnswerLabel = new QLabel(this);
-    resTestUserAnswerLabel->setObjectName(QString::fromUtf8("resTestUserAnswerLabel"));
-    sizePolicy3.setHeightForWidth(resTestUserAnswerLabel->sizePolicy().hasHeightForWidth());
-    resTestUserAnswerLabel->setSizePolicy(sizePolicy3);
-    resTestUserAnswerLabel->setFont(font2);
-    resTestUserAnswerLabel->setStyleSheet(QString::fromUtf8("color: red;"));
-    resTestUserAnswerLabel->setAlignment(Qt::AlignCenter);
-    resTestUserAnswerLabel->setWordWrap(true);
+    gridLayout->addWidget(nextBtn, 1, 2, 1, 1);
 
-    verticalLayout_2->addWidget(resTestUserAnswerLabel);
+    prevBtn = new QPushButton(this);
+    prevBtn->setObjectName(QString::fromUtf8("prevBtn"));
+    prevBtn->setMinimumSize(QSize(50, 50));
+    prevBtn->setMaximumSize(QSize(50, 50));
 
-    resTestCorrectLabel = new QLabel(this);
-    resTestCorrectLabel->setObjectName(QString::fromUtf8("resTestCorrectLabel"));
-    sizePolicy3.setHeightForWidth(resTestCorrectLabel->sizePolicy().hasHeightForWidth());
-    resTestCorrectLabel->setSizePolicy(sizePolicy3);
-    resTestCorrectLabel->setAlignment(Qt::AlignCenter);
+    gridLayout->addWidget(prevBtn, 1, 0, 1, 1);
 
-    verticalLayout_2->addWidget(resTestCorrectLabel);
+    contentVIew = new QVBoxLayout();
+    contentVIew->setObjectName(QString::fromUtf8("contentVIew"));
+    questionLabel = new QLabel(this);
+    questionLabel->setObjectName(QString::fromUtf8("questionLabel"));
+    questionLabel->setSizePolicy(sizePolicy8);
+
+    font.setPointSize(18);
+    font.setBold(false);
+    questionLabel->setFont(font);
+
+    questionLabel->setScaledContents(false);
+    questionLabel->setAlignment(Qt::AlignCenter);
+    questionLabel->setWordWrap(true);
+
+    contentVIew->addWidget(questionLabel);
+
+    userAnswerLabel = new QLabel(this);
+    userAnswerLabel->setObjectName(QString::fromUtf8("userAnswerLabel"));
+    sizePolicy3.setHeightForWidth(userAnswerLabel->sizePolicy().hasHeightForWidth());
+    userAnswerLabel->setSizePolicy(sizePolicy3);
+
+    font.setPointSize(15);
+    font.setBold(false);
+    userAnswerLabel->setFont(font);
+
+    userAnswerLabel->setStyleSheet(QString::fromUtf8("color: red;"));
+    userAnswerLabel->setAlignment(Qt::AlignCenter);
+    userAnswerLabel->setWordWrap(true);
+
+    contentVIew->addWidget(userAnswerLabel);
+
+    correctLabel = new QLabel(this);
+    correctLabel->setObjectName(QString::fromUtf8("correctLabel"));
+    sizePolicy3.setHeightForWidth(correctLabel->sizePolicy().hasHeightForWidth());
+    correctLabel->setSizePolicy(sizePolicy3);
+    correctLabel->setAlignment(Qt::AlignCenter);
+
+    contentVIew->addWidget(correctLabel);
 
 
-    gridLayout_12->addLayout(verticalLayout_2, 1, 1, 1, 1);
+    gridLayout->addLayout(contentVIew, 1, 1, 1, 1);
 
-    resTestTitle = new QLabel(this);
-    resTestTitle->setObjectName(QString::fromUtf8("resTestTitle"));
-    sizePolicy3.setHeightForWidth(resTestTitle->sizePolicy().hasHeightForWidth());
-    resTestTitle->setSizePolicy(sizePolicy3);
-    resTestTitle->setFont(font);
-    resTestTitle->setAlignment(Qt::AlignCenter);
+    titleLabel = new QLabel(this);
+    titleLabel->setObjectName(QString::fromUtf8("titleLabel"));
+    sizePolicy3.setHeightForWidth(titleLabel->sizePolicy().hasHeightForWidth());
+    titleLabel->setSizePolicy(sizePolicy3);
 
-    gridLayout_12->addWidget(resTestTitle, 0, 1, 1, 1);
+    font.setPointSize(16);
+    font.setBold(true);
+    titleLabel->setFont(font);
 
-    resTestTitle->setText("Hello");
-    resTestCorrectLabel->setText("Correct");
-    resTestQuestionLabel->setText("Question");
-    resTestUserAnswerLabel->setText("userAnswer");
-    setLayout(gridLayout_12);
+    titleLabel->setAlignment(Qt::AlignCenter);
+
+    gridLayout->addWidget(titleLabel, 0, 1, 1, 1);
+
+    titleLabel->setText("Hello");
+    correctLabel->setText("Correct");
+    questionLabel->setText("Question");
+    userAnswerLabel->setText("userAnswer");
+    setLayout(gridLayout);
 }
