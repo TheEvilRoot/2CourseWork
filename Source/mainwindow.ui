@@ -234,18 +234,32 @@
       </widget>
       <widget class="QWidget" name="history">
        <layout class="QGridLayout" name="gridLayout_8">
-        <item row="10" column="0">
+        <item row="9" column="0">
          <widget class="QPushButton" name="historyBack2Menu">
           <property name="text">
            <string>Вернуться  в меню</string>
           </property>
          </widget>
         </item>
-        <item row="3" column="0">
-         <widget class="QTableWidget" name="detailTable"/>
+        <item row="4" column="0">
+         <widget class="QLabel" name="sbpercentLabel">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
         </item>
         <item row="6" column="0">
-         <widget class="QLabel" name="cefrResult">
+         <widget class="QLabel" name="resultMessage">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QTableWidget" name="historyTable"/>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="wbpercentLabel">
           <property name="text">
            <string/>
           </property>
@@ -261,29 +275,15 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="0">
-         <widget class="QTableWidget" name="historyTable"/>
-        </item>
         <item row="5" column="0">
-         <widget class="QLabel" name="sbpercentLabel">
+         <widget class="QLabel" name="cefrResult">
           <property name="text">
            <string/>
           </property>
          </widget>
         </item>
         <item row="7" column="0">
-         <widget class="QLabel" name="resultMessage">
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="0">
-         <widget class="QLabel" name="wbpercentLabel">
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
+         <layout class="QVBoxLayout" name="resultLayout"/>
         </item>
        </layout>
       </widget>

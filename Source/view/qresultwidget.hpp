@@ -19,7 +19,6 @@ private:
     QPushButton *resTestPrev;
     QVBoxLayout *verticalLayout_2;
     QLabel *resTestQuestionLabel;
-    QLabel *resTestAnswerLabel;
     QLabel *resTestUserAnswerLabel;
     QLabel *resTestCorrectLabel;
     QLabel *resTestTitle;

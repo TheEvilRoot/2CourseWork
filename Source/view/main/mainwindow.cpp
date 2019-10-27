@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "view/sessiondialog/sessiondialog.hpp"
 #include "model/settings.h" // TODO: Create Presenter proxy!
+#include "view/qresultwidget.hpp"
 
 #include <QMessageBox>
 #include <QSpinBox>
@@ -28,8 +29,12 @@ MainWindow::MainWindow(
     initConnection();
     initStatusBar();
 //    initStateTable(ui->logTable);
-    initStateTable(ui->detailTable);
+//    initStateTable(ui->detailTable);
     initHistoryTables();
+
+    QResultWidget *w = new QResultWidget();
+    w->setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum));
+    ui->resultLayout->addWidget(w);
 
     setupMenuScreen(nullptr);
     presentView(ViewType::MENU);
@@ -249,7 +254,7 @@ void MainWindow::setupHistoryList(std::deque<SessionState *> &states) {
 }
 
 void MainWindow::setupHistoryDetails(SessionState *state) {
-    setupStateTableForState(ui->detailTable, state);
+//    setupStateTableForState(ui->detailTable, state);
 
     if (state == nullptr) {
         setTextFor(ui->cefrResult, "");

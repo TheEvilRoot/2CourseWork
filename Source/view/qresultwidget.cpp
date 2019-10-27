@@ -79,4 +79,10 @@ QResultWidget::QResultWidget() {
     resTestTitle->setAlignment(Qt::AlignCenter);
 
     gridLayout_12->addWidget(resTestTitle, 0, 1, 1, 1);
+
+    resTestTitle->setText("Hello");
+    resTestCorrectLabel->setText("Correct");
+    resTestQuestionLabel->setText("Question");
+    resTestUserAnswerLabel->setText("userAnswer");
+    setLayout(gridLayout_12);
 }
