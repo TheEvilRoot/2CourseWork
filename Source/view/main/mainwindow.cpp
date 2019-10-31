@@ -59,6 +59,9 @@ void MainWindow::initConnection() {
     connect(ui->startSession, &QPushButton::clicked, this, [=]() {
       mPresenter->requestNewSession(false);
     });
+    connect(ui->helpBtn, &QPushButton::clicked, this, [=]() {
+        mPresenter->initView(ViewType::HELP);
+    });
 
     // Choice screen
     for (int i = 0; i < 6; i++) {
@@ -133,6 +136,8 @@ bool MainWindow::presentView(const ViewType *type) {
       ui->stackedWidget->setCurrentWidget(ui->result);
     } else if (type == ViewType::HISTORY) {
       ui->stackedWidget->setCurrentWidget(ui->history);
+    } else if (type == ViewType::HELP) {
+        ui->stackedWidget->setCurrentWidget(ui->helpPage);
     }else {
         return false;
     }

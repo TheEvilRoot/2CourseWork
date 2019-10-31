@@ -1,6 +1,9 @@
 <RCC>
     <qresource prefix="/logo">
         <file>english_logo.png</file>
+        <file>help1.jpg</file>
+        <file>help2.jpg</file>
+        <file>help3.jpg</file>
     </qresource>
     <qresource prefix="/data">
         <file>words.db</file>

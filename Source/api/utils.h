@@ -5,5 +5,3 @@
 #else
 #define setTextFor(__widget, __text) (__widget)->setText(__text)
 #endif
-
-
