@@ -1,4 +1,4 @@
-#include "wordsfileloader.h"
+#include "wordsfileloader.hpp"
 
 #include <iostream>
 

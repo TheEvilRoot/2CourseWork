@@ -9,12 +9,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 RC_ICONS += icn.ico
 ICON = icn.icns
 
-SOURCES += \
-    model/data/basetest.cpp \
-    main.cpp \
-    model/data/checktest.cpp \
-    model/data/choicetest.cpp \
-    model/data/inputtest.cpp \
+SOURCES += main.cpp \
     model/loader/storeworker.cpp \
     model/session/sessionstate.cpp \
     presenter/main/mainpresenter.cpp \
@@ -28,11 +23,11 @@ SOURCES += \
 
 HEADERS += \
     api/randomgenerator.hpp \
-    api/utils.h \
+    api/utils.hpp \
     model/data/CEFR.hpp \
     model/data/basetest.hpp \
-    model/data/checktest.h \
-    model/data/choicetest.h \
+    model/data/checktest.hpp \
+    model/data/choicetest.hpp \
     model/data/inputtest.hpp \
     model/data/result.hpp \
     model/loader/storeworker.hpp \
@@ -45,9 +40,9 @@ HEADERS += \
     view/qfloatingwidget.hpp \
     view/qresultwidget.hpp \
     view/sessiondialog/sessiondialog.hpp \
-    model/settings.h \
-    view/viewtype.h \
-    model/loader/wordsfileloader.h
+    model/settings.hpp \
+    view/viewtype.hpp \
+    model/loader/wordsfileloader.hpp
 
 FORMS += \
     mainwindow.ui \

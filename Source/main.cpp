@@ -1,13 +1,14 @@
 #include "view/main/mainwindow.hpp"
-#include "view/viewtype.h"
+#include "view/viewtype.hpp"
 #include "view/mainview.hpp"
 #include "model/model.hpp"
-#include "model/settings.h"
+#include "model/settings.hpp"
 #include "model/data/CEFR.hpp"
 
 #include <QApplication>
 #include <iostream>
 
+int BaseTest::GLOBAL_ID = 0;
 int ViewType::GLOBAL_ID = 0;
 std::vector<CEFR* > CEFR::list;
 

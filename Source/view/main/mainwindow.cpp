@@ -1,7 +1,7 @@
 ﻿#include "mainwindow.hpp"
 #include "ui_mainwindow.h"
 #include "view/sessiondialog/sessiondialog.hpp"
-#include "model/settings.h" // TODO: Create Presenter proxy!
+#include "model/settings.hpp" // TODO: Create Presenter proxy!
 
 #include <QMessageBox>
 #include <QSpinBox>

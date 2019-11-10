@@ -1,6 +1,6 @@
 #include "qresultwidget.hpp"
 
-#include "api/utils.h"
+#include "api/utils.hpp"
 
 QResultWidget::QResultWidget(SessionState *state) : mEmptyAnswer("<i>Пустой ответ</i>"), mIndex(0), mState(state) {
     QFont font;

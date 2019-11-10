@@ -4,5 +4,10 @@
 
 class InputTest: public BaseTest {
 public:
-    InputTest(QString questionText, QString rightAnswer);
+    InputTest(
+        QString questionText,
+        QString rightAnswer
+    ): BaseTest(ViewType::INPUT, questionText, rightAnswer){ }
+
+
 };

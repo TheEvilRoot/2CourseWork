@@ -1,11 +1,11 @@
 #pragma once
 
-#include "api/utils.h"
-#include "view/viewtype.h"
+#include "api/utils.hpp"
+#include "view/viewtype.hpp"
 #include "view/mainview.hpp"
 #include "model/model.hpp"
 #include "presenter/main/mainpresenter.hpp"
-#include "model/settings.h"
+#include "model/settings.hpp"
 #include "view/qfloatingwidget.hpp"
 #include "view/qresultwidget.hpp"
 

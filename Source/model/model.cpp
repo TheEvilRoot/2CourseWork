@@ -1,9 +1,9 @@
 #include "model.hpp"
-#include "settings.h"
-#include "model/data/choicetest.h"
-#include "model/data/checktest.h"
+#include "settings.hpp"
+#include "model/data/choicetest.hpp"
+#include "model/data/checktest.hpp"
 #include "model/data/inputtest.hpp"
-#include "api/utils.h"
+#include "api/utils.hpp"
 
 #include<QStandardPaths>
 #include <QFile>

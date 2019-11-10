@@ -1,8 +1,8 @@
 #include "mainpresenter.hpp"
-#include "model/loader/wordsfileloader.h"
+#include "model/loader/wordsfileloader.hpp"
 #include "model/loader/storeworker.hpp"
-#include "model/data/choicetest.h"
-#include "model/data/checktest.h"
+#include "model/data/choicetest.hpp"
+#include "model/data/checktest.hpp"
 
 #include <QApplication>
 

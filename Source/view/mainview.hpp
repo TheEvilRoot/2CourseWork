@@ -1,6 +1,6 @@
 #pragma once
 
-#include "viewtype.h"
+#include "viewtype.hpp"
 #include "model/data/basetest.hpp"
 #include "model/session/sessionstate.hpp"
 

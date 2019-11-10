@@ -1,7 +1,7 @@
 #pragma once
 
 #include "model/session/session.hpp"
-#include "settings.h"
+#include "settings.hpp"
 #include "api/randomgenerator.hpp"
 
 typedef std::vector<std::pair<QString, QString>> WordsList;
