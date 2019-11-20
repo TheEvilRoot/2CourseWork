@@ -11,8 +11,11 @@ public:
     int versionBuild;
     char versionSign;
     QString *style;
+
     int attemptsCount;
-    Settings(): versionMajor(1), versionMinor(3), versionBuild(201019), versionSign('A'), style(new QString), attemptsCount(1) {
+    int wordsTestsCount;
+    int sentencesTestsCount;
+    Settings(): versionMajor(1), versionMinor(3), versionBuild(201019), versionSign('A'), style(new QString), attemptsCount(1), wordsTestsCount(15), sentencesTestsCount(5) {
         loadStyles(style);
     }
 
