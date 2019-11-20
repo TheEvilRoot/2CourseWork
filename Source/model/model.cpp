@@ -14,7 +14,7 @@
 #include <iostream>
 #include <algorithm>
 #include <QDir>
-Model::Model(Settings *settings, RandomGenerator *random): mSession(nullptr), mSettings(settings), mRandomGen(random) {
+Model::Model(Settings *settings, RandomGenerator *random): mSession(nullptr), mSettings(settings), mRandomGen(random), mWordsGraph(new GraphDict()) {
     mVersion = QString::number(mSettings->versionMajor) + "." + QString::number(mSettings->versionMinor) + "-" + QString::number(mSettings->versionBuild) + mSettings->versionSign;
 }
 
@@ -57,9 +57,6 @@ void Model::storeSession(SessionState *state) {
 }
 
 bool Model::loadWords(bool forceReload) {
-    if (mWords.size() > 0 && !forceReload) return true;
-    if (mWords.size()) mWords.clear();
-
     QFile *file = new QFile(":/data/words.db");
     if (!file->open(QIODevice::ReadOnly)) {
         auto message = QString::fromUtf8("Unable to open words file: ") + file->errorString();
@@ -71,26 +68,15 @@ bool Model::loadWords(bool forceReload) {
     QTextStream *stream = new QTextStream(file);
     stream->setCodec("UTF-8");
 
-    int lineNum = 0;
-    while (!stream->atEnd()) {
-        lineNum++;
+    QString allLines = stream->readAll();
+    mWordsGraph->setSource(allLines);
+    mWordsGraph->parse();
 
-        QString line = stream->readLine();
-        if (line.startsWith("#")) continue;
-
-        QStringList list = line.split("\t");
-        if (list.size() < 2) {
-            std::cerr << "[words.db] Line " << lineNum << " has invastoreSessionlid stucture\n";
-            continue;
-        }
-
-       mWords.push_back(std::pair<QString, QString>(list[0], list[1]));
-    }
     file->close();
 
     if (file) delete file;
     if (stream) delete stream;
-    return mWords.size();
+    return mWordsGraph->getItemsCount();
 }
 
 bool Model::loadSentences(bool forceReload) {

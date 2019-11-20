@@ -22,6 +22,10 @@ SOURCES += main.cpp \
     model/loader/wordsfileloader.cpp
 
 HEADERS += \
+    api/graphdict.hpp \
+    api/matrix.hpp \
+    api/mutablematrix.hpp \
+    api/orderedset.hpp \
     api/randomgenerator.hpp \
     api/utils.hpp \
     model/data/CEFR.hpp \

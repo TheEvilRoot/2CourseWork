@@ -3,6 +3,7 @@
 #include "model/session/session.hpp"
 #include "settings.hpp"
 #include "api/randomgenerator.hpp"
+#include "api/graphdict.hpp"
 
 typedef std::vector<std::pair<QString, QString>> WordsList;
 
@@ -11,7 +12,7 @@ private:
   Session *mSession;
   Settings *mSettings;
   RandomGenerator *mRandomGen;
-  WordsList mWords;
+  GraphDict *mWordsGraph;
   WordsList mSentences;
   std::vector<QString> mSentenceAnswers;
   std::deque<SessionState *> mHistory;

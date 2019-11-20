@@ -29,8 +29,9 @@ public:
 #endif
     }
 
-    int intInRange(int upper) {
-        int result = 0;
+    template<typename T>
+    T intInRange(T upper) {
+        T result = 0;
 #ifdef QT_RANDOM_GEN_PRESENT
          result = mQtRandomGen->bounded(upper);
 #else
@@ -39,8 +40,9 @@ public:
         return result;
     }
 
-    int intInRange(int lower, int upper) {
-        int result = 0;
+    template<typename T>
+    T intInRange(T lower, T upper) {
+        T result = 0;
 #ifdef QT_RANDOM_GEN_PRESENT
         result = mQtRandomGen->bounded(lower, upper);
 #else
