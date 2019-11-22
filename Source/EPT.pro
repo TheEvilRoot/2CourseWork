@@ -26,6 +26,8 @@ HEADERS += \
     api/matrix.hpp \
     api/mutablematrix.hpp \
     api/orderedset.hpp \
+    api/orderedsetlinkinterface.hpp \
+    api/qgraphdict.hpp \
     api/randomgenerator.hpp \
     api/utils.hpp \
     model/data/CEFR.hpp \

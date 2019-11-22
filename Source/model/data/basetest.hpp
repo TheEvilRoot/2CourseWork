@@ -8,6 +8,7 @@
 class BaseTest {
 protected:
     int mId;
+    char __padding[4];
     const ViewType *mType;
     QString mQuestionText;
     QString mRightAnswer;
@@ -15,7 +16,6 @@ protected:
     char _padding[7];
 
 public:
-
     static int GLOBAL_ID;
 
     BaseTest(const ViewType *type,
@@ -27,8 +27,6 @@ public:
              mQuestionText(questionText),
              mRightAnswer(rightAnswer),
              mIsSentenceBased(isSentenceBased) { }
-
-    virtual ~BaseTest() = default;
 
     bool checkResult(QString answer) {
         return answer.toLower() == mRightAnswer.toLower();

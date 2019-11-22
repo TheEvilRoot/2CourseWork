@@ -102,13 +102,13 @@ void MainPresenter::initView(const ViewType *type) {
         }
         if (type == ViewType::CHOICE) {
             ChoiceTest *choiceTest;
-            if ((choiceTest = dynamic_cast<ChoiceTest *>(test)) != nullptr) {
+            if ((choiceTest = reinterpret_cast<ChoiceTest *>(test)) != nullptr) {
                 mView->setupChoiceScreen(test->getQuestion(), choiceTest->getAnswers());
             }
         }
         if (type == ViewType::CHECK) {
             CheckTest *checkTest;
-            if ((checkTest = dynamic_cast<CheckTest *>(test)) != nullptr) {
+            if ((checkTest = reinterpret_cast<CheckTest *>(test)) != nullptr) {
                 mView->setupCheckScreen(test->getQuestion(), checkTest->getAnswers());
             }
         }

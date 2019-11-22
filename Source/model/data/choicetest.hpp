@@ -13,6 +13,8 @@ public:
         uint correctIndex
     ): BaseTest(ViewType::CHOICE, questionText, answers[correctIndex]), mAnswers(answers), mCorrectIndex(correctIndex) {}
 
+    ~ChoiceTest() = default;
+
     bool checkAnswerByIndex(size_t index) {
         return mCorrectIndex == index && checkResult(getAnswers()[index]);
     }

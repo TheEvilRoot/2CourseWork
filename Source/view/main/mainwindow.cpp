@@ -56,6 +56,19 @@ void MainWindow::initConnection() {
         mSettings->attemptsCount = ui->attemptsBox->value();
     });
 
+    connect(ui->menuWordsSlider, static_cast<void(QSlider::*)(int)>(&QSlider::valueChanged), this, [=]() {
+        auto value = ui->menuWordsSlider->value();
+        ui->menuWordsLabel->setText(QString::number(value));
+        mSettings->wordsTestsCount = value;
+    });
+
+    connect(ui->menuSentencesSlider, static_cast<void(QSlider::*)(int)>(&QSlider::valueChanged), this, [=]() {
+        auto value = ui->menuSentencesSlider->value();
+        ui->menuSentencesLabel->setText(QString::number(value));
+        mSettings->sentencesTestsCount = value;
+    });
+
+
     connect(ui->startSession, &QPushButton::clicked, this, [=]() {
       mPresenter->requestNewSession(false);
     });
@@ -201,6 +214,12 @@ void MainWindow::setupMenuScreen(SessionState *currentState) {
         ui->sessionInfo->setVisible(false);
     }
     ui->versionLabel->setText(mPresenter->getVersion());
+
+    ui->menuWordsSlider->setValue(mSettings->wordsTestsCount);
+    ui->menuSentencesSlider->setValue(mSettings->sentencesTestsCount);
+
+    ui->menuSentencesLabel->setText(QString::number(mSettings->sentencesTestsCount));
+    ui->menuWordsLabel->setText(QString::number(mSettings->wordsTestsCount));
 }
 
 void MainWindow::setupChoiceScreen(QString question, std::vector<QString> answers) {

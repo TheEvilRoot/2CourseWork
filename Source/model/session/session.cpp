@@ -72,7 +72,7 @@ int Session::submitTest(size_t index, QString answer) {
     auto isCorrect = false;
 
     if (test->getType() == ViewType::CHOICE || test->getType() == ViewType::CHECK) {
-        auto choiceTest = dynamic_cast<ChoiceTest *>(test);
+        auto choiceTest = reinterpret_cast<ChoiceTest *>(test);
         isCorrect = choiceTest->checkAnswerByIndex(index);
         answer = choiceTest->getAnswers()[index];
     } else {

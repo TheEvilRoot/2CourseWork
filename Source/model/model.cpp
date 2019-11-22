@@ -5,7 +5,7 @@
 #include "model/data/inputtest.hpp"
 #include "api/utils.hpp"
 
-#include<QStandardPaths>
+#include <QStandardPaths>
 #include <QFile>
 #include <QTextStream>
 #include <QJsonArray>
@@ -14,7 +14,8 @@
 #include <iostream>
 #include <algorithm>
 #include <QDir>
-Model::Model(Settings *settings, RandomGenerator *random): mSession(nullptr), mSettings(settings), mRandomGen(random), mWordsGraph(new GraphDict()) {
+
+Model::Model(Settings *settings, RandomGenerator *random): mSession(nullptr), mSettings(settings), mRandomGen(random), mWordsGraph(new QGraphDict()) {
     mVersion = QString::number(mSettings->versionMajor) + "." + QString::number(mSettings->versionMinor) + "-" + QString::number(mSettings->versionBuild) + mSettings->versionSign;
 }
 
@@ -169,8 +170,8 @@ std::vector<QString> Model::getRandomSentenceAnswers(size_t count) {
 
 std::vector<BaseTest *> Model::generateTests() {
     std::vector<BaseTest *> tests;
-    int wordBasedCount = mRandomGen->intInRange(10, 20);
-    int sentenceBasedCount = mRandomGen->intInRange(3, 10);
+    int wordBasedCount = mSettings->wordsTestsCount;
+    int sentenceBasedCount = mSettings->sentencesTestsCount;
 
     for (int i = 0; i < wordBasedCount; i++) {
         auto options = getRandomWords(6);
