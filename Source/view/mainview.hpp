@@ -6,7 +6,7 @@
 
 class MainView { // TODO: Solve warning
 public:
-    virtual ~MainView() {}
+    virtual ~MainView() = default;
 
     virtual bool presentView(const ViewType *type) = 0;
     virtual void showLoading() = 0;

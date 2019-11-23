@@ -6,11 +6,10 @@
 #include "model/data/CEFR.hpp"
 
 #include <QApplication>
-#include <iostream>
 
 int BaseTest::GLOBAL_ID = 0;
 int ViewType::GLOBAL_ID = 0;
-std::vector<CEFR* > CEFR::list;
+std::vector<CEFR *> CEFR::list;
 
 const ViewType* ViewType::MENU = new ViewType("menu");
 const ViewType* ViewType::CHOICE = new ViewType("choice");
@@ -32,17 +31,17 @@ const CEFR* CEFR::C2 = new CEFR("C2");
 int main(int argc, char *argv[]) {
     QApplication application(argc, argv);
 
-    Settings *settings = new Settings();
+    auto *settings = new Settings();
     Q_ASSERT(settings);
 
-    RandomGenerator *random = new RandomGenerator(time(nullptr));
+    auto *random = new RandomGenerator(time(nullptr));
     Q_ASSERT(random);
 
-    Model *model = new Model(settings, random);
+    auto *model = new Model(settings, random);
     Q_ASSERT(model);
 
     MainWindow window(&application, model, settings);
-    MainView *view = dynamic_cast<MainView*>(&window);
+    auto *view = dynamic_cast<MainView*>(&window);
     Q_ASSERT(view);
 
     Q_ASSERT(view->presentView(nullptr) == false);

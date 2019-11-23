@@ -2,7 +2,6 @@
 
 #include <QFile>
 #include <QTextStream>
-#include <iostream>
 
 class Settings {
 public:
@@ -20,20 +19,19 @@ public:
     }
 
     bool loadStyles(QString *str) {
-        QFile *file = new QFile(":/styles/styles.css");
+        auto *file = new QFile(":/styles/styles.css");
         if (!file->open(QIODevice::ReadOnly)) {
-            std::cerr << "Unable to open css file: " + file->errorString().toStdString() << "\n";
             return false;
         }
-        QTextStream *stream = new QTextStream(file);
+        auto *stream = new QTextStream(file);
         stream->setCodec("UTF-8");
 
-        (*str) = stream->readAll();
+        if (str) (*str) = stream->readAll();
 
         file->close();
-        if (file) delete file;
-        if (stream) delete stream;
 
+        delete file;
+        delete stream;
         return true;
     }
 };

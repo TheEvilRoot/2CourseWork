@@ -1,23 +1,17 @@
 #include "wordsfileloader.hpp"
 
-#include <iostream>
+#include <QDebug>
 
 WordsFileLoader::WordsFileLoader(Model *model): mModel(model) { }
 
 void WordsFileLoader::run() {
     try {
-        if (!mModel->loadWords() || !mModel->loadSentences()) emit progressError("Something really went wrong.", true);
+        auto result = mModel->loadWords() &&
+            mModel->loadSentences() &&
+            mModel->loadHistory();
+        qDebug() << "File loader: " << result;
+        emit progressDone();
     } catch(QString& msg) {
         emit progressError(msg, true);
-        return;
     }
-
-    try {
-        mModel->loadHistory();
-    } catch (QString& msg) {
-        emit progressError(msg, false);
-        return;
-    }
-
-    emit progressDone();
 }

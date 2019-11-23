@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <utility>
 
 class ViewType {
 private:
@@ -9,7 +10,7 @@ private:
 
     static int GLOBAL_ID;
 
-    ViewType(std::string name): mViewName(name), mViewId(GLOBAL_ID++) {}
+    ViewType(std::string name): mViewName(std::move(name)), mViewId(GLOBAL_ID++) {}
 public:
     static const ViewType* MENU;
     static const ViewType* CHOICE;

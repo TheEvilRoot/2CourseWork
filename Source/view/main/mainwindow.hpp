@@ -24,7 +24,7 @@ class MainWindow : public QMainWindow, public MainView {
 
 public:
     MainWindow(QApplication *application, Model *model, Settings *settings, QWidget *parent = nullptr);
-    ~MainWindow() override;
+    ~MainWindow();
 
     bool presentView(const ViewType *type) override;
     void showLoading() override;
@@ -54,9 +54,9 @@ private:
     void initStatusBar();
     void initHistoryTables();
     void optionSubmit(int position);
-    void answerSubmit(QString answer);
-    void showPopup(QString message, unsigned int time = 1000);
-    QTableWidgetItem* notEditableItem(QString content);
+    void answerSubmit(const QString& answer);
+    void showPopup(const QString& message, unsigned int time = 1000);
+    QTableWidgetItem* notEditableItem(const QString& content);
 
     Ui::MainWindow *ui;
     MainPresenter *mPresenter;

@@ -5,11 +5,12 @@ SessionState::SessionState():
     mWrong(0),
     mTime(QDateTime::currentDateTime()),
     mResult(""),
+    mCefrResult(CEFR::NOTHING),
     mWordBasedCorrect(0),
     mSentenceBasedCorrect(0),
     mSolveTime(QDateTime::fromMSecsSinceEpoch(0)){}
 
-SessionState::SessionState(QJsonObject obj):
+SessionState::SessionState(const QJsonObject& obj):
     mCorrect(obj.value("correct").toInt()),
     mWrong(obj.value("wrong").toInt()),
     mTime(QDateTime::fromMSecsSinceEpoch(obj.value("time").toString().toLongLong())),

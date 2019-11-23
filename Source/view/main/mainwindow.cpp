@@ -15,7 +15,9 @@ MainWindow::MainWindow(
     ui(new Ui::MainWindow),
     mPresenter(new MainPresenter(model, this)),
     mSettings(settings),
-    mApplication(application) {
+    mApplication(application),
+    statusBarLabel(nullptr),
+    statusProgressBar(nullptr) {
     ui->setupUi(this);
 
     // I hate it!
@@ -49,63 +51,65 @@ MainWindow::~MainWindow() {
 
 void MainWindow::initConnection() {
     // Menu screen
-    connect(ui->go2exit, &QPushButton::clicked, this, [=]() {
+    connect(ui->go2exit, &QPushButton::clicked, this, [&]() {
       this->close();
     });
-    connect(ui->attemptsBox, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, [=]() {
+
+    connect(ui->attemptsBox, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, [&]() {
         mSettings->attemptsCount = ui->attemptsBox->value();
     });
 
-    connect(ui->menuWordsSlider, static_cast<void(QSlider::*)(int)>(&QSlider::valueChanged), this, [=]() {
+    connect(ui->menuWordsSlider, static_cast<void(QSlider::*)(int)>(&QSlider::valueChanged), this, [&]() {
         auto value = ui->menuWordsSlider->value();
         ui->menuWordsLabel->setText(QString::number(value));
         mSettings->wordsTestsCount = value;
     });
 
-    connect(ui->menuSentencesSlider, static_cast<void(QSlider::*)(int)>(&QSlider::valueChanged), this, [=]() {
+    connect(ui->menuSentencesSlider, static_cast<void(QSlider::*)(int)>(&QSlider::valueChanged), this, [&]() {
         auto value = ui->menuSentencesSlider->value();
         ui->menuSentencesLabel->setText(QString::number(value));
         mSettings->sentencesTestsCount = value;
     });
 
 
-    connect(ui->startSession, &QPushButton::clicked, this, [=]() {
+    connect(ui->startSession, &QPushButton::clicked, this, [&]() {
       mPresenter->requestNewSession(false);
     });
 
     // Choice screen
     for (int i = 0; i < 6; i++) {
-      connect(mChoiceButtons[i], &QPushButton::clicked, this, [=]() {
+      connect(mChoiceButtons[i], &QPushButton::clicked, this, [&, i] {
         optionSubmit(i);
       });
     }
 
     // Input screen
-    connect(ui->inputSubmitButton, &QPushButton::clicked, this, [=]() {
+    connect(ui->inputSubmitButton, &QPushButton::clicked, this, [&]() {
         answerSubmit(ui->inputAnswerInput->text());
     });
 
     // Check screen
-    connect(ui->checkSubmitButton, &QPushButton::clicked, this, [=]() {
+    connect(ui->checkSubmitButton, &QPushButton::clicked, this, [&]() {
         optionSubmit(ui->checkBox->currentIndex());
     });
 
     // Result screen
-    connect(ui->back2menu, &QPushButton::clicked, this, [=]() {
+    connect(ui->back2menu, &QPushButton::clicked, this, [&]() {
         mPresenter->requestSessionFinish(ViewType::MENU);
     });
-    connect(ui->resGo2History, &QPushButton::clicked, this, [=]() {
+
+    connect(ui->resGo2History, &QPushButton::clicked, this, [&]() {
        mPresenter->requestSessionFinish(ViewType::HISTORY);
     });
     // History screen
-    connect(ui->showHistory, &QPushButton::clicked, this, [=]() {
+    connect(ui->showHistory, &QPushButton::clicked, this, [&]() {
         mPresenter->initView(ViewType::HISTORY);
     });
 
-    connect(ui->historyBack2Menu, &QPushButton::clicked, this, [=]() {
+    connect(ui->historyBack2Menu, &QPushButton::clicked, this, [&]() {
         mPresenter->initView(ViewType::MENU);
     });
-    connect(ui->historyTable, &QTableWidget::itemSelectionChanged, this, [=]() {
+    connect(ui->historyTable, &QTableWidget::itemSelectionChanged, this, [&]() {
         auto selectedIndex = ui->historyTable->currentRow();
         auto isSelected = ui->historyTable->selectedRanges().size();
         mPresenter->requestHistoryDetailUpdate(isSelected ? selectedIndex : -1);
@@ -158,11 +162,11 @@ void MainWindow::askSession() {
 }
 
 void MainWindow::optionSubmit(int position) {
-    size_t index = static_cast<size_t>(position);
+    auto index = static_cast<size_t>(position);
     mPresenter->proceedAnswer("", index);
 }
 
-void MainWindow::answerSubmit(QString answer) {
+void MainWindow::answerSubmit(const QString& answer) {
   mPresenter->proceedAnswer(answer, 0);
 }
 
@@ -183,16 +187,16 @@ void MainWindow::showMessage(QString message, bool enablePopup) {
 void MainWindow::initiateError(bool fatal, QString message) {
    if (fatal) {
        disableContent();
-       QMessageBox *errorBox = new QMessageBox(this);
-       errorBox->setText("Во время работы приложения произошла ошибка. К сожалению дальнейшая работа невозможна.\nДалее представлена информация об ошибке, которая может помочь решить ее:\n\n" + message);
-       errorBox->setWindowTitle("Произошла ошибка");
-       errorBox->setButtonText(QMessageBox::Ok, "Закрыть приложение");
-       errorBox->button(QMessageBox::Ok)->setStyleSheet("padding-left: 20px; padding-right: 20px;");
-       connect(errorBox->button(QMessageBox::Ok), &QPushButton::clicked, [=]() {
+       QMessageBox errorBox(this);
+       errorBox.setText("Во время работы приложения произошла ошибка. К сожалению дальнейшая работа невозможна.\nДалее представлена информация об ошибке, которая может помочь решить ее:\n\n" + message);
+       errorBox.setWindowTitle("Произошла ошибка");
+       errorBox.setButtonText(QMessageBox::Ok, "Закрыть приложение");
+       errorBox.button(QMessageBox::Ok)->setStyleSheet("padding-left: 20px; padding-right: 20px;");
+       connect(errorBox.button(QMessageBox::Ok), &QPushButton::clicked, [=]() {
            exit(0);
        });
-       errorBox->setWindowFlags((errorBox->windowFlags() | Qt::CustomizeWindowHint) & ~Qt::WindowCloseButtonHint);
-       errorBox->show();
+       errorBox.setWindowFlags((errorBox.windowFlags() | Qt::CustomizeWindowHint) & ~Qt::WindowCloseButtonHint);
+       errorBox.show();
    } else {
        showPopup("Произошла ошибка: " + message);
    }
@@ -303,13 +307,13 @@ void MainWindow::setupResultScreen(SessionState *state) {
     mFinalResult->setState(state);
 }
 
-QTableWidgetItem* MainWindow::notEditableItem(QString content) {
+QTableWidgetItem* MainWindow::notEditableItem(const QString& content) {
     auto item = new QTableWidgetItem(content);
     item->setFlags(item->flags() & (~Qt::ItemIsEditable));
     return item;
 }
 
-void MainWindow::showPopup(QString message, unsigned int time) {
+void MainWindow::showPopup(const QString& message, unsigned int time) {
     mFloating->setPopupText(message);
 
     const QPoint point(0, 0);
@@ -330,7 +334,9 @@ void MainWindow::setTestTitle(const ViewType *type, size_t index, size_t count) 
     if (type == ViewType::CHECK) titleView = ui->checkTestTitle;
     if (type == ViewType::CHOICE) titleView = ui->choiceTestTitle;
 
-    if (titleView) setTextFor(titleView, "Тест " + QString::number(index + 1) + "/" + QString::number(count));
+    if (titleView) {
+        setTextFor(titleView, "Тест " + QString::number(index + 1) + "/" + QString::number(count));
+    }
 }
 
 void MainWindow::setTipWords(std::pair<QString, QString> &words) {

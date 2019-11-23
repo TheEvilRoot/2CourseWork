@@ -8,7 +8,7 @@ public:
         QString questionText,
         std::vector<QString> answers,
         uint correctIndex
-    ): ChoiceTest(questionText, answers, correctIndex) { this->mType = ViewType::CHECK; }
-
-
+    ): ChoiceTest(questionText, answers, correctIndex) {
+        this->mType = ViewType::CHECK;
+    }
 };

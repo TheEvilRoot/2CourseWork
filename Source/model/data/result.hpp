@@ -33,7 +33,7 @@ public:
         mSolveTime(QDateTime::fromMSecsSinceEpoch(obj.value("time").toString().toLongLong()))
     {
         auto userAnswers = obj.value("answers").toArray();
-        for (auto ans : userAnswers) {
+        for (const auto& ans : userAnswers) {
             mUserAnswers.push_back(ans.toString());
         }
     }
@@ -57,7 +57,7 @@ public:
         obj.insert("time", QString::number(mSolveTime.toMSecsSinceEpoch()));
 
         QJsonArray answersArray;
-        for (auto ans : mUserAnswers) {
+        for (const auto& ans : mUserAnswers) {
             answersArray.push_back(ans);
         }
         obj.insert("answers", answersArray);

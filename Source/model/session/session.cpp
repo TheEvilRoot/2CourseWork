@@ -1,9 +1,9 @@
 #include "session.hpp"
 #include "model/data/choicetest.hpp"
 
-#include <iostream>
 #include <cmath>
 #include <QDateTime>
+#include <QDebug>
 
 Session::Session(TestList tests, int maxAttempts):
     mTests(tests),
@@ -15,8 +15,10 @@ Session::Session(TestList tests, int maxAttempts):
 }
 
 Session::~Session() {
-    std::cerr << "Session descruction initiated!!!!!!\n";
-    for (size_t i = 0; i < mTests.size(); i++) if (mTests[i]) delete mTests[i];
+    qDebug() << "Session descruction initiated!!!!!!\n";
+    for (auto& test : mTests) {
+        delete test;
+    }
 }
 
 int Session::getCorrectAnswersCount() const {
@@ -106,9 +108,8 @@ int Session::submitTest(size_t index, QString answer) {
 BaseTest* Session::currentTest() const {
   if (mPosition < mTests.size()){
     return mTests[mPosition];
-  } else {
-    return nullptr;
   }
+  return nullptr;
 }
 
 bool Session::isFinished() {

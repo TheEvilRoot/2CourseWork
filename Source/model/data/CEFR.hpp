@@ -2,6 +2,7 @@
 
 #include <QString>
 #include <vector>
+#include <utility>
 
 class CEFR {
 private:
@@ -11,7 +12,7 @@ private:
     QString mName;
 
 public:
-    CEFR(QString name): mId(GLOBAL_ID++), mName(name) {
+    CEFR(QString name): mId(GLOBAL_ID++), mName(std::move(name)) {
         list.push_back(this);
     }
 
@@ -23,7 +24,7 @@ public:
         return mId;
     }
 
-    static const CEFR* fromName(QString name) {
+    static const CEFR* fromName(const QString& name) {
         for (auto cefr : list) {
             if (cefr && cefr->getName() == name) return cefr;
         }
