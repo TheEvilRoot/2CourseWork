@@ -2,9 +2,9 @@
 
 Settings::Settings():
     versionMajor(1),
-    versionMinor(3),
-    versionBuild(201019),
-    versionSign('A'),
+    versionMinor(4),
+    versionBuild(81219),
+    versionSign("RC"),
     style(new QString),
     attemptsCount(1),
     randomTestsCount(true),
@@ -25,7 +25,7 @@ bool Settings::loadStyles(QString *str) {
         (*str) = stream->readAll();
 
     file->close();
-s
+
     delete file;
     delete stream;
 

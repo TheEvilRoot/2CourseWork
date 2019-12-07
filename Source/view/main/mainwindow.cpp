@@ -121,44 +121,46 @@ void MainWindow::initConnection() {
         mSettings->randomTestsCount = checked;
     });
 
-    connect(ui->startSession, &QPushButton::clicked, this, [&]() {
+    connect(ui->startSession, &QPushButton::clicked, this, [this]() {
       mPresenter->requestNewSession(false);
     });
 
     // Choice screen
     for (int i = 0; i < 6; i++) {
-      connect(mChoiceButtons[i], &QPushButton::clicked, this, [&, i] {
+      connect(mChoiceButtons[i], &QPushButton::clicked, this, [this, i] {
         optionSubmit(i);
       });
     }
 
     // Input screen
-    connect(ui->inputSubmitButton, &QPushButton::clicked, this, [&]() {
+    connect(ui->inputSubmitButton, &QPushButton::clicked, this, [this]() {
         answerSubmit(ui->inputAnswerInput->text());
     });
 
     // Check screen
-    connect(ui->checkSubmitButton, &QPushButton::clicked, this, [&]() {
+    connect(ui->checkSubmitButton, &QPushButton::clicked, this, [this]() {
         optionSubmit(ui->checkBox->currentIndex());
     });
 
     // Result screen
-    connect(ui->back2menu, &QPushButton::clicked, this, [&]() {
+    connect(ui->back2menu, &QPushButton::clicked, this, [this]() {
         mPresenter->requestSessionFinish(ViewType::MENU);
     });
 
-    connect(ui->resGo2History, &QPushButton::clicked, this, [&]() {
+    connect(ui->resGo2History, &QPushButton::clicked, this, [this]() {
        mPresenter->requestSessionFinish(ViewType::HISTORY);
     });
+
     // History screen
-    connect(ui->showHistory, &QPushButton::clicked, this, [&]() {
+    connect(ui->showHistory, &QPushButton::clicked, this, [this]() {
         mPresenter->initView(ViewType::HISTORY);
     });
 
-    connect(ui->historyBack2Menu, &QPushButton::clicked, this, [&]() {
+    connect(ui->historyBack2Menu, &QPushButton::clicked, this, [this]() {
         mPresenter->initView(ViewType::MENU);
     });
-    connect(ui->historyTable, &QTableWidget::itemSelectionChanged, this, [&]() {
+
+    connect(ui->historyTable, &QTableWidget::itemSelectionChanged, this, [this]() {
         auto selectedIndex = ui->historyTable->currentRow();
         auto isSelected = ui->historyTable->selectedRanges().size();
         mPresenter->requestHistoryDetailUpdate(isSelected ? selectedIndex : -1);

@@ -8,7 +8,7 @@ public:
     int versionMajor;
     int versionMinor;
     int versionBuild;
-    char versionSign;
+    QString versionSign;
     QString *style;
 
     int attemptsCount;
