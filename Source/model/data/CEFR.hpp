@@ -8,13 +8,14 @@ class CEFR {
 private:
     static std::vector<CEFR*> list;
     static int GLOBAL_ID;
+
     int mId;
     QString mName;
 
 public:
-    CEFR(QString name): mId(GLOBAL_ID++), mName(std::move(name)) {
-        list.push_back(this);
-    }
+    CEFR(QString name):
+        mId(GLOBAL_ID++),
+        mName(std::move(name)) { list.push_back(this); }
 
     QString getName() const {
         return mName;

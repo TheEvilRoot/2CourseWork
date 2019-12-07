@@ -7,5 +7,5 @@ public:
     InputTest(
         QString questionText,
         QString rightAnswer
-    ): BaseTest(ViewType::INPUT, questionText, rightAnswer){ }
+    ): BaseTest(ViewType::INPUT, questionText, rightAnswer) { }
 };

@@ -22,11 +22,11 @@ public:
              QString questionText,
              QString rightAnswer,
              bool isSentenceBased = false): 
-             mId(GLOBAL_ID++),
-             mType(type),
-             mQuestionText(questionText),
-             mRightAnswer(rightAnswer),
-             mIsSentenceBased(isSentenceBased) { }
+         mId(GLOBAL_ID++),
+         mType(type),
+         mQuestionText(questionText),
+         mRightAnswer(rightAnswer),
+         mIsSentenceBased(isSentenceBased) { }
 
     virtual ~BaseTest() = default;
 

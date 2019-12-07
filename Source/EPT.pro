@@ -10,8 +10,10 @@ RC_ICONS += icn.ico
 ICON = icn.icns
 
 SOURCES += main.cpp \
+    model/data/result.cpp \
     model/loader/storeworker.cpp \
     model/session/sessionstate.cpp \
+    model/settings.cpp \
     presenter/main/mainpresenter.cpp \
     view/main/mainwindow.cpp \
     model/model.cpp \
