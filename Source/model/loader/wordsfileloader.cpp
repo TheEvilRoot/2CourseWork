@@ -4,6 +4,10 @@
 
 WordsFileLoader::WordsFileLoader(Model *model): mModel(model) { }
 
+WordsFileLoader::~WordsFileLoader() {
+    qDebug() << "WordsFileLoader destruction...";
+}
+
 void WordsFileLoader::run() {
     try {
         auto result = mModel->loadWords() &&

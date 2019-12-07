@@ -50,6 +50,10 @@ public:
 private slots:
 
 private:
+    void initSettings();
+    void initMisc();
+    void initResultWidgets();
+    void initFloatingWidget();
     void initConnection();
     void initStatusBar();
     void initHistoryTables();

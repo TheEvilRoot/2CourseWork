@@ -12,6 +12,8 @@ private:
     Model *mModel;
 public:
     WordsFileLoader(Model *model);
+    ~WordsFileLoader();
+
     void run() override;
 
 signals:

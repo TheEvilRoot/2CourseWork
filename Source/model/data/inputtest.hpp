@@ -8,6 +8,4 @@ public:
         QString questionText,
         QString rightAnswer
     ): BaseTest(ViewType::INPUT, questionText, rightAnswer){ }
-
-
 };

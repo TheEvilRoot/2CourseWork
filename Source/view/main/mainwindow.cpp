@@ -17,27 +17,23 @@ MainWindow::MainWindow(
     mSettings(settings),
     mApplication(application),
     statusBarLabel(nullptr),
-    statusProgressBar(nullptr) {
+    statusProgressBar(nullptr),
+    mChoiceButtons(nullptr),
+    mStateHeaders(nullptr),
+    mHistoryHeaders(nullptr),
+    mFloating(nullptr),
+    mHistoryResult(nullptr),
+    mFinalResult(nullptr){
     ui->setupUi(this);
 
-    // I hate it!
-    mChoiceButtons = new QPushButton*[6]{ ui->choiceOption1, ui->choiceOption2, ui->choiceOption3, ui->choiceOption4, ui->choiceOption5, ui->choiceOption6 };
-    mHistoryHeaders = new QStringList {"Время", "Верные ответы", "Неверные ответы", "Численных результат", "Результат"};
-    mStateHeaders = new QStringList {"Вопрос", "Правильный ответ", "Попытки", "Численных результат", "Время", "Ваши ответы"};
-
-    mFloating = new QFloatingWidget(this);
-
+    initMisc();
+    initFloatingWidget();
     initConnection();
     initStatusBar();
     initHistoryTables();
+    initResultWidgets();
 
-    mHistoryResult = new QResultWidget();
-    mHistoryResult->setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum));
-    ui->resultLayout->addWidget(mHistoryResult);
-
-    mFinalResult = new QResultWidget();
-    mFinalResult->setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum));
-    ui->finalResult->addWidget(mFinalResult);
+    initSettings();
 
     setupMenuScreen(nullptr);
     presentView(ViewType::MENU);
@@ -47,6 +43,34 @@ MainWindow::MainWindow(
 
 MainWindow::~MainWindow() {
     delete ui;
+}
+
+void MainWindow::initSettings() {
+    ui->menuSentencesSlider->setValue (mSettings->sentencesTestsCount);
+    ui->menuWordsSlider->setValue (mSettings->wordsTestsCount);
+    ui->menuTotalTestsSlider->setValue (mSettings->totalTestsCount);
+    ui->attemptsBox->setValue (mSettings->attemptsCount);
+    ui->menuRandomTestCountCheck->setChecked (mSettings->randomTestsCount);
+}
+
+void MainWindow::initResultWidgets() {
+    mHistoryResult = new QResultWidget();
+    mHistoryResult->setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum));
+    ui->resultLayout->addWidget(mHistoryResult);
+
+    mFinalResult = new QResultWidget();
+    mFinalResult->setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum));
+    ui->finalResult->addWidget(mFinalResult);
+}
+
+void MainWindow::initMisc() {
+    mChoiceButtons = new QPushButton*[6]{ ui->choiceOption1, ui->choiceOption2, ui->choiceOption3, ui->choiceOption4, ui->choiceOption5, ui->choiceOption6 };
+    mHistoryHeaders = new QStringList {"Время", "Верные ответы", "Неверные ответы", "Численных результат", "Результат"};
+    mStateHeaders = new QStringList {"Вопрос", "Правильный ответ", "Попытки", "Численных результат", "Время", "Ваши ответы"};
+}
+
+void MainWindow::initFloatingWidget() {
+    mFloating = new QFloatingWidget(this);
 }
 
 void MainWindow::initConnection() {
@@ -63,14 +87,39 @@ void MainWindow::initConnection() {
         auto value = ui->menuWordsSlider->value();
         ui->menuWordsLabel->setText(QString::number(value));
         mSettings->wordsTestsCount = value;
+        ui->menuTotalTestsSlider->setValue(value + mSettings->sentencesTestsCount);
     });
 
     connect(ui->menuSentencesSlider, static_cast<void(QSlider::*)(int)>(&QSlider::valueChanged), this, [&]() {
         auto value = ui->menuSentencesSlider->value();
         ui->menuSentencesLabel->setText(QString::number(value));
         mSettings->sentencesTestsCount = value;
+
+        ui->menuTotalTestsSlider->setValue(value + mSettings->wordsTestsCount);
     });
 
+    connect(ui->menuTotalTestsSlider, static_cast<void(QSlider::*)(int)>(&QSlider::valueChanged), this, [&]() {
+        auto value = ui->menuTotalTestsSlider->value();
+        ui->menuTotalTestsLabel->setText (QString::number(value));
+
+        mSettings->totalTestsCount = value;
+    });
+
+    connect(ui->menuRandomTestCountCheck, &QCheckBox::toggled, this, [&]() {
+        auto checked = ui->menuRandomTestCountCheck->isChecked();
+
+        if (checked) {
+            ui->menuSentencesSlider->setEnabled(false);
+            ui->menuWordsSlider->setEnabled(false);
+            ui->menuTotalTestsSlider->setEnabled(true);
+        } else {
+            ui->menuSentencesSlider->setEnabled(true);
+            ui->menuWordsSlider->setEnabled(true);
+            ui->menuTotalTestsSlider->setEnabled(false);
+        }
+
+        mSettings->randomTestsCount = checked;
+    });
 
     connect(ui->startSession, &QPushButton::clicked, this, [&]() {
       mPresenter->requestNewSession(false);

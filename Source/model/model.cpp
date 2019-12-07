@@ -200,8 +200,17 @@ std::vector<QString> Model::getRandomSentenceAnswers(size_t count) {
 
 std::vector<BaseTest *> Model::generateTests() {
     std::vector<BaseTest *> tests;
+    bool isRandom = mSettings->randomTestsCount;
+    int total = mSettings->totalTestsCount;
+
     int wordBasedCount = mSettings->wordsTestsCount;
     int sentenceBasedCount = mSettings->sentencesTestsCount;
+
+    if (isRandom) {
+        wordBasedCount = mRandomGen->intInRange (total / 2, (3 * total) / 4); // 0.5 - 0.75
+        sentenceBasedCount = total - wordBasedCount;
+    }
+
     int numberOfOptions = 6;
 
     // Generate word-based tests

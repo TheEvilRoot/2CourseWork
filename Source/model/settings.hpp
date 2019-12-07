@@ -12,9 +12,21 @@ public:
     QString *style;
 
     int attemptsCount;
+    bool randomTestsCount;
+    int totalTestsCount;
     int wordsTestsCount;
     int sentencesTestsCount;
-    Settings(): versionMajor(1), versionMinor(3), versionBuild(201019), versionSign('A'), style(new QString), attemptsCount(1), wordsTestsCount(15), sentencesTestsCount(5) {
+    Settings():
+        versionMajor(1),
+        versionMinor(3),
+        versionBuild(201019),
+        versionSign('A'),
+        style(new QString),
+        attemptsCount(1),
+        randomTestsCount(true),
+        totalTestsCount(25),
+        wordsTestsCount(15),
+        sentencesTestsCount(5) {
         loadStyles(style);
     }
 

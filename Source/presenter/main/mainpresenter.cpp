@@ -152,6 +152,7 @@ void MainPresenter::onProgressDone() {
     mView->showMessage("Готов к работе");
     updateMenuTip();
     delete mLoader;
+    mLoader = nullptr;
 }
 
 // File loader callback
@@ -160,6 +161,7 @@ void MainPresenter::onError(const QString& message, bool fatal) {
     mView->showMessage(message);
     mView->initiateError(fatal, message);
     delete mLoader;
+    mLoader = nullptr;
 }
 
 // Store worker callback
@@ -169,6 +171,7 @@ void MainPresenter::onSessionFinish(const ViewType *nextView) {
     mView->showMessage("Готов к работе");
     updateMenuTip();
     delete mWorker;
+    mWorker = nullptr;
 
     initView(nextView);
 }
@@ -179,12 +182,14 @@ void MainPresenter::onSessionError(const QString& message) {
     mView->showMessage(message);
     mView->initiateError(true, message);
     delete mWorker;
+    mWorker = nullptr;
 
     initView(ViewType::MENU);
 }
 
 void MainPresenter::initApplication() {
-    if (mLoader != nullptr) return;
+    if (mLoader != nullptr)
+        return;
     mView->showLoading();
     mView->disableContent();
     mView->showMessage("Загрузка данных...");
