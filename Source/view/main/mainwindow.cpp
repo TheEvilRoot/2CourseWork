@@ -1,9 +1,10 @@
 ﻿#include "mainwindow.hpp"
 #include "ui_mainwindow.h"
 #include "view/sessiondialog/sessiondialog.hpp"
-#include "model/settings.h" // TODO: Create Presenter proxy!
+#include "model/settings.hpp" // TODO: Create Presenter proxy!
 
 #include <QMessageBox>
+#include <QSpinBox>
 
 MainWindow::MainWindow(
     QApplication *application,
@@ -14,89 +15,156 @@ MainWindow::MainWindow(
     ui(new Ui::MainWindow),
     mPresenter(new MainPresenter(model, this)),
     mSettings(settings),
-    mApplication(application) {
+    mApplication(application),
+    statusBarLabel(nullptr),
+    statusProgressBar(nullptr),
+    mChoiceButtons(nullptr),
+    mStateHeaders(nullptr),
+    mHistoryHeaders(nullptr),
+    mFloating(nullptr),
+    mHistoryResult(nullptr),
+    mFinalResult(nullptr){
     ui->setupUi(this);
 
-    // I hate it!
-    mChoiceButtons = new QPushButton*[6]{ ui->choiceOption1, ui->choiceOption2, ui->choiceOption3, ui->choiceOption4, ui->choiceOption5, ui->choiceOption6 };
-    mHistoryHeaders = new QStringList {"Время", "Верные ответы", "Неверные ответы", "Численных результат", "Результат"};
-    mStateHeaders = new QStringList {"Вопрос", "Правильный ответ", "Попытки", "Численных результат", "Время", "Ваши ответы"};
-
-    mFloating = new QFloatingWidget(this);
-
+    initMisc();
+    initFloatingWidget();
     initConnection();
     initStatusBar();
-    initStateTable(ui->logTable);
-    initStateTable(ui->detailTable);
     initHistoryTables();
+    initResultWidgets();
+
+    initSettings();
 
     setupMenuScreen(nullptr);
     presentView(ViewType::MENU);
     mApplication->setStyleSheet(*mSettings->style);
     mPresenter->initApplication();
-
 }
 
 MainWindow::~MainWindow() {
     delete ui;
 }
 
+void MainWindow::initSettings() {
+    ui->menuSentencesSlider->setValue (mSettings->sentencesTestsCount);
+    ui->menuWordsSlider->setValue (mSettings->wordsTestsCount);
+    ui->menuTotalTestsSlider->setValue (mSettings->totalTestsCount);
+    ui->attemptsBox->setValue (mSettings->attemptsCount);
+    ui->menuRandomTestCountCheck->setChecked (mSettings->randomTestsCount);
+}
+
+void MainWindow::initResultWidgets() {
+    mHistoryResult = new QResultWidget();
+    mHistoryResult->setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum));
+    ui->resultLayout->addWidget(mHistoryResult);
+
+    mFinalResult = new QResultWidget();
+    mFinalResult->setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum));
+    ui->finalResult->addWidget(mFinalResult);
+}
+
+void MainWindow::initMisc() {
+    mChoiceButtons = new QPushButton*[6]{ ui->choiceOption1, ui->choiceOption2, ui->choiceOption3, ui->choiceOption4, ui->choiceOption5, ui->choiceOption6 };
+    mHistoryHeaders = new QStringList {"Время", "Верные ответы", "Неверные ответы", "Численных результат", "Результат"};
+    mStateHeaders = new QStringList {"Вопрос", "Правильный ответ", "Попытки", "Численных результат", "Время", "Ваши ответы"};
+}
+
+void MainWindow::initFloatingWidget() {
+    mFloating = new QFloatingWidget(this);
+}
+
 void MainWindow::initConnection() {
     // Menu screen
-    connect(ui->go2exit, &QPushButton::clicked, this, [=]() {
+    connect(ui->go2exit, &QPushButton::clicked, this, [&]() {
       this->close();
     });
-    connect(ui->attemptsBox, &QCheckBox::toggled, this, [=]() {
-       bool newState = ui->attemptsBox->isChecked();
-       mSettings->isAttemptMode = newState;
+
+    connect(ui->attemptsBox, static_cast<void(QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, [&]() {
+        mSettings->attemptsCount = ui->attemptsBox->value();
     });
 
-    connect(ui->startSession, &QPushButton::clicked, this, [=]() {
+    connect(ui->menuWordsSlider, static_cast<void(QSlider::*)(int)>(&QSlider::valueChanged), this, [&]() {
+        auto value = ui->menuWordsSlider->value();
+        ui->menuWordsLabel->setText(QString::number(value));
+        mSettings->wordsTestsCount = value;
+        ui->menuTotalTestsSlider->setValue(value + mSettings->sentencesTestsCount);
+    });
+
+    connect(ui->menuSentencesSlider, static_cast<void(QSlider::*)(int)>(&QSlider::valueChanged), this, [&]() {
+        auto value = ui->menuSentencesSlider->value();
+        ui->menuSentencesLabel->setText(QString::number(value));
+        mSettings->sentencesTestsCount = value;
+
+        ui->menuTotalTestsSlider->setValue(value + mSettings->wordsTestsCount);
+    });
+
+    connect(ui->menuTotalTestsSlider, static_cast<void(QSlider::*)(int)>(&QSlider::valueChanged), this, [&]() {
+        auto value = ui->menuTotalTestsSlider->value();
+        ui->menuTotalTestsLabel->setText (QString::number(value));
+
+        mSettings->totalTestsCount = value;
+    });
+
+    connect(ui->menuRandomTestCountCheck, &QCheckBox::toggled, this, [&]() {
+        auto checked = ui->menuRandomTestCountCheck->isChecked();
+
+        if (checked) {
+            ui->menuSentencesSlider->setEnabled(false);
+            ui->menuWordsSlider->setEnabled(false);
+            ui->menuTotalTestsSlider->setEnabled(true);
+        } else {
+            ui->menuSentencesSlider->setEnabled(true);
+            ui->menuWordsSlider->setEnabled(true);
+            ui->menuTotalTestsSlider->setEnabled(false);
+        }
+
+        mSettings->randomTestsCount = checked;
+    });
+
+    connect(ui->startSession, &QPushButton::clicked, this, [this]() {
       mPresenter->requestNewSession(false);
     });
 
     // Choice screen
     for (int i = 0; i < 6; i++) {
-      connect(mChoiceButtons[i], &QPushButton::clicked, this, [=]() {
+      connect(mChoiceButtons[i], &QPushButton::clicked, this, [this, i] {
         optionSubmit(i);
       });
     }
 
     // Input screen
-    connect(ui->inputSubmitButton, &QPushButton::clicked, this, [=]() {
-     // if (ui->inputAnswerInput->text().size() > 0) {
+    connect(ui->inputSubmitButton, &QPushButton::clicked, this, [this]() {
         answerSubmit(ui->inputAnswerInput->text());
-      //}
     });
 
     // Check screen
-    connect(ui->checkSubmitButton, &QPushButton::clicked, this, [=]() {
+    connect(ui->checkSubmitButton, &QPushButton::clicked, this, [this]() {
         optionSubmit(ui->checkBox->currentIndex());
     });
 
     // Result screen
-    connect(ui->back2menu, &QPushButton::clicked, this, [=]() {
+    connect(ui->back2menu, &QPushButton::clicked, this, [this]() {
         mPresenter->requestSessionFinish(ViewType::MENU);
     });
-    connect(ui->resGo2History, &QPushButton::clicked, this, [=]() {
+
+    connect(ui->resGo2History, &QPushButton::clicked, this, [this]() {
        mPresenter->requestSessionFinish(ViewType::HISTORY);
     });
 
     // History screen
-    connect(ui->showHistory, &QPushButton::clicked, this, [=]() {
+    connect(ui->showHistory, &QPushButton::clicked, this, [this]() {
         mPresenter->initView(ViewType::HISTORY);
     });
 
-    connect(ui->historyBack2Menu, &QPushButton::clicked, this, [=]() {
+    connect(ui->historyBack2Menu, &QPushButton::clicked, this, [this]() {
         mPresenter->initView(ViewType::MENU);
     });
 
-    connect(ui->historyTable, &QTableWidget::itemSelectionChanged, this, [=]() {
+    connect(ui->historyTable, &QTableWidget::itemSelectionChanged, this, [this]() {
         auto selectedIndex = ui->historyTable->currentRow();
         auto isSelected = ui->historyTable->selectedRanges().size();
         mPresenter->requestHistoryDetailUpdate(isSelected ? selectedIndex : -1);
     });
-
 }
 
 void MainWindow::initStatusBar() {
@@ -110,14 +178,6 @@ void MainWindow::initStatusBar() {
 
     ui->statusbar->addPermanentWidget(statusProgressBar);
     ui->statusbar->addPermanentWidget(statusBarLabel);
-}
-
-void MainWindow::initStateTable(QTableWidget *table) {
-    table->setHorizontalHeaderLabels(*mStateHeaders);
-    table->setColumnCount(6);
-    table->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-    table->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectRows);
-    table->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
 }
 
 void MainWindow::initHistoryTables() {
@@ -153,11 +213,11 @@ void MainWindow::askSession() {
 }
 
 void MainWindow::optionSubmit(int position) {
-    size_t index = static_cast<size_t>(position);
+    auto index = static_cast<size_t>(position);
     mPresenter->proceedAnswer("", index);
 }
 
-void MainWindow::answerSubmit(QString answer) {
+void MainWindow::answerSubmit(const QString& answer) {
   mPresenter->proceedAnswer(answer, 0);
 }
 
@@ -178,18 +238,18 @@ void MainWindow::showMessage(QString message, bool enablePopup) {
 void MainWindow::initiateError(bool fatal, QString message) {
    if (fatal) {
        disableContent();
-       QMessageBox *errorBox = new QMessageBox(this);
-       errorBox->setText("We've catch an fatal error dying application's work.\nThere's a description that will help maintain that problem: \n\n" + message);
-       errorBox->setWindowTitle("Fatal error occurred");
-       errorBox->setButtonText(QMessageBox::Ok, "Exit");
-       errorBox->button(QMessageBox::Ok)->setStyleSheet("padding-left: 20px; padding-right: 20px;");
-       connect(errorBox->button(QMessageBox::Ok), &QPushButton::clicked, [=]() {
+       QMessageBox errorBox(this);
+       errorBox.setText("Во время работы приложения произошла ошибка. К сожалению дальнейшая работа невозможна.\nДалее представлена информация об ошибке, которая может помочь решить ее:\n\n" + message);
+       errorBox.setWindowTitle("Произошла ошибка");
+       errorBox.setButtonText(QMessageBox::Ok, "Закрыть приложение");
+       errorBox.button(QMessageBox::Ok)->setStyleSheet("padding-left: 20px; padding-right: 20px;");
+       connect(errorBox.button(QMessageBox::Ok), &QPushButton::clicked, [=]() {
            exit(0);
        });
-       errorBox->setWindowFlags((errorBox->windowFlags() | Qt::CustomizeWindowHint) & ~Qt::WindowCloseButtonHint);
-       errorBox->show();
+       errorBox.setWindowFlags((errorBox.windowFlags() | Qt::CustomizeWindowHint) & ~Qt::WindowCloseButtonHint);
+       errorBox.show();
    } else {
-       showPopup("Error has occurred: " + message);
+       showPopup("Произошла ошибка: " + message);
    }
 }
 
@@ -209,7 +269,12 @@ void MainWindow::setupMenuScreen(SessionState *currentState) {
         ui->sessionInfo->setVisible(false);
     }
     ui->versionLabel->setText(mPresenter->getVersion());
-    ui->attemptsBox->setChecked(mSettings->isAttemptMode);
+
+    ui->menuWordsSlider->setValue(mSettings->wordsTestsCount);
+    ui->menuSentencesSlider->setValue(mSettings->sentencesTestsCount);
+
+    ui->menuSentencesLabel->setText(QString::number(mSettings->sentencesTestsCount));
+    ui->menuWordsLabel->setText(QString::number(mSettings->wordsTestsCount));
 }
 
 void MainWindow::setupChoiceScreen(QString question, std::vector<QString> answers) {
@@ -249,7 +314,7 @@ void MainWindow::setupHistoryList(std::deque<SessionState *> &states) {
 }
 
 void MainWindow::setupHistoryDetails(SessionState *state) {
-    setupStateTableForState(ui->detailTable, state);
+    mHistoryResult->setState(state);
 
     if (state == nullptr) {
         setTextFor(ui->cefrResult, "");
@@ -258,6 +323,7 @@ void MainWindow::setupHistoryDetails(SessionState *state) {
         setTextFor(ui->sbpercentLabel, "");
         return;
     }
+
     if (state->getCefr() == CEFR::NOTHING) {
         setTextFor(ui->cefrResult, "Нам пока не удалось определить Ваш уровень знаний. Больше практикуйтесь и в следующий раз у Вас все получится!");
         setTextFor(ui->resultMessage, "");
@@ -289,42 +355,16 @@ void MainWindow::setupResultScreen(SessionState *state) {
         setTextFor(ui->resultLabel, state->getResultString());
     }
 
-    setupStateTableForState(ui->logTable, state);
+    mFinalResult->setState(state);
 }
 
-void MainWindow::setupStateTableForState(QTableWidget *table, SessionState *state) {
-    if (table == nullptr)
-        return;
-    table->clear();
-    table->setHorizontalHeaderLabels(*mStateHeaders);
-    if (state == nullptr) {
-        table->setRowCount(0);
-        return;
-    }
-
-    table->setRowCount(static_cast<int>(state->getCount()));
-    for (int i = 0; i < static_cast<int>(state->getCount()); i++) {
-        auto res = state->at(static_cast<size_t>(i));
-        if (res == nullptr) {
-            std::cerr << "index " << i << " nullptr\n";
-        }
-        int j = 0;
-        table->setItem(i, j++, notEditableItem(res->mQuestion));
-        table->setItem(i, j++, notEditableItem(res->mAnswer));
-        table->setItem(i, j++, notEditableItem(res->getJoinedAnswers(',')));
-        table->setItem(i, j++, notEditableItem(QString::number(res->mPointsForTest)));
-        table->setItem(i, j++, notEditableItem(QString::number(res->mAttempts)));
-        table->setItem(i, j++, notEditableItem(res->mSolveTime.toString("mm:ss")));
-    }
-}
-
-QTableWidgetItem* MainWindow::notEditableItem(QString content) {
+QTableWidgetItem* MainWindow::notEditableItem(const QString& content) {
     auto item = new QTableWidgetItem(content);
     item->setFlags(item->flags() & (~Qt::ItemIsEditable));
     return item;
 }
 
-void MainWindow::showPopup(QString message, unsigned int time) {
+void MainWindow::showPopup(const QString& message, unsigned int time) {
     mFloating->setPopupText(message);
 
     const QPoint point(0, 0);
@@ -337,4 +377,19 @@ void MainWindow::showPopup(QString message, unsigned int time) {
                        mFloating->height());
 
     mFloating->show();
+}
+
+void MainWindow::setTestTitle(const ViewType *type, size_t index, size_t count) {
+    QLabel *titleView = nullptr;
+    if (type == ViewType::INPUT) titleView = ui->inputTestTitle;
+    if (type == ViewType::CHECK) titleView = ui->checkTestTitle;
+    if (type == ViewType::CHOICE) titleView = ui->choiceTestTitle;
+
+    if (titleView) {
+        setTextFor(titleView, "Тест " + QString::number(index + 1) + "/" + QString::number(count));
+    }
+}
+
+void MainWindow::setTipWords(std::pair<QString, QString> &words) {
+    setTextFor(ui->menuTipView, "Интересный факт<br><b>" + words.first + "</b> переводится как <b>" + words.second + "</b>");
 }

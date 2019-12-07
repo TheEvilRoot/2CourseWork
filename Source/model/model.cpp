@@ -1,20 +1,28 @@
 #include "model.hpp"
-#include "settings.h"
-#include "model/data/choicetest.h"
-#include "model/data/checktest.h"
+#include "settings.hpp"
+#include "model/data/choicetest.hpp"
+#include "model/data/checktest.hpp"
 #include "model/data/inputtest.hpp"
-#include "api/utils.h"
+#include "api/utils.hpp"
 
+#include <QStandardPaths>
 #include <QFile>
 #include <QTextStream>
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QJsonDocument>
-#include <iostream>
 #include <algorithm>
+#include <QDir>
+#include <QDebug>
 
-Model::Model(Settings *settings, RandomGenerator *random): mSession(nullptr), mSettings(settings), mRandomGen(random) {
+Model::Model(Settings *settings,
+             RandomGenerator *random): mSession(nullptr), mSettings(settings), mRandomGen(random) {
     mVersion = QString::number(mSettings->versionMajor) + "." + QString::number(mSettings->versionMinor) + "-" + QString::number(mSettings->versionBuild) + mSettings->versionSign;
+}
+
+QString& Model::getFromPair(std::pair<QString, QString> &pair, uint index) {
+    index %= 2;
+    return index == 0 ? pair.first : pair.second;
 }
 
 QString& Model::getVersion() {
@@ -31,8 +39,8 @@ int Model::newSession(bool force) {
   }
 
   // Otherwise delete (free) current session (if even exists) and create a new one!
-  if (mSession) delete mSession;
-  this->mSession = new Session(generateTests(), mSettings->isAttemptMode);
+  delete mSession;
+  this->mSession = new Session(generateTests(), mSettings->attemptsCount);
 
   return 0;
 }
@@ -51,16 +59,18 @@ void Model::storeSession(SessionState *state) {
 }
 
 bool Model::loadWords(bool forceReload) {
-    if (mWords.size() > 0 && !forceReload) return true;
-    if (mWords.size()) mWords.clear();
+    if (!mWords.empty() && !forceReload) return true;
+    if (!mWords.empty()) mWords.clear();
 
-    QFile *file = new QFile(":/data/words.db");
+    auto *file = new QFile(":/data/words.db");
     if (!file->open(QIODevice::ReadOnly)) {
-        if (file) delete file;
-        return false;
+        auto message = file->errorString();
+        delete file;
+
+        throw QString::fromUtf8("Unable to open words file: ") + message;
     }
 
-    QTextStream *stream = new QTextStream(file);
+    auto *stream = new QTextStream(file);
     stream->setCodec("UTF-8");
 
     int lineNum = 0;
@@ -72,18 +82,18 @@ bool Model::loadWords(bool forceReload) {
 
         QStringList list = line.split("\t");
         if (list.size() < 2) {
-            std::cerr << "[words.db] Line " << lineNum << " has invastoreSessionlid stucture\n";
+            qDebug() << "[words.db] Line " << lineNum << " has invastoreSessionlid stucture\n";
             continue;
         }
 
-       mWords.push_back(std::pair<QString, QString>(list[0], list[1]));
+       mWords.push_back({ list[0], list[1] });
     }
+
     file->close();
 
-    if (file) delete file;
-    if (stream) delete stream;
-
-    return mWords.size();
+    delete file;
+    delete stream;
+    return !mWords.empty();
 }
 
 bool Model::loadSentences(bool forceReload) {
@@ -91,24 +101,28 @@ bool Model::loadSentences(bool forceReload) {
     mSentences.clear();
     mSentenceAnswers.clear();
 
-    QFile *file = new QFile(":/data/sentences.db");
+    auto *file = new QFile(":/data/sentences.db");
     if (!file->open(QIODevice::ReadOnly)) {
-        if (file) delete  file;
-        return false;
+        auto message = file->errorString();
+        delete file;
+
+        throw QString::fromUtf8("Unable to open sentences file: ") + message;
     }
 
-    QTextStream *stream = new QTextStream(file);
+    auto *stream = new QTextStream(file);
     int lineNum = 0;
     while (!stream->atEnd()) {
         lineNum++;
 
-        QString line = stream->readLine();
+        auto line = stream->readLine();
         if (line.startsWith("#")) continue;
 
-        QStringList list = line.split("\t");
-        QString sentence = list[0];
+        auto list = line.split("\t");
+        auto sentence = list[0];
+
         QString answer = "";
-        if (list.size() > 1) answer = list[1];
+        if (list.size() > 1)
+            answer = list[1];
         mSentences.push_back(std::pair<QString, QString>(sentence, answer));
         // If not already added
         if (std::find(mSentenceAnswers.begin(), mSentenceAnswers.end(), answer) == mSentenceAnswers.end()) {
@@ -118,11 +132,10 @@ bool Model::loadSentences(bool forceReload) {
 
     file->close();
 
-    if (file) delete file;
-    if (stream) delete stream;
+    delete file;
+    delete stream;
 
-    std::cout << "[D] " << mSentences.size() << " " << mSentenceAnswers.size() << "\n";
-    return mSentences.size();
+    return !mSentences.empty();
 }
 
 /*
@@ -137,17 +150,24 @@ bool Model::loadSentences(bool forceReload) {
  */
 WordsList Model::getRandomWords(size_t count) {
     WordsList list;
-    if (count > mWords.size()) count = mWords.size();
-    size_t lastIndex, randomIndex;
+
+    if (count > mWords.size())
+        count = mWords.size();
+
+    size_t randomIndex = 0;
     for (size_t i = 0; i < count; i++) {
-        lastIndex = mWords.size() - 1;
         randomIndex = mRandomGen->intInRange(mWords.size());
 
-        std::swap(mWords[lastIndex], mWords[randomIndex]);
-        list.push_back(mWords[lastIndex]);
+        std::iter_swap(mWords.end() - 1, mWords.begin() + randomIndex);
+
+        list.push_back(mWords.back());
         mWords.pop_back();
     }
-    for (size_t i = 0; i < list.size(); i++) mWords.push_back(list[i]);
+
+    for (const auto& word : list) {
+        mWords.push_back(word);
+    }
+
     return list;
 }
 
@@ -158,120 +178,179 @@ std::pair<QString, QString> Model::getRandomSentence() {
 
 std::vector<QString> Model::getRandomSentenceAnswers(size_t count) {
     std::vector<QString> list;
-    if (count > mSentenceAnswers.size()) count = mSentenceAnswers.size();
-    size_t lastIndex, randomIndex;
+    if (count > mSentenceAnswers.size())
+        count = mSentenceAnswers.size();
+
+    size_t randomIndex = 0;
     for (size_t i = 0; i < count; i++) {
-        lastIndex = mSentenceAnswers.size() - 1;
         randomIndex = mRandomGen->intInRange(mSentenceAnswers.size());
 
-        std::swap(mSentenceAnswers[lastIndex], mSentenceAnswers[randomIndex]);
-        list.push_back(mSentenceAnswers[lastIndex]);
+        std::iter_swap(mSentenceAnswers.end() - 1, mSentenceAnswers.begin() + randomIndex);
+
+        list.push_back(mSentenceAnswers.back());
         mSentenceAnswers.pop_back();
     }
-    for (size_t i = 0; i < list.size(); i++) mSentenceAnswers.push_back(list[i]);
+
+    for (const auto& sentence : list) {
+        mSentenceAnswers.push_back(sentence);
+    }
+
     return list;
 }
 
 std::vector<BaseTest *> Model::generateTests() {
     std::vector<BaseTest *> tests;
-    int wordBasedCount = mRandomGen->intInRange(10, 20);
-    int sentenceBasedCount = mRandomGen->intInRange(3, 10);
+    bool isRandom = mSettings->randomTestsCount;
+    int total = mSettings->totalTestsCount;
 
-    for (int i = 0; i < wordBasedCount; i++) {
-        auto options = getRandomWords(6);
-        std::vector<QString> answers;
-        uint direction = static_cast<uint>(mRandomGen->intInRange(2));
-        for (auto &p : options) answers.push_back(getFromPair(p, direction));
-        uint randomIndex = static_cast<uint>(mRandomGen->intInRange(6));
+    int wordBasedCount = mSettings->wordsTestsCount;
+    int sentenceBasedCount = mSettings->sentencesTestsCount;
 
-        if (mRandomGen->intInRange(6) > 3) {
-            tests.push_back(new ChoiceTest(getFromPair(options[randomIndex], !direction), answers, randomIndex));
-        } else {
-            tests.push_back(new CheckTest(getFromPair(options[randomIndex], !direction), answers, randomIndex));
-        }
+    if (isRandom) {
+        wordBasedCount = mRandomGen->intInRange (total / 2, (3 * total) / 4); // 0.5 - 0.75
+        sentenceBasedCount = total - wordBasedCount;
     }
+
+    int numberOfOptions = 6;
+
+    // Generate word-based tests
+    for (int i = 0; i < wordBasedCount; i++) {
+        auto options = getRandomWords(numberOfOptions);
+        std::vector<QString> answers;
+
+        auto direction = static_cast<uint>(mRandomGen->intInRange(2));
+
+        for (size_t i = 0; i < numberOfOptions; i++) {
+            answers.push_back (getFromPair(options[i], direction));
+        }
+
+        uint randomIndex = static_cast<uint>(mRandomGen->intInRange(numberOfOptions));
+
+        BaseTest *test = nullptr;
+        if (mRandomGen->intInRange(2) == 1) {
+            test = new ChoiceTest(getFromPair(options[randomIndex], !direction), answers, randomIndex);
+        } else {
+            test = new CheckTest(getFromPair(options[randomIndex], !direction), answers, randomIndex);
+        }
+
+        if (test)
+            tests.push_back(test);
+    }
+
+    int probabilityModifyer = 10;
+    int numberOfSentences = 5;
+
+    // Generate sentence based tests
     for (int i = 0; i < sentenceBasedCount; i++) {
         std::pair<QString, QString> sentence = getRandomSentence();
 
-        int random = mRandomGen->intInRange(10);
-        BaseTest *testToPush;
+        int random = mRandomGen->intInRange(probabilityModifyer);
+        BaseTest *testToPush = nullptr;
         if (random % 2 == 0) {
-            std::vector<QString> wordsForAnswers = getRandomSentenceAnswers(5);
+            std::vector<QString> wordsForAnswers = getRandomSentenceAnswers(numberOfSentences);
             std::vector<QString> answers;
-            for (auto w : wordsForAnswers) {
-                answers.push_back(QString(sentence.first).replace("[ ]", w));
+
+            for (const auto& wordForAnswer : wordsForAnswers) {
+                answers.push_back (QString(sentence.first).replace("[ ]", wordForAnswer));
             }
+
             answers.push_back(QString(sentence.first).replace("[ ]", sentence.second));
-            testToPush = new CheckTest(sentence.first, answers, 5);
+
+            // Set correct answer to random position
+            size_t randomCorrentIndex = mRandomGen->intInRange(answers.size());
+            std::iter_swap(answers.begin() + randomCorrentIndex, answers.end() - 1);
+
+            testToPush = new CheckTest(sentence.first, answers, randomCorrentIndex);
         } else {
             testToPush = new InputTest(sentence.first, sentence.second);
         }
-        testToPush->setSentenceBased();
-        tests.push_back(testToPush);
+
+        if (testToPush) {
+            testToPush->setSentenceBased();
+            tests.push_back(testToPush);
+        }
     }
+
     return tests;
 }
 
 bool Model::loadHistory() {
-    QFile *file = new QFile("./history.json");
-    if (!file->exists()) return true; // If file does not exists, history loading is not necessary, so it's actually succeed
+    auto path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    auto *file = new QFile(path + "/history.json");
+
+    if (!file->exists()) {
+        file->close(); // very controversial, should we close the file if it doesn't exists ?!
+        delete file;
+        return true;
+    } // If file does not exists, history loading is not necessary, so it's actually succeed
 
     if (!file->open(QIODevice::ReadOnly)) {
-        std::cerr << "Unable to open history file" << file->errorString().toStdString() << "\n";
-        if (file) delete file;
-        return false;
+        auto message = file->errorString();
+        delete file;
+
+        throw QString::fromUtf8("Unable to open history file: ") + message;
     }
 
-    QTextStream *stream = new QTextStream(file);
+    auto *stream = new QTextStream(file);
     stream->setCodec("UTF-8");
 
-    QString text = stream->readAll();
-    QJsonObject fileObj = QJsonDocument::fromJson(text.toUtf8()).object();
+    auto text = stream->readAll();
+    auto fileObj = QJsonDocument::fromJson(text.toUtf8()).object();
 
     if (!fileObj.keys().contains("history")) {
-        std::cout << "History file is invalid. History entry not in root object" << "\n";
-        return false;
+        file->remove();
+        file->close();
+        delete file;
+
+        throw QString::fromUtf8("History file is invalid");
     }
 
-    QJsonArray historyEntries = fileObj.value("history").toArray();
+    auto historyEntries = fileObj.value("history").toArray();
 
     for (auto entry : historyEntries) {
         auto state = new SessionState(entry.toObject());
         mHistory.push_back(state);
     }
+
     file->close();
 
-    std::cout << "History count: " << mHistory.size() << "\n";
-
-    if (file) delete file;
-    if (stream) delete stream;
+    delete file;
+    delete stream;
 
     return true;
 }
 
-
+// Throws QString with error message
 bool Model::saveHistory() {
+    // Json generation
     QJsonObject obj;
     QJsonArray history;
-
     for (auto state : mHistory) {
         history.push_back(state->toJson());
     }
-
     obj.insert("history", history);
     QJsonDocument doc(obj);
 
-    QFile *file = new QFile("history.json");
+    // Create AppData directory is doesn't exists
+    auto path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    auto *directory = new QDir(path);
+    if (!directory->exists()) directory->mkpath(".");
+
+    // Open file
+    auto *file = new QFile(path + "/history.json");
     if (!file->open(QIODevice::WriteOnly)) {
-        std::cerr << "Failed to open file to save history " << file->errorString().toStdString() << "\n";
-        return false;
+        throw QString::fromUtf8("Failed to open file to save history: ") + file->errorString();
     }
 
-    QTextStream *stream = new QTextStream(file);
+    auto *stream = new QTextStream(file);
     stream->setCodec("UTF-8");
-
     stream->operator<<(QString::fromUtf8(doc.toJson()));
+
     file->close();
+
+    delete directory;
+    delete file;
+    delete stream;
 
     return true;
 }

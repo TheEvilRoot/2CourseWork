@@ -12,9 +12,11 @@ private:
     Model *mModel;
 public:
     WordsFileLoader(Model *model);
+    ~WordsFileLoader();
+
     void run() override;
 
 signals:
     void progressDone();
-    void progressError(QString);
+    void progressError(QString, bool);
 };

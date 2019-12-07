@@ -1,12 +1,17 @@
 #include "mainpresenter.hpp"
-#include "model/loader/wordsfileloader.h"
+#include "model/loader/wordsfileloader.hpp"
 #include "model/loader/storeworker.hpp"
-#include "model/data/choicetest.h"
-#include "model/data/checktest.h"
+#include "model/data/choicetest.hpp"
+#include "model/data/checktest.hpp"
 
 #include <QApplication>
 
-MainPresenter::MainPresenter(Model *model, MainView *view): mModel(model), mView(view) {
+MainPresenter::MainPresenter(Model *model, MainView *view):
+    mModel(model),
+    mView(view),
+    mResultTestIndex(0),
+    mLoader(nullptr),
+    mWorker(nullptr) {
   Q_ASSERT(model);
   Q_ASSERT(view);
 }
@@ -19,7 +24,7 @@ MainPresenter::MainPresenter(Model *model, MainView *view): mModel(model), mView
  * Calls on user answer to current test.
  * Should check answer and display result to screen.
  */
-void MainPresenter::proceedAnswer(QString answer, size_t index) {
+void MainPresenter::proceedAnswer(const QString& answer, size_t index) {
     if (!mModel->getSession()) {
         mView->showMessage("Тестирование не начато!", true);
         return;
@@ -32,10 +37,13 @@ void MainPresenter::proceedAnswer(QString answer, size_t index) {
     }
 
     auto session = mModel->getSession();
-    auto isCorrect = session->submitTest(index, answer);
+    auto isCorrect = session->submitTest(index, std::move(answer));
 
-    if (isCorrect) {
+    // I will refactor this later
+    if (isCorrect == 1) {
         mView->showMessage("Правильный ответ!", true);
+    } else if (isCorrect >= session->getMagic()) {
+        mView->showMessage("Ответ неверный. Осталось " + QString::number(session->getMaxAttempts() - (isCorrect - session->getMagic())) + " попыток");
     } else {
         mView->showMessage("Ответ не верный...", true);
     }
@@ -70,22 +78,33 @@ void MainPresenter::completeSession() {
     initView(ViewType::RESULT);
 }
 
+void MainPresenter::updateMenuTip() {
+    auto tip = mModel->getRandomWords(1);
+    mView->setTipWords(tip[0]);
+}
+
 void MainPresenter::initView(const ViewType *type) {
     mView->presentView(type);
 
     auto session = mModel->getSession();
-    if (type == ViewType::MENU) {
+    if (type == ViewType::MENU) { 
+        updateMenuTip();
         mView->setupMenuScreen(session && !session->isFinished() ? session->getState() : nullptr);
     } else if (type == ViewType::RESULT) {
-        mView->setupResultScreen(mModel->getLastSession());
+        mResultTestIndex = 0;
+        auto lastSession = mModel->getLastSession();
+        mView->setupResultScreen(lastSession);
     } else if (type == ViewType::HISTORY) {
         mView->setupHistoryList(mModel->getHistory());
     } else {
+        auto testsCount = session->getTestsCount();
+        auto testIndex = session->getTestPosition();
         auto test = session->currentTest();
         if (test == nullptr) return;
 
-        if (type == ViewType::INPUT) mView->setupInputScreen(test->getQuestion(), "");
-
+        if (type == ViewType::INPUT) {
+            mView->setupInputScreen(test->getQuestion(), "");
+        }
         if (type == ViewType::CHOICE) {
             ChoiceTest *choiceTest;
             if ((choiceTest = dynamic_cast<ChoiceTest *>(test)) != nullptr) {
@@ -98,6 +117,7 @@ void MainPresenter::initView(const ViewType *type) {
                 mView->setupCheckScreen(test->getQuestion(), checkTest->getAnswers());
             }
         }
+        mView->setTestTitle(type, testIndex, testsCount);
     }
 }
 
@@ -125,46 +145,71 @@ void MainPresenter::requestNewSession(bool force, bool continueSession) {
   }
 }
 
+// File loader callback
 void MainPresenter::onProgressDone() {
     mView->hideLoading();
     mView->enableContent();
     mView->showMessage("Готов к работе");
+    updateMenuTip();
+    delete mLoader;
+    mLoader = nullptr;
 }
 
-void MainPresenter::onError(QString message) {
+// File loader callback
+void MainPresenter::onError(const QString& message, bool fatal) {
     mView->hideLoading();
     mView->showMessage(message);
-    mView->initiateError(true, message);
+    mView->initiateError(fatal, message);
+    delete mLoader;
+    mLoader = nullptr;
 }
 
+// Store worker callback
 void MainPresenter::onSessionFinish(const ViewType *nextView) {
-    onProgressDone();
+    mView->hideLoading();
+    mView->enableContent();
+    mView->showMessage("Готов к работе");
+    updateMenuTip();
+    delete mWorker;
+    mWorker = nullptr;
+
     initView(nextView);
 }
 
-void MainPresenter::onSessionError(QString message) {
-    onError(message);
+// Store worker callback
+void MainPresenter::onSessionError(const QString& message) {
+    mView->hideLoading();
+    mView->showMessage(message);
+    mView->initiateError(true, message);
+    delete mWorker;
+    mWorker = nullptr;
+
     initView(ViewType::MENU);
 }
 
 void MainPresenter::initApplication() {
+    if (mLoader != nullptr)
+        return;
     mView->showLoading();
     mView->disableContent();
     mView->showMessage("Загрузка данных...");
-    WordsFileLoader *loader = new WordsFileLoader(mModel);
-    QObject::connect(loader, &WordsFileLoader::progressDone, this, &MainPresenter::onProgressDone);
-    QObject::connect(loader, &WordsFileLoader::progressError, this, &MainPresenter::onError);
-    loader->start();
+
+    mLoader = new WordsFileLoader(mModel);
+    QObject::connect(mLoader, &WordsFileLoader::progressDone, this, &MainPresenter::onProgressDone);
+    QObject::connect(mLoader, &WordsFileLoader::progressError, this, &MainPresenter::onError);
+    mLoader->start();
 }
 
 void MainPresenter::requestSessionFinish(const ViewType *nextView) {
+    if (mWorker != nullptr) return;
     mView->showLoading();
     mView->disableContent();
     mView->showMessage("Сохранение...");
-    StoreWorker *worker = new StoreWorker(mModel, nextView);
-    QObject::connect(worker, &StoreWorker::progressDone, this, &MainPresenter::onSessionFinish);
-    QObject::connect(worker, &StoreWorker::progressError, this, &MainPresenter::onSessionError);
-    worker->start();
+
+    mWorker = new StoreWorker(mModel, nextView);
+    QObject::connect(mWorker, &StoreWorker::progressDone, this, &MainPresenter::onSessionFinish);
+    QObject::connect(mWorker, &StoreWorker::progressError, this, &MainPresenter::onSessionError);
+    mWorker->start();
 }
 
 void MainPresenter::requestHistoryDetailUpdate(int index) {

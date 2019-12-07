@@ -1,19 +1,21 @@
-#include "wordsfileloader.h"
+#include "wordsfileloader.hpp"
 
-#include <iostream>
+#include <QDebug>
 
 WordsFileLoader::WordsFileLoader(Model *model): mModel(model) { }
 
+WordsFileLoader::~WordsFileLoader() {
+    qDebug() << "WordsFileLoader destruction...";
+}
+
 void WordsFileLoader::run() {
-//    sleep(5);
-    bool loadWords = mModel->loadWords();
-    bool loadSentences = mModel->loadSentences();
-    bool loadHistory = mModel->loadHistory();
-    auto res = ("Words loaded: " + QString::number(loadWords) + " Sentences loaded: " + QString::number(loadSentences) + "History loaded: " + QString::number(loadHistory));
-    std::cout << res.toStdString() << "\n";
-    if (loadWords && loadSentences && loadHistory) {
+    try {
+        auto result = mModel->loadWords() &&
+            mModel->loadSentences() &&
+            mModel->loadHistory();
+        qDebug() << "File loader: " << result;
         emit progressDone();
-    } else {
-        emit progressError(res);
+    } catch(QString& msg) {
+        emit progressError(msg, true);
     }
 }

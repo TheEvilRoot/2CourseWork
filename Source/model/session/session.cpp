@@ -1,30 +1,36 @@
 #include "session.hpp"
-#include "model/data/choicetest.h"
+#include "model/data/choicetest.hpp"
 
-#include <iostream>
 #include <cmath>
 #include <QDateTime>
+#include <QDebug>
 
-Session::Session(TestList tests, bool attemptsMode):
+Session::Session(TestList tests, int maxAttempts):
     mTests(tests),
     mPosition(0),
-    mAttemptsMode(attemptsMode),
+    mMaxAttempts(maxAttempts),
+    mMagicConstant(1377),
     mState(new SessionState) {
     applyResult();
-    std::cout << "Initializing session " << attemptsMode << "\n";
 }
 
 Session::~Session() {
-    std::cerr << "Session descruction initiated!!!!!!\n";
-    for (size_t i = 0; i < mTests.size(); i++) if (mTests[i]) delete mTests[i];
-}
-
-bool Session::isAttemptsMode() const {
-    return mAttemptsMode;
+    qDebug() << "Session descruction initiated!!!!!!\n";
+    for (auto& test : mTests) {
+        delete test;
+    }
 }
 
 int Session::getCorrectAnswersCount() const {
     return mState->mCorrect;
+}
+
+int Session::getMaxAttempts() const {
+    return mMaxAttempts;
+}
+
+int Session::getMagic() const {
+    return mMagicConstant;
 }
 
 int Session::getWrongAnswersCount() const {
@@ -37,6 +43,10 @@ int Session::getPoints() const{
 
 size_t Session::getTestsCount() const {
     return mTests.size();
+}
+
+size_t Session::getTestPosition() const {
+    return mPosition;
 }
 
 void Session::applyResult() {
@@ -58,7 +68,7 @@ void Session::nextTest() {
  * @param result - r
  * @param answer
  */
-bool Session::submitTest(size_t index, QString answer) {
+int Session::submitTest(size_t index, QString answer) {
     auto test = currentTest();
     if (test == nullptr) return false;
     auto isCorrect = false;
@@ -82,19 +92,24 @@ bool Session::submitTest(size_t index, QString answer) {
         mState->mWrong++;
     }
 
-    if (isCorrect || !mAttemptsMode) {
+    if (isCorrect || result->mAttempts >= mMaxAttempts) {
         nextTest();
         applyResult();
+        return isCorrect;
     }
-    return isCorrect;
+    // Ghosts:
+    // is not correct
+    // maxAttempts > 0
+    // mAttemps <= maxAttempts
+
+    return mMagicConstant + result->mAttempts;
 }
 
 BaseTest* Session::currentTest() const {
   if (mPosition < mTests.size()){
     return mTests[mPosition];
-  } else {
-    return nullptr;
   }
+  return nullptr;
 }
 
 bool Session::isFinished() {

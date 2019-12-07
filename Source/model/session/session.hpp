@@ -11,15 +11,16 @@ class Session {
 private:
   TestList mTests;
   size_t mPosition;
-  bool mAttemptsMode;
+  int mMaxAttempts;
+  int mMagicConstant;
   SessionState *mState;
 
 public:
-    Session(TestList tests, bool attemptsMode = false);
+    Session(TestList tests, int maxAttempts = 0);
     ~Session();
 
     void nextTest();
-    bool submitTest(size_t index, QString answer);
+    int submitTest(size_t index, QString answer);
     int calculatePoints(Result *result, BaseTest *test);
     void applyResult();
 
@@ -28,10 +29,11 @@ public:
     int getPoints() const;
     int getCorrectAnswersCount() const;
     int getWrongAnswersCount() const;
-    bool isAttemptsMode() const;
     bool isFinished();
-
+    size_t getTestPosition() const;
     void generateConclusion();
+    int getMaxAttempts() const;
+    int getMagic() const;
 
     SessionState * getState(); // Should be removed!
 };

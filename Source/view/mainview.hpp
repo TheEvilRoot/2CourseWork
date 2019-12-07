@@ -1,12 +1,12 @@
 #pragma once
 
-#include "viewtype.h"
+#include "viewtype.hpp"
 #include "model/data/basetest.hpp"
 #include "model/session/sessionstate.hpp"
 
 class MainView { // TODO: Solve warning
 public:
-    virtual ~MainView() {}
+    virtual ~MainView() = default;
 
     virtual bool presentView(const ViewType *type) = 0;
     virtual void showLoading() = 0;
@@ -25,4 +25,9 @@ public:
 
     virtual void setupHistoryList(std::deque<SessionState *> &states) = 0;
     virtual void setupHistoryDetails(SessionState *state) = 0;
+
+    virtual void setTipWords(std::pair<QString, QString>& words) = 0;
+
+    virtual void setTestTitle(const ViewType *type, size_t index, size_t count) = 0;
 };
+

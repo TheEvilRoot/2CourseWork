@@ -13,6 +13,8 @@ private:
     const ViewType *mNextView;
 public:
     StoreWorker(Model *model, const ViewType *nextView);
+    ~StoreWorker();
+
     void run() override;
 
 signals:

@@ -34,6 +34,9 @@ Bugs to solve and to-do list:
 * Windows encoding for custom strings for labels and table's headers
 * Fix data set!! (Outsourced)
 * Shared pointers for DI objects.
+* ~~Add tips to Menu Screen with words from dataset.~~
+* ~~Add number of attempts only for attempts mode.~~
+* ~~On macOS(Windows just not tested) failed to open history file~~
 
 
 

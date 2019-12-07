@@ -1,17 +1,19 @@
 #include "model/loader/storeworker.hpp"
 
-#include <iostream>
+#include <QDebug>
 
-StoreWorker::StoreWorker(Model *model, const ViewType *nextView): mModel(model), mNextView(nextView) { }
+StoreWorker::StoreWorker(Model *model,
+                         const ViewType *nextView): mModel(model), mNextView(nextView) { }
+
+StoreWorker::~StoreWorker() {
+    qDebug() << "StoreWorker destruction...";
+}
 
 void StoreWorker::run() {
     try {
-        if (mModel->saveHistory()) {
-            emit progressDone(mNextView);
-        } else {
-            emit progressError("Failed");
-        }
-    } catch(...){
-        emit progressError("Exception!!");
+       mModel->saveHistory();
+       emit progressDone(mNextView);
+    } catch(QString &msg){
+        emit progressError(msg);
     }
 }

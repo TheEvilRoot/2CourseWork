@@ -21,7 +21,7 @@ private:
 
     SessionState();
 public:
-    SessionState(QJsonObject obj);
+    SessionState(const QJsonObject& obj);
 
     QJsonObject toJson();
 
