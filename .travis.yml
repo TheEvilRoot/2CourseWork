@@ -24,4 +24,4 @@ before_script:
 script:
  - qmake ../Source
  - make
- - zip -r build.zip CourseWork_EnglishTests.app
+ - zip -r build.zip EPT.app
