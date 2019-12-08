@@ -1,6 +1,8 @@
 <RCC>
     <qresource prefix="/logo">
         <file>english_logo.png</file>
+        <file>arrow_back-24px.svg</file>
+        <file>arrow_back-24px_white.svg</file>
     </qresource>
     <qresource prefix="/data">
         <file>words.db</file>

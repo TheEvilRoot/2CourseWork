@@ -156,7 +156,7 @@ void MainWindow::initConnection() {
         mPresenter->initView(ViewType::HISTORY);
     });
 
-    connect(ui->historyBack2Menu, &QPushButton::clicked, this, [this]() {
+    connect(ui->historyBack, &QToolButton::clicked, this, [this]() {
         mPresenter->initView(ViewType::MENU);
     });
 
@@ -164,6 +164,14 @@ void MainWindow::initConnection() {
         auto selectedIndex = ui->historyTable->currentRow();
         auto isSelected = ui->historyTable->selectedRanges().size();
         mPresenter->requestHistoryDetailUpdate(isSelected ? selectedIndex : -1);
+    });
+
+    connect(ui->showPreferences, &QPushButton::clicked, this, [this]() {
+       mPresenter->initView(ViewType::PREFERENCES);
+    });
+
+    connect(ui->preferencesBack, &QToolButton::clicked, this, [this]() {
+       mPresenter->initView(ViewType::MENU);
     });
 }
 
@@ -201,6 +209,8 @@ bool MainWindow::presentView(const ViewType *type) {
       ui->stackedWidget->setCurrentWidget(ui->result);
     } else if (type == ViewType::HISTORY) {
       ui->stackedWidget->setCurrentWidget(ui->history);
+    } else if (type == ViewType::PREFERENCES) {
+      ui->stackedWidget->setCurrentWidget(ui->preferencesPage);
     }else {
         return false;
     }

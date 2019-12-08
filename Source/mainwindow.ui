@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>408</width>
-    <height>608</height>
+    <width>410</width>
+    <height>595</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -27,7 +27,7 @@
     <item row="0" column="0">
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>6</number>
       </property>
       <widget class="QWidget" name="menuPage">
        <layout class="QGridLayout" name="gridLayout_5">
@@ -64,20 +64,42 @@
         </item>
         <item row="1" column="0">
          <layout class="QGridLayout" name="gridLayout_6">
-          <item row="4" column="2">
-           <spacer name="horizontalSpacer">
+          <item row="9" column="1">
+           <widget class="QLabel" name="versionLabel">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>&lt;i&gt;version 1.0-alpha&lt;/i&gt;</string>
+            </property>
+            <property name="textFormat">
+             <enum>Qt::RichText</enum>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignBottom|Qt::AlignRight|Qt::AlignTrailing</set>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0" colspan="2">
+           <spacer name="verticalSpacer_11">
             <property name="orientation">
-             <enum>Qt::Horizontal</enum>
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Fixed</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
-              <width>40</width>
-              <height>20</height>
+              <width>20</width>
+              <height>10</height>
              </size>
             </property>
            </spacer>
           </item>
-          <item row="1" column="0" colspan="3">
+          <item row="1" column="0" colspan="2">
            <widget class="QLabel" name="menuTipView">
             <property name="text">
              <string/>
@@ -96,14 +118,7 @@
             </property>
            </widget>
           </item>
-          <item row="7" column="0">
-           <widget class="QLabel" name="label_9">
-            <property name="text">
-             <string>Тестов на грамматику</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0" colspan="3">
+          <item row="3" column="0" colspan="2">
            <widget class="QPushButton" name="startSession">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -128,7 +143,14 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="0" colspan="3">
+          <item row="7" column="0" colspan="2">
+           <widget class="QPushButton" name="go2exit">
+            <property name="text">
+             <string>Выйти из программы</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0" colspan="2">
            <widget class="QLabel" name="sessionInfo">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
@@ -141,112 +163,14 @@
             </property>
            </widget>
           </item>
-          <item row="7" column="2">
-           <widget class="QSlider" name="menuSentencesSlider">
-            <property name="minimum">
-             <number>5</number>
-            </property>
-            <property name="maximum">
-             <number>10</number>
-            </property>
-            <property name="value">
-             <number>8</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="1">
-           <widget class="QLabel" name="menuWordsLabel">
+          <item row="5" column="0" colspan="2">
+           <widget class="QPushButton" name="showHistory">
             <property name="text">
-             <string>0</string>
+             <string>История</string>
             </property>
            </widget>
           </item>
-          <item row="10" column="0" colspan="3">
-           <widget class="QPushButton" name="go2exit">
-            <property name="text">
-             <string>Выйти из программы</string>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="0">
-           <widget class="QLabel" name="label_7">
-            <property name="text">
-             <string>Тестов на лексику</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0" colspan="3">
-           <spacer name="verticalSpacer_11">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Fixed</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>10</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="7" column="1">
-           <widget class="QLabel" name="menuSentencesLabel">
-            <property name="text">
-             <string>0</string>
-            </property>
-           </widget>
-          </item>
-          <item row="12" column="2">
-           <widget class="QLabel" name="versionLabel">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>&lt;i&gt;version 1.0-alpha&lt;/i&gt;</string>
-            </property>
-            <property name="textFormat">
-             <enum>Qt::RichText</enum>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignBottom|Qt::AlignRight|Qt::AlignTrailing</set>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="0" colspan="3">
-           <widget class="QCheckBox" name="menuRandomTestCountCheck">
-            <property name="text">
-             <string>Случайное количество тестов</string>
-            </property>
-            <property name="tristate">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="label_5">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>Количество попыток на тест</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-            </property>
-           </widget>
-          </item>
-          <item row="11" column="0" colspan="3">
+          <item row="8" column="0" colspan="2">
            <spacer name="verticalSpacer">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
@@ -259,75 +183,10 @@
             </property>
            </spacer>
           </item>
-          <item row="9" column="0" colspan="3">
-           <widget class="QPushButton" name="showHistory">
+          <item row="6" column="0" colspan="2">
+           <widget class="QPushButton" name="showPreferences">
             <property name="text">
-             <string>История</string>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1">
-           <widget class="QSpinBox" name="attemptsBox">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimum">
-             <number>1</number>
-            </property>
-            <property name="maximum">
-             <number>10</number>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="2">
-           <widget class="QSlider" name="menuWordsSlider">
-            <property name="minimum">
-             <number>10</number>
-            </property>
-            <property name="maximum">
-             <number>30</number>
-            </property>
-            <property name="pageStep">
-             <number>15</number>
-            </property>
-            <property name="value">
-             <number>15</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="invertedAppearance">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="8" column="2">
-           <widget class="QSlider" name="menuTotalTestsSlider">
-            <property name="minimum">
-             <number>10</number>
-            </property>
-            <property name="maximum">
-             <number>40</number>
-            </property>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="8" column="1">
-           <widget class="QLabel" name="menuTotalTestsLabel">
-            <property name="text">
-             <string>0</string>
-            </property>
-           </widget>
-          </item>
-          <item row="8" column="0">
-           <widget class="QLabel" name="label_12">
-            <property name="text">
-             <string>Всего тестов</string>
+             <string>Настройки</string>
             </property>
            </widget>
           </item>
@@ -335,40 +194,255 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="history">
-       <layout class="QGridLayout" name="gridLayout_8">
-        <item row="9" column="0">
-         <widget class="QPushButton" name="historyBack2Menu">
-          <property name="text">
-           <string>Вернуться  в меню</string>
+      <widget class="QWidget" name="preferencesPage">
+       <layout class="QGridLayout" name="gridLayout_10">
+        <item row="14" column="3" colspan="2">
+         <widget class="QSlider" name="menuSentencesSlider">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimum">
+           <number>5</number>
+          </property>
+          <property name="maximum">
+           <number>10</number>
+          </property>
+          <property name="value">
+           <number>8</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
           </property>
          </widget>
         </item>
-        <item row="4" column="0">
-         <widget class="QLabel" name="sbpercentLabel">
+        <item row="18" column="0" colspan="5">
+         <spacer name="verticalSpacer_12">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="16" column="2">
+         <widget class="QLabel" name="menuTotalTestsLabel">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
-           <string/>
+           <string>0</string>
           </property>
          </widget>
         </item>
-        <item row="6" column="0">
-         <widget class="QLabel" name="resultMessage">
+        <item row="16" column="0" colspan="2">
+         <widget class="QLabel" name="label_14">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
-           <string/>
+           <string>Всего тестов</string>
           </property>
          </widget>
         </item>
-        <item row="1" column="0">
-         <widget class="QTableWidget" name="historyTable"/>
+        <item row="1" column="3">
+         <widget class="QSpinBox" name="attemptsBox">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="maximum">
+           <number>10</number>
+          </property>
+         </widget>
         </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="wbpercentLabel">
+        <item row="14" column="2">
+         <widget class="QLabel" name="menuSentencesLabel">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
-           <string/>
+           <string>0</string>
+          </property>
+         </widget>
+        </item>
+        <item row="9" column="2">
+         <widget class="QLabel" name="menuWordsLabel">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>0</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0" colspan="2">
+         <widget class="QLabel" name="label_13">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Количество попыток на тест</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="14" column="0" colspan="2">
+         <widget class="QLabel" name="label_15">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Тестов на грамматику</string>
           </property>
          </widget>
         </item>
         <item row="0" column="0">
+         <widget class="QToolButton" name="preferencesBack">
+          <property name="styleSheet">
+           <string notr="true">background: transparent;</string>
+          </property>
+          <property name="text">
+           <string>...</string>
+          </property>
+          <property name="icon">
+           <iconset>
+            <activeoff>:/logo/arrow_back-24px.svg</activeoff>
+           </iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>32</width>
+            <height>32</height>
+           </size>
+          </property>
+          <property name="toolButtonStyle">
+           <enum>Qt::ToolButtonIconOnly</enum>
+          </property>
+          <property name="arrowType">
+           <enum>Qt::NoArrow</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="9" column="3" colspan="2">
+         <widget class="QSlider" name="menuWordsSlider">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimum">
+           <number>10</number>
+          </property>
+          <property name="maximum">
+           <number>30</number>
+          </property>
+          <property name="pageStep">
+           <number>15</number>
+          </property>
+          <property name="value">
+           <number>15</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="invertedAppearance">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="16" column="3" colspan="2">
+         <widget class="QSlider" name="menuTotalTestsSlider">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimum">
+           <number>10</number>
+          </property>
+          <property name="maximum">
+           <number>40</number>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="9" column="0" colspan="2">
+         <widget class="QLabel" name="label_11">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Тестов на лексику</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLabel" name="label_16">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>&lt;font size=24&gt;&lt;b&gt;Настройки&lt;/b&gt;&lt;/font&gt;</string>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="0" colspan="5">
+         <widget class="QCheckBox" name="menuRandomTestCountCheck">
+          <property name="text">
+           <string>Случайное количество тестов</string>
+          </property>
+          <property name="tristate">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="history">
+       <layout class="QGridLayout" name="gridLayout_8">
+        <item row="0" column="1">
          <widget class="QLabel" name="label_3">
           <property name="text">
            <string>&lt;font size=24&gt;&lt;b&gt;История&lt;/b&gt;&lt;/font&gt;</string>
@@ -378,14 +452,60 @@
           </property>
          </widget>
         </item>
-        <item row="5" column="0">
+        <item row="0" column="0">
+         <widget class="QToolButton" name="historyBack">
+          <property name="styleSheet">
+           <string notr="true">background: transparent;</string>
+          </property>
+          <property name="text">
+           <string>...</string>
+          </property>
+          <property name="icon">
+           <iconset resource="resources.qrc">
+            <normaloff>:/logo/arrow_back-24px.svg</normaloff>
+            <selectedoff>:/logo/arrow_back-24px_white.svg</selectedoff>
+            <selectedon>:/logo/arrow_back-24px_white.svg</selectedon>:/logo/arrow_back-24px.svg</iconset>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>32</width>
+            <height>32</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0" colspan="2">
+         <widget class="QTableWidget" name="historyTable"/>
+        </item>
+        <item row="3" column="0" colspan="2">
+         <widget class="QLabel" name="wbpercentLabel">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0" colspan="2">
+         <widget class="QLabel" name="sbpercentLabel">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0" colspan="2">
          <widget class="QLabel" name="cefrResult">
           <property name="text">
            <string/>
           </property>
          </widget>
         </item>
-        <item row="7" column="0">
+        <item row="6" column="0" colspan="2">
+         <widget class="QLabel" name="resultMessage">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="0" colspan="2">
          <layout class="QVBoxLayout" name="resultLayout"/>
         </item>
        </layout>
@@ -414,7 +534,7 @@
            <widget class="QLabel" name="choiceTestTitle">
             <property name="font">
              <font>
-              <pointsize>16</pointsize>
+              <pointsize>-1</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>
@@ -447,7 +567,7 @@
            <widget class="QLabel" name="questionLabelChoice">
             <property name="font">
              <font>
-              <pointsize>18</pointsize>
+              <pointsize>-1</pointsize>
              </font>
             </property>
             <property name="text">
@@ -492,7 +612,7 @@
               </property>
               <property name="minimumSize">
                <size>
-                <width>50</width>
+                <width>82</width>
                 <height>50</height>
                </size>
               </property>
@@ -520,7 +640,7 @@
              <widget class="QPushButton" name="choiceOption1">
               <property name="minimumSize">
                <size>
-                <width>50</width>
+                <width>82</width>
                 <height>50</height>
                </size>
               </property>
@@ -545,7 +665,7 @@
               </property>
               <property name="minimumSize">
                <size>
-                <width>50</width>
+                <width>82</width>
                 <height>50</height>
                </size>
               </property>
@@ -579,7 +699,7 @@
               </property>
               <property name="minimumSize">
                <size>
-                <width>50</width>
+                <width>82</width>
                 <height>50</height>
                </size>
               </property>
@@ -613,7 +733,7 @@
               </property>
               <property name="minimumSize">
                <size>
-                <width>50</width>
+                <width>82</width>
                 <height>50</height>
                </size>
               </property>
@@ -647,7 +767,7 @@
               </property>
               <property name="minimumSize">
                <size>
-                <width>50</width>
+                <width>82</width>
                 <height>50</height>
                </size>
               </property>
@@ -736,7 +856,7 @@
           </property>
           <property name="font">
            <font>
-            <pointsize>18</pointsize>
+            <pointsize>-1</pointsize>
            </font>
           </property>
           <property name="text">
@@ -754,7 +874,7 @@
          <widget class="QLabel" name="inputTestTitle">
           <property name="font">
            <font>
-            <pointsize>16</pointsize>
+            <pointsize>-1</pointsize>
             <weight>75</weight>
             <bold>true</bold>
            </font>
@@ -802,7 +922,7 @@
             </property>
             <property name="minimumSize">
              <size>
-              <width>150</width>
+              <width>82</width>
               <height>50</height>
              </size>
             </property>
@@ -876,7 +996,7 @@
            <widget class="QLabel" name="questionLabelCheck">
             <property name="font">
              <font>
-              <pointsize>18</pointsize>
+              <pointsize>-1</pointsize>
              </font>
             </property>
             <property name="text">
@@ -907,7 +1027,7 @@
            <widget class="QLabel" name="checkTestTitle">
             <property name="font">
              <font>
-              <pointsize>16</pointsize>
+              <pointsize>-1</pointsize>
               <weight>75</weight>
               <bold>true</bold>
              </font>

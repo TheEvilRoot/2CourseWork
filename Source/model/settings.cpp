@@ -2,7 +2,7 @@
 
 Settings::Settings():
     versionMajor(1),
-    versionMinor(4),
+    versionMinor(5),
     versionBuild(81219),
     versionSign("RC"),
     style(new QString),
