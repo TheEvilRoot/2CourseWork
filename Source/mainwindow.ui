@@ -27,7 +27,7 @@
     <item row="0" column="0">
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>2</number>
+       <number>6</number>
       </property>
       <widget class="QWidget" name="menuPage">
        <layout class="QGridLayout" name="gridLayout_5">
@@ -196,7 +196,7 @@
       </widget>
       <widget class="QWidget" name="preferencesPage">
        <layout class="QGridLayout" name="gridLayout_10">
-        <item row="13" column="3" colspan="2">
+        <item row="14" column="3" colspan="2">
          <widget class="QSlider" name="menuSentencesSlider">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -218,7 +218,20 @@
           </property>
          </widget>
         </item>
-        <item row="15" column="2">
+        <item row="18" column="0" colspan="5">
+         <spacer name="verticalSpacer_12">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="16" column="2">
          <widget class="QLabel" name="menuTotalTestsLabel">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
@@ -228,6 +241,19 @@
           </property>
           <property name="text">
            <string>0</string>
+          </property>
+         </widget>
+        </item>
+        <item row="16" column="0" colspan="2">
+         <widget class="QLabel" name="label_14">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Всего тестов</string>
           </property>
          </widget>
         </item>
@@ -247,7 +273,7 @@
           </property>
          </widget>
         </item>
-        <item row="13" column="2">
+        <item row="14" column="2">
          <widget class="QLabel" name="menuSentencesLabel">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
@@ -260,7 +286,7 @@
           </property>
          </widget>
         </item>
-        <item row="8" column="2">
+        <item row="9" column="2">
          <widget class="QLabel" name="menuWordsLabel">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
@@ -286,6 +312,19 @@
           </property>
           <property name="alignment">
            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="14" column="0" colspan="2">
+         <widget class="QLabel" name="label_15">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Тестов на грамматику</string>
           </property>
          </widget>
         </item>
@@ -316,7 +355,7 @@
           </property>
          </widget>
         </item>
-        <item row="8" column="3" colspan="2">
+        <item row="9" column="3" colspan="2">
          <widget class="QSlider" name="menuWordsSlider">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -344,7 +383,7 @@
           </property>
          </widget>
         </item>
-        <item row="15" column="3" colspan="2">
+        <item row="16" column="3" colspan="2">
          <widget class="QSlider" name="menuTotalTestsSlider">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -363,6 +402,19 @@
           </property>
          </widget>
         </item>
+        <item row="9" column="0" colspan="2">
+         <widget class="QLabel" name="label_11">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Тестов на лексику</string>
+          </property>
+         </widget>
+        </item>
         <item row="0" column="1">
          <widget class="QLabel" name="label_16">
           <property name="sizePolicy">
@@ -376,20 +428,7 @@
           </property>
          </widget>
         </item>
-        <item row="8" column="0" colspan="2">
-         <widget class="QLabel" name="label_11">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string>Тестов на лексику</string>
-          </property>
-         </widget>
-        </item>
-        <item row="9" column="0" colspan="2">
+        <item row="8" column="0" colspan="5">
          <widget class="QCheckBox" name="menuRandomTestCountCheck">
           <property name="text">
            <string>Случайное количество тестов</string>
@@ -398,45 +437,6 @@
            <bool>false</bool>
           </property>
          </widget>
-        </item>
-        <item row="13" column="0" colspan="2">
-         <widget class="QLabel" name="label_15">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string>Тестов на грамматику</string>
-          </property>
-         </widget>
-        </item>
-        <item row="15" column="0" colspan="2">
-         <widget class="QLabel" name="label_14">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string>Всего тестов</string>
-          </property>
-         </widget>
-        </item>
-        <item row="17" column="0" colspan="5">
-         <spacer name="verticalSpacer_12">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
         </item>
        </layout>
       </widget>
