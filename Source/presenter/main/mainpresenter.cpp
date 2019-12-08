@@ -96,6 +96,8 @@ void MainPresenter::initView(const ViewType *type) {
         mView->setupResultScreen(lastSession);
     } else if (type == ViewType::HISTORY) {
         mView->setupHistoryList(mModel->getHistory());
+    } else if (type == ViewType::PREFERENCES) {
+        // No-op
     } else {
         auto testsCount = session->getTestsCount();
         auto testIndex = session->getTestPosition();

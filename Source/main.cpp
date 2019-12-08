@@ -17,6 +17,7 @@ const ViewType* ViewType::INPUT = new ViewType("input");
 const ViewType* ViewType::CHECK = new ViewType("check");
 const ViewType* ViewType::RESULT = new ViewType("result");
 const ViewType* ViewType::HISTORY = new ViewType("history");
+const ViewType* ViewType::PREFERENCES = new ViewType("preferences");
 
 int CEFR::GLOBAL_ID = 0;
 
